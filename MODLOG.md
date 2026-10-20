@@ -119,3 +119,11 @@ HUD is a separate module. Book-slot override is a separate runtime-only module.
 - Scale root cause identified: Collider.bounds is EMPTY while native pooled enemy collider is disabled during spawn. Switched to intrinsic CapsuleCollider.height/radius/center plus world transform (valid while disabled); offscreen camera also targets intrinsic center rather than empty bounds center.
 
 - Transform evidence showed native renderer import rotation/offset is unsuitable for Unity Y-up guest meshes. Changed visual parent to native physics root, positioned guest base center at intrinsic capsule feet, and visual-facing follows native rigidbody velocity. Movement/collider code remains untouched. Camera distance now scales with subject height.
+
+## Final prototype checkpoint — 2026-10-20
+- Actual offscreen Unity render visually inspected: original textured Azeroth boar is visibly present in the native Megabonk desert scene. Correct physics-root placement confirmed. Screenshot reports/headless-enemy-render.png.
+- Latest headless probe completed, native enemies/colliders active, source Fireball/rank2 upgrade verified, all4book slots retained.
+- Test module removed from normal active plugin folder; no game processes or visible windows left running by this work.
+- Normal launcher Start-AzerothMegabonk.cmd is ready but has NOT been opened; user asked not to occupy PC.
+- Universal Modder installed globally in Codex; CLI+project+all logs live under D:/Games/Saitan/AzerothMegabonkLab. Source and logs have local Git snapshots; no remote/publishing.
+- Remaining: complete classes/spells/talents/racials/original VFX, full interactive HUD fidelity, boss appearance integration, long gameplay performance/pooling checks. This checkpoint is a first playable Mage prototype, not the full requested Azeroth port.
