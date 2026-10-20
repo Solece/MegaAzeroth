@@ -1,0 +1,9 @@
+# Mage visual effects port
+
+- Source resolution: local Spell.dbc (173 fields) -> SpellVisual.dbc (16) -> SpellVisualKit.dbc (35) -> SpellVisualEffectName.dbc (5), Vanilla schema. Missile model is field7, state kit4, channel5, area12/13. No downloaded game assets.
+- Exported32 originalM2 spell assets,67 original textures,140 particle emitters,61 geometry passes and7 projectile ribbon emitters. Bone-derived geometry baked24fps; original emitter tracks/color/size/settings and ribbon width/color/lifetime retained. Source paths/archive/SHA stored privately.
+- Corrected BLP2 paletted separate alpha-plane decoding using scripts/azeroth-mage/blp_decode.py. All13 spell icons re-extracted through same decoder; BlastWave uses actual Spell_Holy_Excorcism_02.
+- Runtime SpellVfx.cs uses native Particles/Standard Unlit, explicit native mesh billboards/ribbons, original textures, preparedRGBA uploads. No IMGUI, ImageConversion.LoadImage, or placeholder spheres in the active rendering route.
+- Native particle renderer is a Unity adaptation: specialized emitter flags, recursive model emitters, exact original blend/simulation details and auxiliary WaterElemental water layers are not all reproduced. Preserve source files for subsequent fidelity improvements; do not claim bit-identical rendering.
+- Live core smoke: original Mage model and portrait attached; all13 spells exercised,47 casts38hits in32 native seconds,4 tome slots, HP/shield live, sourceVFX instances20 by8seconds. No fatal ErrorLog. Original Megabonk movement/spawner/collision retained. Logs reports/mage-hp-full-source-smoke.log.
+- Reproduction: scripts/azeroth-vfx/probe.py then export_vfx.py. Default work directory private-assets/azeroth-vfx; optional AZEROTH_VFX_WORK changes it. Runtime files copied into BepInEx/plugins/AzerothAbilities/vfx. Private game-derived assets remain excluded from Git.

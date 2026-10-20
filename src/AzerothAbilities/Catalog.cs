@@ -10,6 +10,7 @@ public sealed class SpellCatalog
     public float DamageScale { get; set; }
     public float CooldownScale { get; set; }
     public float CooldownFloor { get; set; }
+    public float DurationScale {get;set;}=1.4f;
     public string Evidence { get; set; } = "";
     public OriginalUpgradeRules UpgradeRules {get;set;}=new();
     public List<SpellDefinition> Spells { get; set; } = new();
@@ -25,19 +26,21 @@ public sealed class SpellCatalog
             throw new InvalidDataException("Duplicate spell IDs");
         foreach(var spell in catalog.Spells)
         {
-            if(spell.Id.Length==0 || spell.BaseDamage<=0 || spell.BaseCooldown<=0 || spell.SourceOffset.Length==0)
+            if(spell.Id.Length==0 || spell.BaseDamage<0 || (spell.BaseDamage==0 && spell.Kind!="barrier") || spell.BaseCooldown<=0 || spell.SourceOffset.Length==0)
                 throw new InvalidDataException($"Missing original values for {spell.Id}");
-            if(spell.Kind is not ("projectile" or "instant" or "selfAoe" or "missiles"))
+            if(spell.Kind is not ("projectile" or "instant" or "selfAoe" or "missiles" or "groundAoe" or "cone" or "barrier" or "passive"))
                 throw new InvalidDataException($"Unsupported spell runtime kind: {spell.Id}/{spell.Kind}");
             if(spell.Kind is "projectile" or "missiles" && spell.ProjectileSpeed<=0)
                 throw new InvalidDataException($"Missing projectile speed for {spell.Id}");
-            if(spell.Kind=="selfAoe" ? spell.Radius<=0 : spell.Range<=0)
+            if(spell.Kind is "selfAoe" or "groundAoe" or "passive" ? spell.Radius<=0 : spell.Kind!="barrier" && spell.Range<=0)
                 throw new InvalidDataException($"Missing original range/radius for {spell.Id}");
+            if(spell.Kind=="groundAoe" && (spell.Duration<=0 || spell.Ticks<=0))
+                throw new InvalidDataException($"Missing source area duration/ticks for {spell.Id}");
             foreach(var upgrade in spell.Upgrades)
-                if(upgrade.SourceEvidence.Length==0 || upgrade.Modifier is not ("damage" or "cooldown" or "targets" or "radius"))
+                if(upgrade.SourceEvidence.Length==0 || upgrade.Modifier is not ("damage" or "cooldown" or "targets" or "radius" or "duration"))
                     throw new InvalidDataException($"Unsupported/unproven upgrade for {spell.Id}");
         }
-        if(catalog.UpgradeRules.SourceEvidence.Length==0 || catalog.UpgradeRules.DamageRarity.Length!=5 || catalog.UpgradeRules.CooldownRarity.Length!=5 || catalog.UpgradeRules.TargetsRarity.Length!=5 || catalog.UpgradeRules.RadiusRarity.Length!=5)throw new InvalidDataException("Missing source-backed upgrade tables");
+        if(catalog.UpgradeRules.SourceEvidence.Length==0 || catalog.UpgradeRules.DamageRarity.Length!=5 || catalog.UpgradeRules.CooldownRarity.Length!=5 || catalog.UpgradeRules.TargetsRarity.Length!=5 || catalog.UpgradeRules.RadiusRarity.Length!=5 || catalog.UpgradeRules.DurationRarity.Length!=5)throw new InvalidDataException("Missing source-backed upgrade tables");
         if(!catalog.Spells.Any(s=>s.Id==catalog.StartingSpell))throw new InvalidDataException("Starting spell missing");
         return catalog;
     }
@@ -60,6 +63,12 @@ public sealed class SpellDefinition
     public float Radius { get; set; }
     public int Targets { get; set; }
     public float ProjectileSpeed { get; set; }
+    public float Duration {get;set;}
+    public int Ticks {get;set;}
+    public int StatusKind {get;set;}
+    public float StatusValue {get;set;}
+    public float StatusDuration {get;set;}
+    public string SourceBehaviorEvidence {get;set;}="";
     public int[] AllowedUpgrades {get;set;}=Array.Empty<int>();
     public List<UpgradeDefinition> Upgrades { get; set; }=new();
 }
@@ -79,6 +88,7 @@ public sealed class LearnedSpell
     public float DamageFactor { get; set; }=1;
     public float CooldownFactor { get; set; }=1;
     public float RadiusFactor { get; set; }=1;
+    public float DurationFactor {get;set;}=1;
     public int[] UpgradePicks {get;set;}=new int[5];
     public int ExtraTargets { get; set; }
     public float NextCast { get; set; }
@@ -93,10 +103,12 @@ public sealed class OriginalUpgradeRules
     public float[] CooldownRarity {get;set;}=Array.Empty<float>();
     public int[] TargetsRarity {get;set;}=Array.Empty<int>();
     public float[] RadiusRarity {get;set;}=Array.Empty<float>();
+    public float[] DurationRarity {get;set;}=Array.Empty<float>();
     public float DamageRepeatFalloff {get;set;}
     public float CooldownFactorFloor {get;set;}
     public int ExtraTargetsCap {get;set;}
     public float RadiusFactorCap {get;set;}
+    public float DurationFactorCap {get;set;}=6;
     public float RankDamageBonus {get;set;}
     public float RankDamageFalloff {get;set;}
 
@@ -109,6 +121,7 @@ public sealed class OriginalUpgradeRules
             1=>CooldownRarity[rarity]*Math.Max(0,(spell.CooldownFactor-CooldownFactorFloor)/(1-CooldownFactorFloor)),
             2=>Math.Min(TargetsRarity[rarity],Math.Max(0,ExtraTargetsCap-spell.ExtraTargets)),
             3=>RadiusRarity[rarity]*Math.Max(0,(RadiusFactorCap-spell.RadiusFactor)/(RadiusFactorCap-1)),
+            4=>DurationRarity[rarity]*Math.Max(0,(DurationFactorCap-spell.DurationFactor)/(DurationFactorCap-1)),
             _=>0
         };
     }
@@ -121,6 +134,7 @@ public sealed class OriginalUpgradeRules
             case 1:spell.CooldownFactor-=value;break;
             case 2:spell.ExtraTargets+=(int)value;break;
             case 3:spell.RadiusFactor+=value;break;
+            case 4:spell.DurationFactor+=value;break;
             default:throw new InvalidDataException("Unimplemented original upgrade kind");
         }
         spell.UpgradePicks[kind]++;

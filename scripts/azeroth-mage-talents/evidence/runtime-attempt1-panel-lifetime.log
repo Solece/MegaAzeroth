@@ -1,0 +1,84 @@
+20.10.2026 21:06:28 +05:00 Test battle armed; Mage + Desert, native movement/spawns, no progression save writes.
+20.10.2026 21:06:29 +05:00 Unity batch=True graphics=Direct3D11
+20.10.2026 21:06:32 +05:00 Test-session save suppressed: SaveConfig
+20.10.2026 21:06:32 +05:00 Test-session save suppressed: SaveProgression
+20.10.2026 21:06:32 +05:00 Test-session save suppressed: SaveStats
+20.10.2026 21:06:37 +05:00 Mage selected before map load; tome slots=4
+20.10.2026 21:06:39 +05:00 Mage menu panel active=True
+20.10.2026 21:06:39 +05:00 Original Mage raw RGBA icons loaded=13
+20.10.2026 21:06:39 +05:00 Starting native map=MapDesert stage=StageDesert1 tierIndex=0
+20.10.2026 21:06:47 +05:00 BATTLE READY: class=mage; spells=fireball; tomeSlots=4; HP=130
+20.10.2026 21:06:47 +05:00 Native crit stats: chance=0,01 damage=1
+20.10.2026 21:06:47 +05:00 Available shaders=Archanor VFX/Retro Arsenal/BasicGlow;Archanor VFX/Retro Arsenal/BasicGlowUI;Archanor VFX/Retro Arsenal/Beam;Archanor VFX/Retro Arsenal/BeamDouble;Archanor VFX/Retro Arsenal/Disintegrate;Archanor VFX/Retro Arsenal/TextGlow;BadDog/BGForceField;Custom/DissolveInstanced_Cutout;Custom/GrassShaderOptimized;Custom/GridSpiralTransitionWithTransparency;Custom/HitFlash_BuiltIn;Custom/MinimapHeightColorGradient;Custom/MinimapIconInstancedCutoutColor;Custom/UIRainbowShader;Custom/UnlitTransparentBlended;Custom/WorldIconInstancedCutoutColor;GUI/Text Shader;Hidden/BlitCopy;Hidden/InternalErrorShader;Hidden/PostProcessing/Bloom;Hidden/PostProcessing/Copy;Hidden/PostProcessing/CopyStd;Hidden/PostProcessing/CopyStdFromDoubleWide;Hidden/PostProcessing/CopyStdFromTexArray;Hidden/PostProcessing/Debug/Histogram;Hidden/PostProcessing/Debug/LightMeter;Hidden/PostProcessing/Debug/Overlays;Hidden/PostProcessing/Debug/Vectorscope;Hidden/PostProcessing/Debug/Waveform;Hidden/PostProcessing/DeferredFog;Hidden/PostProcessing/DepthOfField;Hidden/PostProcessing/DiscardAlpha;Hidden/PostProcessing/FinalPass;Hidden/PostProcessing/GrainBaker;Hidden/PostProcessing/Lut2DBaker;Hidden/PostProcessing/MotionBlur;Hidden/PostProcessing/MultiScaleVO;Hidden/PostProcessing/ScalableAO;Hidden/PostProcessing/ScreenSpaceReflections;Hidden/PostProcessing/SubpixelMorphologicalAntialiasing;Hidden/PostProcessing/TemporalAntialiasing;Hidden/PostProcessing/Texture2DLerp;Hidden/PostProcessing/Uber;Hidden/VideoComposite;Hidden/VideoDecode;IL3DN/WaterOptimized;Kaima/Depth/ForceField;Legacy Shaders/Diffuse;Legacy Shaders/Particles/Alpha Blended Premultiply;Legacy Shaders/Transparent/VertexLit;Legacy Shaders/VertexLit;MK/Toon/Built-in/Particles/Simple;MK/Toon/Built-in/Standard/Physically Based + Outline;MK/Toon/Built-in/Standard/Simple;MK/Toon/Built-in/Standard/Simple + Outline;Particles/Standard Unlit;ProBuilder/Standard Vertex Color;Projector/AdditiveTint;Projector/Multiply;Skybox/Cubemap;Skybox/Cubemap Extended;Sprites/Default;Sprites/Diffuse Emit;Sprites/Mask;Standard;TextMeshPro/Distance Field;TextMeshPro/Distance Field Overlay;TextMeshPro/Mobile/Distance Field;TextMeshPro/Sprite;Toon/Lit Tri Planar Noise Blend;Toon/Lit Tri Planar Normal;UI/AnimatedOutline;UI/Default;UI/WorldSpace/AlwaysOnTop (Texture+Color);Unlit/AlwaysOnTopUI;Unlit/MapWithFog;Unlit/Texture;Unlit/Transparent
+20.10.2026 21:06:48 +05:00 Combat tick=1 nativeTime=3,3392348 enemies=0 casts=1 hits=1 slots=4
+20.10.2026 21:06:49 +05:00 Combat tick=2 nativeTime=4,3400483 enemies=2 casts=2 hits=1 slots=4
+20.10.2026 21:06:50 +05:00 HP frame probe current/max=65/130
+20.10.2026 21:06:50 +05:00 Learn IceBarrier for live shield row=True
+20.10.2026 21:06:50 +05:00 Combat tick=3 nativeTime=5,340592 enemies=2 casts=2 hits=2 slots=4
+20.10.2026 21:06:51 +05:00 Combat tick=4 nativeTime=6,341835 enemies=3 casts=4 hits=2 slots=4
+20.10.2026 21:06:52 +05:00 Combat tick=5 nativeTime=7,3466496 enemies=2 casts=4 hits=3 slots=4
+20.10.2026 21:06:52 +05:00 Managed GC exercised after texture/UI creation
+20.10.2026 21:06:53 +05:00 Combat tick=6 nativeTime=8,346785 enemies=4 casts=5 hits=3 slots=4
+20.10.2026 21:06:54 +05:00 Combat tick=7 nativeTime=9,352169 enemies=3 casts=5 hits=4 slots=4
+20.10.2026 21:06:55 +05:00 Combat tick=8 nativeTime=10,359039 enemies=5 casts=6 hits=4 slots=4
+20.10.2026 21:06:55 +05:00 Native Azeroth HUD active: imageNodes=71 totalNodes=116
+20.10.2026 21:06:55 +05:00 Source Mage model attached=True portrait=True clip=idle
+20.10.2026 21:06:55 +05:00 Source Mage VFX instances=20 live=8
+20.10.2026 21:06:55 +05:00 Native HUD graphic nodes masked=63
+20.10.2026 21:06:55 +05:00 Native player world HP graphics hidden=12
+20.10.2026 21:06:55 +05:00 Native inventory weaponParent graphics=21 shown=0
+20.10.2026 21:06:55 +05:00 Native inventory tomeParent graphics=17 shown=0
+20.10.2026 21:06:55 +05:00 Offscreen native Canvas render saved; canvases=22 RawImages=123 path=D:\Games\Saitan\AzerothMegabonkLab\reports\mage-battle-canvas.ppm
+20.10.2026 21:06:56 +05:00 Combat tick=9 nativeTime=11,168263 enemies=4 casts=6 hits=5 slots=4
+20.10.2026 21:06:57 +05:00 Combat tick=10 nativeTime=12,174733 enemies=6 casts=7 hits=6 slots=4
+20.10.2026 21:06:58 +05:00 Combat tick=11 nativeTime=13,180322 enemies=5 casts=8 hits=6 slots=4
+20.10.2026 21:06:59 +05:00 Batch-only complete Mage spellset exercised; learned=13
+20.10.2026 21:06:59 +05:00 Combat tick=12 nativeTime=14,186859 enemies=6 casts=8 hits=7 slots=4
+20.10.2026 21:07:00 +05:00 Combat tick=13 nativeTime=14,919744 enemies=3 casts=15 hits=10 slots=4
+20.10.2026 21:07:01 +05:00 Arcane talent probe snapshot: spent=41 starter=arcane_missiles crit=0,04
+20.10.2026 21:07:01 +05:00 Combat tick=14 nativeTime=15,923533 enemies=2 casts=0 hits=0 slots=4
+20.10.2026 21:07:02 +05:00 Combat tick=15 nativeTime=16,927492 enemies=5 casts=2 hits=0 slots=4
+20.10.2026 21:07:03 +05:00 Combat tick=16 nativeTime=17,927706 enemies=2 casts=2 hits=2 slots=4
+20.10.2026 21:07:04 +05:00 Combat tick=17 nativeTime=18,928234 enemies=4 casts=3 hits=2 slots=4
+20.10.2026 21:07:04 +05:00 Native Azeroth HUD active: imageNodes=71 totalNodes=116
+20.10.2026 21:07:04 +05:00 Source Mage model attached=True portrait=True clip=jump
+20.10.2026 21:07:04 +05:00 Source Mage VFX instances=79 live=26
+20.10.2026 21:07:04 +05:00 Native HUD graphic nodes masked=63
+20.10.2026 21:07:04 +05:00 Native player world HP graphics hidden=12
+20.10.2026 21:07:04 +05:00 Native inventory weaponParent graphics=21 shown=0
+20.10.2026 21:07:04 +05:00 Native inventory tomeParent graphics=17 shown=0
+20.10.2026 21:07:04 +05:00 Offscreen native Canvas render saved; canvases=22 RawImages=123 path=D:\Games\Saitan\AzerothMegabonkLab\reports\mage-all-spells-canvas.ppm
+20.10.2026 21:07:05 +05:00 Combat tick=18 nativeTime=19,827349 enemies=2 casts=3 hits=4 slots=4
+20.10.2026 21:07:06 +05:00 Combat tick=19 nativeTime=20,802841 enemies=2 casts=3 hits=4 slots=4
+20.10.2026 21:07:06 +05:00 ERROR stage=3 System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> Il2CppInterop.Runtime.Il2CppException: System.NullReferenceException: Object reference not set to an instance of an object.
+--- BEGIN IL2CPP STACK TRACE ---
+System.NullReferenceException: Object reference not set to an instance of an object.
+  at UnityEngine.Bindings.ThrowHelper.ThrowNullReferenceException (System.Object obj) [0x00000] in <00000000000000000000000000000000>:0 
+  at UnityEngine.Component.get_gameObject () [0x00000] in <00000000000000000000000000000000>:0 
+  at UnityEngine.UI.Selectable.set_interactable (System.Boolean value) [0x00000] in <00000000000000000000000000000000>:0 
+--- END IL2CPP STACK TRACE ---
+
+   at Il2CppInterop.Runtime.Il2CppException.RaiseExceptionIfNecessary(IntPtr returnedException) in /home/runner/work/Il2CppInterop/Il2CppInterop/Il2CppInterop.Runtime/Il2CppException.cs:line 36
+   at UnityEngine.UI.Selectable.set_interactable(Boolean value)
+   at MageTalents.TalentPanel.Refresh()
+   at MageTalents.TalentPanel.Toggle()
+   at MageTalents.TalentPanel.SetProbeVisible(Boolean visible)
+   at MageTalents.TalentBridge.SetPanelVisibleForProbe(Boolean visible)
+   --- End of inner exception stack trace ---
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Span`1& arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at AzerothMegabonk.TestBattle.BattleRunner.Update()
+20.10.2026 21:07:07 +05:00 Combat tick=20 nativeTime=21,455767 enemies=2 casts=3 hits=4 slots=4
+20.10.2026 21:07:08 +05:00 Combat tick=21 nativeTime=22,487663 enemies=4 casts=4 hits=4 slots=4
+20.10.2026 21:07:09 +05:00 Combat tick=22 nativeTime=23,49051 enemies=3 casts=4 hits=5 slots=4
+20.10.2026 21:07:10 +05:00 Combat tick=23 nativeTime=24,491692 enemies=6 casts=5 hits=5 slots=4
+20.10.2026 21:07:11 +05:00 Combat tick=24 nativeTime=25,4977 enemies=5 casts=5 hits=6 slots=4
+20.10.2026 21:07:12 +05:00 Combat tick=25 nativeTime=26,500948 enemies=6 casts=6 hits=6 slots=4
+20.10.2026 21:07:13 +05:00 Combat tick=26 nativeTime=27,502472 enemies=1 casts=6 hits=9 slots=4
+20.10.2026 21:07:14 +05:00 Combat tick=27 nativeTime=28,50909 enemies=4 casts=7 hits=9 slots=4
+20.10.2026 21:07:15 +05:00 Combat tick=28 nativeTime=29,511425 enemies=4 casts=7 hits=10 slots=4
+20.10.2026 21:07:16 +05:00 Combat tick=29 nativeTime=30,512083 enemies=4 casts=8 hits=10 slots=4
+20.10.2026 21:07:17 +05:00 Combat tick=30 nativeTime=31,512634 enemies=4 casts=8 hits=11 slots=4
+20.10.2026 21:07:17 +05:00 PASS: auto-start battle, Mage damage, four tome slots, native Canvas exercised; no desktop window/input.
+20.10.2026 21:07:17 +05:00 Unity quit stage=4 combatTicks=30

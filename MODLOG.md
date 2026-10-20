@@ -148,3 +148,24 @@ HUD is a separate module. Book-slot override is a separate runtime-only module.
 - Evidence: reports/mage-battle-smoke.log, reports/mage-battle-smoke-player-attempt3.log and reports/mage-battle-canvas.ppm. Earlier failed attempts and user's fatal logs retained separately.
 - Test-session save writes are suppressed. Mage currently changes abilities; hero appearance remains the native Megabonk character. This was a short offscreen runtime check; a long interactive play session is still unverified.
 
+
+## Full Mage port and HUD correction
+- User screenshot confirms native and Azeroth HUD overlap. NewHUD0.3 masks exact nativeHUD graphics/weapon+tome grids, preserves encounter/objectives. Background graphics test starting.
+- Parallel work: original Human Mage composite character/animations, all13nativeMage spells/progression, source spellVFX via localDBC/MPQ (32M2,67textures,140emitters,61meshpasses). Corrected BLP2 palette alpha decoding, no sourcegame writes.
+
+
+### Source Mage integrated checkpoint
+- Original HumanMale Mage robe/model and12nativeclips nowrenderlive; sourceheadportraitcamera feedsHPframe. Native playerbody/weapon renderers hidden, native movement/camera/collidersretained.
+- All13sourceMage spells and5originalupgrade types integrated; source65checks pass. Native runtime47casts38hits over32seconds, nofatalErrorLog. Groundticks,cone,frostcontrol,IceBarrier,Polymorph passive implemented.
+- HPgeometry aligned to originalPlayerFrame.xml; testedhurtstate65/130 withliveheal changes andoriginalshield81.9/130. Nativeweapon21graphicsandnativebook17graphics hidden0shown; 4ownbookslotsalwaysvisible. WorldHPunderfeet mask added0.4.1, finalruntime pending.
+- SourceMageVFX32models/67textures/140emitters/61meshpasses plus7ribbons prepared. Sourceparticleadaptationlimitations recorded MAGE_VFX_LOG.md. Originalgameinputs nevermodified.
+- Talentmodule39nodes/3trees,sourceXPthreshold51pointscap,rewardformula+198offlinechecks integrated forruntimeArcaneprobe. WaterElementalnativecastermath beingverified beforefinalFrostintegration.
+
+
+### Ready to play: maximum Mage talents
+- User explicitly requested999testpoints andalltalentsmaxBEFOREbattle. Launchers nowpass -azeroth-test-battle -azeroth-talent-points=999 -azeroth-talents-max. PluginLoad preallocatesall39nodes tosourceMaxRank beforeRunclone andnativeScene/inventorystats:121spent,878remaining. Normalprogression51pointcap unaffected; teststate notsaved.
+- Final fullnativegraphicsprobe PASSED40combat ticks: sourceMage+portrait+VFX; all13spells;4bookslots; weapon/tome nativegrids0shown; playerworldHP12graphics hidden; F6talentpanelrender/open/close passed;999spend/refund livepassed withoutchangingranksoflearnedspells.
+- Completeall39maxbuild was exercisedinruntime:121ranks/878remaining. WaterElemental made9sourceprojectileattacks,lastdamage56; echoes17/freecasts17/kill-explosions15. No fatalErrorLog; ownedtestprocessselfexited. NativeRunHPandShield/portraitrenderverified.
+- Talentsourceofflinechecks204PASS. Abilitysourcechecks65PASS. TestharnessJsonCaseproblem andearlierpanelnativeobjectlifetimeerror corrected; attemptlogsretained. Finalproof reports/mage-battle-smoke.log andmage-final999-player-attempt2.log.
+- Added startupmaximumallocationafterthepassedruntimeall-maxprobe; samevalidated39-nodeallocationrunsfromPlugin.Load. No additional long interactive test. Sourcephysics/controladapters andsourceVFXfidelitylimitations remainincomponentlogs.
+

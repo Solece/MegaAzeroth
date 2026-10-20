@@ -1,0 +1,179 @@
+14587D0F0: push rbp
+14587D0F1: push r15
+14587D0F3: push r14
+14587D0F5: push r13
+14587D0F7: push r12
+14587D0F9: push rsi
+14587D0FA: push rdi
+14587D0FB: push rbx
+14587D0FC: sub rsp, 0x298
+14587D103: lea rbp, [rsp + 0x80]
+14587D10B: movaps xmmword ptr [rbp + 0x200], xmm13
+14587D113: movaps xmmword ptr [rbp + 0x1f0], xmm12
+14587D11B: movaps xmmword ptr [rbp + 0x1e0], xmm11
+14587D123: movaps xmmword ptr [rbp + 0x1d0], xmm10
+14587D12B: movaps xmmword ptr [rbp + 0x1c0], xmm9
+14587D133: movaps xmmword ptr [rbp + 0x1b0], xmm8
+14587D13B: movaps xmmword ptr [rbp + 0x1a0], xmm7
+14587D142: movaps xmmword ptr [rbp + 0x190], xmm6
+14587D149: mov qword ptr [rbp + 0x188], 0xfffffffffffffffe
+14587D154: cmp dword ptr [rcx + 0x10], 2
+14587D158: je 0x14587e9ba
+14587D15E: cmp byte ptr [rcx + 0x9cb], 0
+14587D165: je 0x14587e9ba
+14587D16B: mov eax, dword ptr [rcx + 0x420]
+14587D171: mov dword ptr [rbp + 0x160], eax
+14587D177: movss xmm8, dword ptr [rcx + 0x944]
+14587D180: mov r15d, dword ptr [rcx + 0x880]
+14587D187: mov rax, qword ptr [rcx + 0xf98]
+14587D18E: mov qword ptr [rbp + 0x90], rax
+14587D195: movzx eax, byte ptr [rcx + 0x2ac]
+14587D19C: mov qword ptr [rbp + 0x168], rax
+14587D1A3: mov r8, qword ptr [rcx + 0x238]
+14587D1AA: mov rdx, qword ptr [rcx + 0x240]
+14587D1B1: mov eax, dword ptr [rcx + 0x684]
+14587D1B7: cvtsi2ss xmm0, rax
+14587D1BC: movzx eax, word ptr [rcx + 0x258]
+14587D1C3: xorps xmm13, xmm13
+14587D1C7: cvtsi2ss xmm13, eax
+14587D1CC: movss xmm10, dword ptr [rip + 0x4cf5eb] ; raw=0x5d4b5c0 f32=100.0 txt=b'\x00\x00\xc8B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00A\xc3\xf5(>/\xdd$>\x00\x00\x00\x00\x00\x00\x00\x00\xfa~\n?\xfa~\n?\x00\x00\x00\x00\x00\x00\x00\x00\xe1z\x14>\x00\x00'
+14587D1D5: movaps xmm1, xmm13
+14587D1D9: divss xmm1, xmm10
+14587D1DE: divss xmm0, xmm1
+14587D1E2: cvttss2si rdi, xmm0
+14587D1E7: xor r14d, r14d
+14587D1EA: xorps xmm11, xmm11
+14587D1EE: ucomiss xmm0, xmm11
+14587D1F2: cmovb edi, r14d
+14587D1F6: movss xmm12, dword ptr [rip + 0x4cf8f5] ; raw=0x5d4b8f4 f32=4294967040.0 txt=b'\xff\xff\x7fO33\xb3>\x08\xd6Q?\x00\x00\x90A\x00\x00\xd7C\x00\x00@\xc1\x00\x00\xd7\xc3\x00\x00\xa0A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\xd7C\x8f\xc2u=\n\xd7#=\n\xd7'
+14587D1FF: ucomiss xmm0, xmm12
+14587D203: mov eax, 0xffffffff
+14587D208: cmova edi, eax
+14587D20B: mov qword ptr [rbp + 0xb8], rcx
+14587D212: mov esi, dword ptr [rcx + 0x690]
+14587D218: mov qword ptr [rbp + 0x98], r8
+14587D21F: mov rcx, r8
+14587D222: mov qword ptr [rbp + 0xa0], rdx
+14587D229: call 0x1458621c0
+14587D22E: cvtsi2ss xmm6, rdi
+14587D233: mov qword ptr [rbp + 0x170], rax
+14587D23A: lea rdi, [rsi*8]
+14587D242: mulss xmm6, dword ptr [rip + 0x4d29b6] ; raw=0x5d4ea00 f32=0.10000000149011612 txt=b'\xcd\xcc\xcc=\xcd\xccL?\x00\x00@@\n\xd7\xa3=\x87\x16y?\xaa\xf1R?\x00\x00\x00\x00\x00\x00\x00\x00\xf4\xfd\xd4>\xaa\xf1R?\x87\x16y?\xd7\xa30?\x00\x00\x00\x80\x00\x00 B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00?\x00\x00'
+14587D24A: movaps xmm0, xmm6
+14587D24D: call 0x145ba8261
+14587D252: cvttss2si rbx, xmm0
+14587D257: movss xmm9, dword ptr [rip + 0x5bb5d0] ; raw=0x5e37630 f32=9.223371487098962e+18 txt=b'\xff\xff\xff^\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x005\xfa\x8e\xbc\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?5\xfa\x8e\xbc\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf2\xd3'
+14587D260: ucomiss xmm0, xmm9
+14587D264: movabs r12, 0x7fffffffffffffff
+14587D26E: cmova rbx, r12
+14587D272: ucomiss xmm0, xmm0
+14587D275: cmovp rbx, r14
+14587D279: movaps xmm7, xmm8
+14587D27D: divss xmm7, dword ptr [rip + 0x5335ab] ; raw=0x5daf630 f32=60.0 txt=b'\x00\x00pB\x1f\x85k?\x00\x00XB\x00\x00 C\x01\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x90A\x8f\xc2\xf5<\x00\x00zD\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\xd8A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@?\x00\x00'
+14587D285: mulss xmm7, dword ptr [rip + 0x4cf2f3] ; raw=0x5d4b380 f32=12.0 txt=b'\x00\x00@A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0C\xff\xff\xff\xff\xff\xff\xefC\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x80?\x01\x00\x00\x00\x00\x00\x80?\x01\x00\x00\x00\x00\x00 A\x01\x00\x00\x00\x00\x00 Aw\xbe\x9f=\xfc\xa9'
+14587D28D: movaps xmm0, xmm7
+14587D290: call 0x145ba8261
+14587D295: cvttss2si r13, xmm0
+14587D29A: ucomiss xmm0, xmm9
+14587D29E: cmova r13, r12
+14587D2A2: ucomiss xmm0, xmm0
+14587D2A5: cmovp r13, r14
+14587D2A9: lea rdi, [rdi + rdi*4]
+14587D2AD: test r15, r15
+14587D2B0: mov r12, 0xffffffffffffff38
+14587D2B7: cmove r12, r15
+14587D2BB: mov r14d, 0xc8
+14587D2C1: mov qword ptr [rbp + 0x40], r15
+14587D2C5: cmove r14, r15
+14587D2C9: jne 0x14587d2d0
+14587D2CB: xorps xmm1, xmm1
+14587D2CE: jmp 0x14587d2d8
+14587D2D0: movss xmm1, dword ptr [rip + 0x533518] ; raw=0x5daf5f0 f32=200.0 txt=b'\x00\x00HC\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf0B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\xc0A\x02\x00\x00\x00\x00\x00\x18B\x00\x00pB\x1f\x85'
+14587D2D8: cvtsi2ss xmm2, rsi
+14587D2DD: addss xmm7, xmm6
+14587D2E1: mulss xmm2, dword ptr [rip + 0x4d294b] ; raw=0x5d4ea34 f32=40.0 txt=b'\x00\x00 B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00?\x00\x00\x00?\x00\x00\x00?\x00\x00\x00?\x00\x00\x00\xbf\x00\x00\x00\xbf\x00\x00\x00\xbf\x00\x00\x00\xbf\x00\x00\x80?\x00\x00\x80?\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xbfo\x12\x83:\x00\x00'
+14587D2E9: addss xmm2, xmm7
+14587D2ED: xorps xmm0, xmm0
+14587D2F0: cvtsi2ss xmm0, dword ptr [rbp + 0x170]
+14587D2F8: mulss xmm0, dword ptr [rip + 0x13152f4] ; raw=0x6b913f4 f32=1.600000023841858 txt=b'\xcd\xcc\xcc?\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc8\xc2\x00\x00\xc8\xc2\x00\x00\x00\x00\x00\x00\x00\x00\xcd\xccL=\xcd\xcc\xcc>\x00\x00\x00\x00\x00\x00\x00\x00\x9a\x99\x19?\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x00\x00\xb9\xfc\xff?\x00\x00\x00\x00\x00\x00'
+14587D300: divss xmm0, dword ptr [rip + 0x5ddbc8] ; raw=0x5e59cd0 f32=11.0 txt=b'\x00\x000A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?\x00\x00\x80\xbf\x00\x00\x80?\x00\x00\x80\xbf\x00\x00\x80?\x00\x00\x80?\x00\x00\x80\xbf\x00\x00\x80\xbf\x00\x00\x80\xbf\x00\x00\x80?\x00\x00\x80?\x00\x00\x80\xbfRIFF$\x00'
+14587D308: addss xmm2, xmm1
+14587D30C: movss xmm6, dword ptr [rip + 0x4cf368] ; raw=0x5d4b47c f32=1.0 txt=b'\x00\x00\x80?\xfc\xa9\xf1=\x00\x00\x80?\x00\x00\x00\x00\x00\x00\x00\x00\x9a\x99\x99=\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?\xbe\x9f\x1a?\x00\x00\x00\x00\x00\x00\x00\x00\xb0r\xa8>!\xb02?\xc3\xf5(>\x00\x00\x00\x00\xe5\xd0'
+14587D314: addss xmm0, xmm6
+14587D318: mulss xmm0, xmm2
+14587D31C: call 0x145ba8261
+14587D321: cvttss2si rax, xmm0
+14587D326: ucomiss xmm0, xmm11
+14587D32A: mov esi, 0
+14587D32F: cmovb eax, esi
+14587D332: ucomiss xmm0, xmm12
+14587D336: mov ecx, 0xffffffff
+14587D33B: cmova eax, ecx
+14587D33E: lea r15, [rdi + r13]
+14587D342: add r15, rbx
+14587D345: sub r12, r15
+14587D348: add r12, rax
+14587D34B: mov qword ptr [rbp - 0x18], r13
+14587D34F: mov qword ptr [rbp - 0x10], rbx
+14587D353: mov qword ptr [rbp - 8], rdi
+14587D357: movss xmm2, dword ptr [rip + 0xc45e21] ; raw=0x64c1f80 f32=-100.0 txt=b'\x00\x00\xc8\xc2C:\\Users\\Aethus\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b55'
+14587D35F: addss xmm13, xmm2
+14587D364: divss xmm13, xmm10
+14587D369: mov r13, qword ptr [rbp + 0xb8]
+14587D370: movzx eax, word ptr [r13 + 0x25a]
+14587D378: xorps xmm0, xmm0
+14587D37B: cvtsi2ss xmm0, eax
+14587D37F: mulss xmm13, dword ptr [rip + 0x4e7f50] ; raw=0x5d640d8 f32=0.05000000074505806 txt=b'\xcd\xccL=\x00\x00\x00\x00azerothsurvivors\x00\x00\x00C\x00\x00\x80B\x00\x00\x00C\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00@A\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00'
+14587D388: addss xmm0, xmm2
+14587D38C: divss xmm0, xmm10
+14587D391: mulss xmm0, dword ptr [rip + 0x510103] ; raw=0x5d8c29c f32=0.4000000059604645 txt=b'\xcd\xcc\xcc>\x00\x00\xdc\xc2\xdb\x0fI@333?\x00\x00\x00\x00\x00\x00\x80?\xcd\xccL?\x00\x00\x00\x00\x00\x00\x00\x00\x9a\x99\x19@\x00\x00\x0cD\x00\x00\xa0\xc2\x9a\x99\x99?\xe0\x084\x98\xfb\xfdC@\xe6X\xa8a\x88\x93Z\xa0\xbb\x9d'
+14587D399: addss xmm0, xmm13
+14587D39E: movzx eax, word ptr [r13 + 0x25c]
+14587D3A6: xorps xmm1, xmm1
+14587D3A9: cvtsi2ss xmm1, eax
+14587D3AD: addss xmm1, xmm2
+14587D3B1: divss xmm1, xmm10
+14587D3B6: mulss xmm1, dword ptr [rip + 0x4e80da] ; raw=0x5d64298 f32=0.6000000238418579 txt=b'\x9a\x99\x19?\x00\x00\x00\x00\xcd\xcc\x0c?\xcd\xcc\x0c?\xe1z\x14?\x00\x00\x80?\n\xd7\xa3<\n\xd7\xa3<\x8f\xc2u=\xd7\xa3p?\x00\x00\x7fC\x00\x80\x00\x00\xdb\x0f\xc9@33\xb3\xbe\xcd\xcc\xcc>\\\x8f\xc2>\x00\x00\x00\x00\x00\x00'
+14587D3BE: addss xmm1, xmm0
+14587D3C2: movzx eax, word ptr [r13 + 0x25e]
+14587D3CA: xorps xmm0, xmm0
+14587D3CD: cvtsi2ss xmm0, eax
+14587D3D1: mov qword ptr [rbp], r14
+14587D3D5: addss xmm0, xmm2
+14587D3D9: add r15, r14
+14587D3DC: add r15, r12
+14587D3DF: cvttss2si rax, xmm8
+14587D3E4: ucomiss xmm8, xmm11
+14587D3E8: cmovb eax, esi
+14587D3EB: ucomiss xmm8, xmm12
+14587D3EF: divss xmm0, xmm10
+14587D3F4: cmova eax, ecx
+14587D3F7: mov qword ptr [rbp + 0x170], rax
+14587D3FE: addss xmm0, xmm0
+14587D402: xorps xmm2, xmm2
+14587D405: cvtsi2ss xmm2, r15
+14587D40A: addss xmm0, xmm1
+14587D40E: addss xmm0, xmm6
+14587D412: minss xmm0, dword ptr [rip + 0x4cf322] ; raw=0x5d4b53c f32=2.0 txt=b'\x00\x00\x00@\x00\x00\x80?\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x80A\x01\x00\x00\x00\x00\x00\x80A\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x10A\x01\x00\x00\x00\x00\x00\xc0@\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+14587D41A: mov qword ptr [rbp + 8], r12
+14587D41E: addss xmm0, dword ptr [rip + 0x4e7e3e] ; raw=0x5d64064 f32=-1.0 txt=b'\x00\x00\x80\xbf\x00\x00\x00\x00\x00\x00\x00\x00\xe8\x80\x00\x000u\x00\x00`\xea\x00\x00\x98:\x00\x00\x01\x00\x00\x00&z\x00\x00\x84\x80\x00\x00\x00\xfa\x00\x00\x00\x00z&\x00\x00\x80\x84\x00\x00\xfa\x00\x00\x00\x80\xe8\x00\x00u0\x00\x00\xea`\x00\x00'
+14587D426: mulss xmm0, xmm2
+14587D42A: call 0x145ba8261
+14587D42F: cvttss2si rax, xmm0
+14587D434: ucomiss xmm0, xmm9
+14587D438: movabs rdi, 0x7fffffffffffffff
+14587D442: cmova rax, rdi
+14587D446: ucomiss xmm0, xmm0
+14587D449: cmovp rax, rsi
+14587D44D: mov qword ptr [rbp + 0x10], rax
+14587D451: add rax, r15
+14587D454: xorps xmm0, xmm0
+14587D457: cvtsi2ss xmm0, rax
+14587D45C: mulss xmm0, dword ptr [r13 + 0x1018]
+14587D465: call 0x145ba8261
+14587D46A: cvttss2si rax, xmm0
+14587D46F: ucomiss xmm0, xmm9
+14587D473: cmova rax, rdi
+14587D477: ucomiss xmm0, xmm0
+14587D47A: cmovp rax, rsi
+14587D47E: mov qword ptr [rbp + 0x18], rax

@@ -1,0 +1,44 @@
+# Mage talent port log
+
+## 2026-10-20 — Original catalog and progression
+
+- Read-only source: `D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe`, SHA256 `2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a`, observed version `v0.102.3 (f78e6fab)`.
+- Exact 39 Mage talent definitions recovered from three original 13-node tables at raw offsets `0x7175f50`, `0x7176c68`, `0x7177940`. Node stride104 bytes; effect stride64 bytes. Original names, icons, descriptions, prerequisites, tiers, columns, maximum ranks, float values and raw effect words are preserved in `src/MageTalents/mage-talents.json`.
+- Reproducible extractor: `scripts/azeroth-mage-talents/extract_mage_talents.py`. It rejects a different source executable hash.
+- Native point progression confirmed in `145887D50..145887EE1` and `145887F80..145888000`: point index0..50 costs `80 + 15*n` experience; maximum51 points; cumulative maximum23205XP.
+- Original run XP confirmed in `14587D0F0..14587D482`: time12XP/minute, normalized kills0.1XP each, bosses40XP each, victory200XP; then original zone, run-option and account-perk multipliers. The laboratory uses the verified first-zone baseline with no invented Megabonk-to-Azeroth zone mapping or account bonuses. Positive rounding uses native `roundf` (IAT confirmed `api-ms-win-crt-math-l1-1-0.dll!roundf`).
+- Original UI strings explicitly require five points per tree row, milestone rows at10/20/30 points, free respecs and allocation between runs. The laboratory snapshots talents before `MapSelectionUi.StartMap` initializes health/stats and again on `AbilityRuntime.ResetRun`. Edits during combat affect the next run only.
+- Original `characters.txt` was inspected read-only; it uses `RSE1:` serialization. No original save data was modified or imported. A new laboratory character starts with0XP/0points. Its own normal-session profile is stored as `BepInEx/config/local.azerothmegabonk.magetalents.json`.
+- Test battle (`-azeroth-test-battle`) and batch sessions suppress this module's profile writes. Probe budgets require both Unity batch mode and `AZEROTH_LAB_HEADLESS_TEST=1`; probe state never persists.
+
+## Implemented runtime and UI
+
+- All39 nodes have source definitions and validated point allocation/refunds. Native Canvas/TMP talent panel: F6, three trees,13 nodes per tree, original descriptions, ranks, learn/refund controls and free reset. It uses no IMGUI or desktop input.
+- Source stat and spell modifiers are applied separately from native tome/item stats: school damage, individual cooldown/radius, Arcane Missiles+2 targets, damage/crit/critical damage, maximum health, damage reduction, regeneration, movement, luck, echo chance and damage against controlled enemies. Native regeneration is health/minute; source health/second values convert by60.
+- Source procs: Clearcasting30%; Presence of Mind full-damage missile chain; Arcane Power20% echo and up to3 cascaded echoes; Impact2% per rank/1second stun; Ignite80% over4seconds in2ticks; Hot Streak every4 Fire critical hits at most2casts/sec; Pyroclasm25% victim maxHP within6yards at most3explosions/sec; Frostbite40%/1.5seconds root; Splitting Ice100% splash within5yards; free Frost Nova every8seconds for Water Elemental.
+- Starting spell union distinction is retained: original tag27 Pyroclasm ADDS Pyroblast to Fireball; original tag28 Arcane Power and Water Elemental REPLACE Fireball with Arcane Missiles/Frostbolt.
+- Native critical adapter uses `DamageUtility.GetCritDamageMultiplier(chance,out multiplier)` and multiplies by native `PlayerStats.CritDamage`; original talent deltas remain separate. Runtime baseline probe: CritChance0.01, CritDamage1. Native single-crit2.0 confirmed at `GameAssembly.dll` RVA `0x4702D0`, constant RVA `0x262ECA4`; weapon adapter RVA `0x435590`. The original Azeroth base critical stats are not asserted equivalent to this adapter.
+- Public probe telemetry: EchoCount, FreeCastCount, IgniteTickCount, ControlCount, ChainCount, SplitCount, ExplosionCount. A batch-only `SetPanelVisibleForProbe` permits offscreen UI verification.
+
+## Validation checkpoint
+
+- `dotnet build src/MageTalents/MageTalents.csproj -c Release`: PASS,0warnings,0errors.
+- `scripts/azeroth-mage-talents/checks`:204 independent checks PASS, including all51 XP thresholds, source maximum, run rewards, invalid allocation/refund rejection, fully allocating each original tree within51 points and the explicit999-point debug override. All39 nodes contain121 total ranks; buying them all in the test leaves878 points. Results and native proof excerpts are in `scripts/azeroth-mage-talents/evidence/`.
+- Parent integration is responsible for background game probes and deployment. No game windows, desktop input or processes were started by this subtask.
+
+## 2026-10-20 — Native pet implementation and requested999-point test
+
+- Water Elemental combat verified by the ability research subtask in original world tick `145912DC0`: pet definition `1459154D2`; interval2.2seconds at `1459156DF`, independent of attack speed; target range28 at `145915685`; base damage50 at `14591595E`; final damage `50 * (1 + .12 * (sourcePlayerLevel - 1)) * globalDamageMultiplier * (1 + PetDamageBonus)` at `145915FA2..FDC`. There is no player-spell1.4scale or Frostbolt rank scaling. Native Megabonk level0 maps to source level1.
+- Original projectile116/Frostbolt: speed28 at `145916180/18A`, Frost school4, slow30% for2seconds at `1459164DB` / raw `0x7183C00`. Parent `LaunchPetProjectile` API bypasses tome projectile speed and uses this separate definition. It does not cast the player's Frostbolt.
+- Original follow behavior: ring radius2.8, check every.25seconds, move when more than3.5 from the ring position, teleport beyond40 from owner; follow speed `1.15 * max(7 * sourceMoveMultiplier,7)` confirmed in `14591537D..3B5`, `1459155A7` and move duration calculation `1459346BD`. Native owner's orientation/ground position provide the arena adapter.
+- `WaterElemental.cs` creates the recovered model110 through `CreatureVisualBridge`, drives its source run/idle/cast animations and emits the separate projectile loop. Public telemetry: Active, ShotCount, LastDamage.
+- Initial offscreen talent panel probe exposed stale native Button references after scene transitions. The panel Canvas now persists with `DontDestroyOnLoad`; rows/actions are cleared before any rebuild. The original failure log is preserved as `evidence/runtime-attempt1-panel-lifetime.log`. Compiler-generated unsupported LINQ predicates were also removed from the injected MonoBehaviour.
+- User explicitly requested999 points to test talents. Only `-azeroth-test-battle -azeroth-talent-points=999` enables this temporary budget. Original rank limits and prerequisites remain; normal experience progression retains its51-point cap. All39 nodes can be allocated in this explicit test mode.
+- In999-point mode, Spend/Refund/Reset apply immediately, refresh native maximum health/regen, preserve learned spell objects/ranks and add selected capstone starters. This is explicitly a debug exception to original between-run allocation. The F6 panel labels the test and immediate behavior. No test profile or original game progress is saved.
+- User subsequently explicitly requested all talents trained before starting the test. Additional `-azeroth-talents-max` is honored only with a test battle and a sufficient explicit temporary budget. Plugin.Load allocates all39 nodes/121 ranks before the native scene/inventory is initialized:121 spent,878 available from999. The allocation is validated against original node ranks/prerequisites and is never persisted. In this explicit multi-capstone test, Arcane Missiles, Pyroblast and Frostbolt are all added as selected capstone starters without resetting already learned spell ranks.
+- Subsequent offscreen parent probe confirmed999→998 on spend,998→999 on refund, immediate application and preservation of spell ranks. The new talent panel rendered and closed without desktop input after the lifetime fix. The probe then stopped on a test-harness JSON property case mismatch; this was outside the talent runtime and was reported to the parent for correction before final validation.
+
+## Remaining at this checkpoint
+
+- Water Elemental record float0.55 is used for visual size as an adapter, but its original render consumer has not been located. The actual damage/cooldown/speed/range/slow values above are native verified. Pet on-hit context mode2 gating is being traced; pet callbacks currently avoid unverified player-spell proc interactions.
+- Native critical baseline, Megabonk encounter actors and first-zone XP baseline are cross-engine adapters. Original source crit baseline, original-zone difficulty/account bonuses and exact proc collision/stacking edge cases require additional source/runtime checks before claiming complete behavioral equivalence.

@@ -1,0 +1,208 @@
+C:\Program Files\dotnet\sdk\10.0.400\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: целевая платформа "net6.0" больше не поддерживается и не будет получать обновления для системы безопасности в будущем. Дополнительные сведения о политике поддержки см. в https://aka.ms/dotnet-core-support. [D:\Games\Saitan\AzerothMegabonkLab\scripts\azeroth-mage-talents\checks\TalentChecks.csproj]
+C:\Program Files\dotnet\sdk\10.0.400\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: целевая платформа "net6.0" больше не поддерживается и не будет получать обновления для системы безопасности в будущем. Дополнительные сведения о политике поддержки см. в https://aka.ms/dotnet-core-support. [D:\Games\Saitan\AzerothMegabonkLab\scripts\azeroth-mage-talents\checks\TalentChecks.csproj]
+C:\Program Files\dotnet\sdk\10.0.400\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: целевая платформа "net6.0" больше не поддерживается и не будет получать обновления для системы безопасности в будущем. Дополнительные сведения о политике поддержки см. в https://aka.ms/dotnet-core-support. [D:\Games\Saitan\AzerothMegabonkLab\scripts\azeroth-mage-talents\checks\TalentChecks.csproj]
+PASS: original39 nodes,13 per tree
+PASS: first source point costs80XP
+PASS: second source point costs95XP
+PASS: native51 point cap and exact23205XP threshold
+PASS: native threshold roundtrip 0
+PASS: native threshold roundtrip 1
+PASS: native threshold roundtrip 2
+PASS: native threshold roundtrip 3
+PASS: native threshold roundtrip 4
+PASS: native threshold roundtrip 5
+PASS: native threshold roundtrip 6
+PASS: native threshold roundtrip 7
+PASS: native threshold roundtrip 8
+PASS: native threshold roundtrip 9
+PASS: native threshold roundtrip 10
+PASS: native threshold roundtrip 11
+PASS: native threshold roundtrip 12
+PASS: native threshold roundtrip 13
+PASS: native threshold roundtrip 14
+PASS: native threshold roundtrip 15
+PASS: native threshold roundtrip 16
+PASS: native threshold roundtrip 17
+PASS: native threshold roundtrip 18
+PASS: native threshold roundtrip 19
+PASS: native threshold roundtrip 20
+PASS: native threshold roundtrip 21
+PASS: native threshold roundtrip 22
+PASS: native threshold roundtrip 23
+PASS: native threshold roundtrip 24
+PASS: native threshold roundtrip 25
+PASS: native threshold roundtrip 26
+PASS: native threshold roundtrip 27
+PASS: native threshold roundtrip 28
+PASS: native threshold roundtrip 29
+PASS: native threshold roundtrip 30
+PASS: native threshold roundtrip 31
+PASS: native threshold roundtrip 32
+PASS: native threshold roundtrip 33
+PASS: native threshold roundtrip 34
+PASS: native threshold roundtrip 35
+PASS: native threshold roundtrip 36
+PASS: native threshold roundtrip 37
+PASS: native threshold roundtrip 38
+PASS: native threshold roundtrip 39
+PASS: native threshold roundtrip 40
+PASS: native threshold roundtrip 41
+PASS: native threshold roundtrip 42
+PASS: native threshold roundtrip 43
+PASS: native threshold roundtrip 44
+PASS: native threshold roundtrip 45
+PASS: native threshold roundtrip 46
+PASS: native threshold roundtrip 47
+PASS: native threshold roundtrip 48
+PASS: native threshold roundtrip 49
+PASS: native threshold roundtrip 50
+PASS: native threshold roundtrip 51
+PASS: source baseline60sec+100kills yields22XP
+PASS: source baseline10min+1000kills+2boss+win yields500XP
+PASS: zero earned points cannot allocate
+PASS: tier3 requires10 tree points
+PASS: allocate sourceArcaneFocus 1
+PASS: allocate sourceArcaneFocus 2
+PASS: allocate sourceArcaneFocus 3
+PASS: allocate sourceArcaneFocus 4
+PASS: allocate sourceArcaneFocus 5
+PASS: cannot exceed source max rank5
+PASS: 10 point milestone opens
+PASS: cannot refund prerequisite row under a learned milestone
+PASS: ArcaneFocus5 gives source25%school damage
+PASS: ArcaneFocus does not buff Fire
+PASS: ArcaneSubtlety5 gives source40%luck
+PASS: sourceArcane prerequisite chain
+PASS: source tree allocation arcane_focus/1
+PASS: source tree allocation arcane_focus/2
+PASS: source tree allocation arcane_focus/3
+PASS: source tree allocation arcane_focus/4
+PASS: source tree allocation arcane_focus/5
+PASS: source tree allocation arcane_subtlety/1
+PASS: source tree allocation arcane_subtlety/2
+PASS: source tree allocation arcane_subtlety/3
+PASS: source tree allocation arcane_subtlety/4
+PASS: source tree allocation arcane_subtlety/5
+PASS: source tree allocation imp_arcane_explosion/1
+PASS: source tree allocation imp_arcane_explosion/2
+PASS: source tree allocation imp_arcane_explosion/3
+PASS: source tree allocation magic_absorption/1
+PASS: source tree allocation magic_absorption/2
+PASS: source tree allocation magic_absorption/3
+PASS: source tree allocation magic_absorption/4
+PASS: source tree allocation magic_absorption/5
+PASS: source tree allocation arcane_concentration/1
+PASS: source tree allocation arcane_meditation/1
+PASS: source tree allocation arcane_meditation/2
+PASS: source tree allocation arcane_meditation/3
+PASS: source tree allocation arcane_mind/1
+PASS: source tree allocation arcane_mind/2
+PASS: source tree allocation arcane_mind/3
+PASS: source tree allocation arcane_mind/4
+PASS: source tree allocation arcane_mind/5
+PASS: source tree allocation imp_blink/1
+PASS: source tree allocation imp_blink/2
+PASS: source tree allocation imp_blink/3
+PASS: source tree allocation presence_of_mind/1
+PASS: source tree allocation arcane_instability/1
+PASS: source tree allocation arcane_instability/2
+PASS: source tree allocation arcane_instability/3
+PASS: source tree allocation arcane_fortitude/1
+PASS: source tree allocation arcane_fortitude/2
+PASS: source tree allocation arcane_fortitude/3
+PASS: source tree allocation arcane_reach/1
+PASS: source tree allocation arcane_reach/2
+PASS: source tree allocation arcane_reach/3
+PASS: source tree allocation arcane_power/1
+PASS: complete Arcane tree valid within source51point budget
+PASS: source tree allocation imp_fireball/1
+PASS: source tree allocation imp_fireball/2
+PASS: source tree allocation imp_fireball/3
+PASS: source tree allocation imp_fireball/4
+PASS: source tree allocation imp_fireball/5
+PASS: source tree allocation impact/1
+PASS: source tree allocation impact/2
+PASS: source tree allocation impact/3
+PASS: source tree allocation impact/4
+PASS: source tree allocation impact/5
+PASS: source tree allocation flame_throwing/1
+PASS: source tree allocation flame_throwing/2
+PASS: source tree allocation imp_flamestrike/1
+PASS: source tree allocation imp_flamestrike/2
+PASS: source tree allocation imp_flamestrike/3
+PASS: source tree allocation imp_flamestrike/4
+PASS: source tree allocation imp_flamestrike/5
+PASS: source tree allocation ignite/1
+PASS: source tree allocation incinerate/1
+PASS: source tree allocation incinerate/2
+PASS: source tree allocation incinerate/3
+PASS: source tree allocation master_elements/1
+PASS: source tree allocation master_elements/2
+PASS: source tree allocation master_elements/3
+PASS: source tree allocation critical_mass/1
+PASS: source tree allocation critical_mass/2
+PASS: source tree allocation critical_mass/3
+PASS: source tree allocation hot_streak/1
+PASS: source tree allocation fire_power/1
+PASS: source tree allocation fire_power/2
+PASS: source tree allocation fire_power/3
+PASS: source tree allocation fire_power/4
+PASS: source tree allocation fire_power/5
+PASS: source tree allocation burning_soul/1
+PASS: source tree allocation burning_soul/2
+PASS: source tree allocation burning_soul/3
+PASS: source tree allocation imp_blast_wave/1
+PASS: source tree allocation imp_blast_wave/2
+PASS: source tree allocation imp_blast_wave/3
+PASS: source tree allocation pyroclasm/1
+PASS: complete Fire tree valid within source51point budget
+PASS: source tree allocation frost_warding/1
+PASS: source tree allocation frost_warding/2
+PASS: source tree allocation frost_warding/3
+PASS: source tree allocation frost_warding/4
+PASS: source tree allocation frost_warding/5
+PASS: source tree allocation imp_frostbolt/1
+PASS: source tree allocation imp_frostbolt/2
+PASS: source tree allocation imp_frostbolt/3
+PASS: source tree allocation imp_frostbolt/4
+PASS: source tree allocation imp_frostbolt/5
+PASS: source tree allocation elemental_precision/1
+PASS: source tree allocation elemental_precision/2
+PASS: source tree allocation elemental_precision/3
+PASS: source tree allocation ice_shards/1
+PASS: source tree allocation ice_shards/2
+PASS: source tree allocation ice_shards/3
+PASS: source tree allocation ice_shards/4
+PASS: source tree allocation ice_shards/5
+PASS: source tree allocation frostbite/1
+PASS: source tree allocation piercing_ice/1
+PASS: source tree allocation piercing_ice/2
+PASS: source tree allocation piercing_ice/3
+PASS: source tree allocation shatter/1
+PASS: source tree allocation shatter/2
+PASS: source tree allocation shatter/3
+PASS: source tree allocation shatter/4
+PASS: source tree allocation shatter/5
+PASS: source tree allocation arctic_reach/1
+PASS: source tree allocation arctic_reach/2
+PASS: source tree allocation splitting_ice/1
+PASS: source tree allocation frost_channeling/1
+PASS: source tree allocation frost_channeling/2
+PASS: source tree allocation frost_channeling/3
+PASS: source tree allocation permafrost/1
+PASS: source tree allocation permafrost/2
+PASS: source tree allocation permafrost/3
+PASS: source tree allocation imp_ice_barrier/1
+PASS: source tree allocation imp_ice_barrier/2
+PASS: source tree allocation imp_ice_barrier/3
+PASS: source tree allocation water_elemental/1
+PASS: complete Frost tree valid within source51point budget
+PASS: sourceIgnite80%over4sec/2ticks
+PASS: sourceWaterElemental freeNova8sec
+PASS: explicit debug budget999 with zero original experience
+PASS: debug999 permits all39 original nodes at maximum ranks
+PASS: debug budget retains original node rank caps
+PASS: debug budget retains original prerequisite validation
+PASS: debug free respec returns all999 points
+PASS: normal progression restored to original experience after debug override removed
+204 source Mage talent/progression checks passed.

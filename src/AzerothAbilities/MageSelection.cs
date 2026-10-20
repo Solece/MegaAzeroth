@@ -127,7 +127,7 @@ public sealed class MageSelectionBehaviour : MonoBehaviour
 
         CreateText(panel.transform, template, "Title", "Azeroth: Маг", 28, new Vector2(20, -13), new Vector2(650, 35), new Color(1, 0.83f, 0.36f));
         status = CreateText(panel.transform, template, "SelectedStatus", "", 23, new Vector2(20, -49), new Vector2(650, 33), Color.white);
-        CreateText(panel.transform, template, "AppearanceNotice", "Внешность — выбранный герой Megabonk.\nЗаклинания и прокачка — Azeroth (прототип мага).", 19, new Vector2(20, -86), new Vector2(650, 55), new Color(0.86f, 0.88f, 0.94f));
+        CreateText(panel.transform, template, "AppearanceNotice", "Модель, анимации и заклинания — Azeroth.\nМувмент и появление врагов — Megabonk.", 19, new Vector2(20, -86), new Vector2(650, 55), new Color(0.86f, 0.88f, 0.94f));
 
         mageButton = CreateButton(panel.transform, template, "SelectMage", "Выбрать мага", new Vector2(20, -148), new Vector2(310, 43), out mageLabel);
         nativeButton = CreateButton(panel.transform, template, "SelectNative", "Обычный герой Megabonk", new Vector2(348, -148), new Vector2(322, 43), out _);
@@ -137,7 +137,7 @@ public sealed class MageSelectionBehaviour : MonoBehaviour
         nativeButton.onClick.AddListener(chooseNative);
         lastSelection = null;
         lastVisible = false;
-        Plugin.Current.Log.LogInfo("Mage selection UI built: native Canvas/TMP; title=Azeroth: Маг; menu/character/map tabs only; appearance stays Megabonk; no save or native book changes.");
+        Plugin.Current.Log.LogInfo("Mage selection UI built: native Canvas/TMP; title=Azeroth: Маг; menu/character/map tabs only; original Mage appearance; no save or native book changes.");
     }
 
     [HideFromIl2Cpp]
@@ -195,7 +195,7 @@ public sealed class MageSelectionBehaviour : MonoBehaviour
         if (selected == lastSelection) return;
         lastSelection = selected;
         var mage = selected == "mage";
-        status.text = mage ? "Маг выбран — Огненный шар" : "Маг не выбран — обычные способности Megabonk";
+        status.text = mage ? "Маг Azeroth выбран" : "Маг не выбран — обычные способности Megabonk";
         status.color = mage ? new Color(0.5f, 1, 0.61f) : Color.white;
         mageLabel.text = mage ? "Маг выбран" : "Выбрать мага";
         mageButton.interactable = !mage;
@@ -219,7 +219,7 @@ public sealed class MageSelectionBehaviour : MonoBehaviour
             {
                 lastSelection = null;
                 RefreshSelection();
-                Plugin.Current.Log.LogInfo("Mage selection button applied: " + classId + "; Megabonk appearance retained.");
+                Plugin.Current.Log.LogInfo("Mage selection button applied: " + classId + "; original Mage appearance active.");
             }
         }
         catch (Exception ex) { Plugin.Current?.Log.LogError("Mage selection click failed: " + ex); }
@@ -238,3 +238,4 @@ public sealed class MageSelectionBehaviour : MonoBehaviour
         chooseMage = chooseNative = null;
     }
 }
+

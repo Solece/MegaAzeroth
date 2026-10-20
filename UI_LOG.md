@@ -39,3 +39,37 @@ Final headless guard fixes: tome cells require HasTome before reading rank; clas
 
 - Runtime verified 20.10.2026: HUD0.2.1 built59 RawImages+33TMP labels; offscreen native camera render showed Azeroth frames/action bar and original Fireball icon. Managed GC exercised, fatal ErrorLog empty,30-tick test clean exit.
 
+
+## 2026-10-20 — single HUD, book slots and readable Mage frame (0.3.0)
+- Inspected the user's screenshot showing the native red HP bar, weapon/tome grid and gold/timer behind the Azeroth overlay.
+- Added a reversible native Graphic mask scoped to UiManager.hud and exact generated native types/field references: InventoryHud.weaponParent/tomeParent, HealthUI player HUD, XpBarUI, GameTimer and KillsAndGoldCounter.t_gold. Native scripts remain enabled and continue tracking actual game state.
+- The mask never disables UiManager, its hud root, shared parents, pause/levelup/encounter widgets, objectives, arrows, alerts or cinematics. It records previous Graphic.enabled state, enforces visibility after native updates, and restores original state when disabled, outside the run, on errors or destruction. Kills, silver and chest price are preserved.
+- Enlarged the Azeroth player frame 1.5x; hero name 24px, HP 20px, visible XP value/progress, level 20px; one XP display instead of an additional bottom XP bar.
+- Exactly four clearly labelled book slots (Книжки) remain visible including empty slots. Native weapon inventory cells are masked. Mage ability cells appear only for actually learned spell IDs; capacity 16, absent spells do not create a visible empty grid. Learned abilities retain icons, ranks and cooldowns.
+- Build passed against the actual interop assemblies with 0 compiler errors. Runtime selective-mask and screenshot verification pending root background TestBattle; no game windows/input launched by this task.
+- Prepared DLL: reports/hud-layout-fix/AzerothHud.dll; plugin runtime deployment left to root for the combined test.
+
+### 0.3.0 native runtime verification and 0.3.1 layout polish
+- Root's integrated background TestBattle confirms NativeGraphicsHidden=51; native weaponParent has 21 Graphics with 0 shown, native tomeParent has 17 Graphics with 0 shown. The native mask executes successfully in the real scene.
+- Inspected outputs/mage-ui-fixed-preview.png: the extra bottom grid was baked into UI-MainMenuBar-Human art, not live native weapon/tome cells. Removed that atlas from the actionbar background; retained original gryphon endcaps and the actual EmptySlot art for exactly four books plus actually learned spells. Plain dark/gold backing has no embedded cells.
+- Root's current screenshot includes a world health bar because its capture temporarily moved a WorldSpace canvas; that capture issue is handled by root and is separate from the mask.
+- Labels now use a private clone of the game's TMP material with guarded _OutlineWidth/_OutlineSoftness/_FaceDilate set to zero and underlay keywords disabled. The game's shared font/material is not modified. Private material is destroyed with this HUD.
+- Added guarded reflection read of HudBridge.BarrierRemaining for active Mage: the independent Azeroth Ice Barrier pool is added to the native shield value for display. Missing property remains compatible with older ability DLLs.
+- Version 0.3.1 builds with 0 compiler errors; new artwork/text material runtime capture pending combined root test. No deployment or game launch by this task.
+
+## 2026-10-20 — source-aligned HP frame (0.4.0)
+- Inspected the user's cropped malformed frame and actual source gameplay reference reports/reference/azeroth-original-hud.png (1920x1080), plus the locally extracted Interface/FrameXML/PlayerFrame.xml and original UI-TargetingFrame.png atlas (256x128).
+- The atlas UV crop itself is correct: XML left=1/right=.09375/top=0/bottom=.78125 maps to mirrored 232x100 source pixels, uGUI UV=(1,.21875,-.90625,.78125). The previous independently guessed widget coordinates did not align with that crop, placing HP and text across the metal rails and drawing an oversized black background.
+- All player-frame elements now share one PlayerRect source coordinate transform. The source rects are HP=(106,41,119,12), second row=(106,52,119,12), backdrop=(106,22,119,42), original frame=(0,0,232,100). Native current/max HP fills the first row with centred readable numbers; the name is centred in the name plaque above it.
+- The second source row is explicitly labelled Shield with blue fill and independent number, including the Mage Ice Barrier pool from HudBridge.BarrierRemaining when exposed. The hybrid has no native mana pool; no fabricated mana value is shown. Its fill is displayed relative to max HP, clamped to the row width; its actual total remains visible numerically.
+- XP is now a separate labelled purple bar below the frame, so it no longer occupies the source mana/shield row. It reads actual native level progress.
+- The unrelated native Megabonk portrait is replaced for active Mage with original Azeroth Fireball icon inside the portrait ring as a temporary class illustration. Actual rendered Mage portrait remains a separate missing asset; source screenshot fidelity is not claimed for this temporary icon or the shield/XP adaptation.
+- Build passed with 0 compiler errors. Runtime alignment screenshot test is pending root's background TestBattle. Source and reports/hp-frame-fix/AzerothHud.dll saved; no plugin deployment, game launch or desktop input by this task.
+- Added optional live portrait contract: reflection lookup AzerothMegabonk.MageVisuals.MageVisualBridge.PortraitTexture. If it exposes a live UnityEngine.Texture, active Mage shows that actual model head at the exact source portrait rect (42,12,64,64). Otherwise the original Fireball class icon remains an inscribed 44x44 fallback. The external texture is borrowed and never destroyed by the HUD; no portrait rendering or visible-window use is performed by this plugin.
+
+### 0.4.1 — local-player feet HP duplicate
+- Root's combined 0.4.0 scene test passed: original Mage head portrait, actual ~68/130 green HP, shield ~81 and two learned spell cells/four book cells. Inspected outputs/mage-hp-and-model-preview.png; the remaining red HP bar at the character feet is outside UiManager.hud.
+- The native HealthUI type is specifically bound to PlayerHealth and OnPlayerInventoryInit; its followPlayer instance follows the local player. Extended the existing reversible Graphic mask only to active HealthUI.followPlayer branches outside the main HUD. Enemy/boss bar types and unrelated world canvases are not queried or disabled.
+- Native scripts, transforms, HP values and damage logic are untouched; previous Graphic.enabled states are restored when leaving the custom HUD. HudDiagnostics.PlayerWorldHealthGraphicsHidden exposes the additional count for the next real-scene assertion.
+- Corrected blast_wave icon to the verified catalog value Spell_Holy_Excorcism_02. Raised HP text from 19 to 20 without moving the source-aligned frame geometry.
+- 0.4.1 build passes with zero compiler errors; the added feet-bar mask is pending the root background runtime check. Prepared reports/hp-frame-fix/AzerothHud.dll; no plugin deployment, game launch or input from this task.
