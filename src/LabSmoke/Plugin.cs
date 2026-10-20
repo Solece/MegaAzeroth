@@ -116,7 +116,8 @@ public sealed class Runner:MonoBehaviour
         cam.fieldOfView=40;cam.nearClipPlane=.1f;cam.farClipPlane=200;
         var center=enemy.collider!=null?enemy.collider.transform.TransformPoint(enemy.collider.center):enemy.transform.position+Vector3.up*1f;
         foreach(var renderer in enemy.GetComponentsInChildren<Renderer>()) Plugin.Note($"Renderer evidence name={renderer.name},enabled={renderer.enabled},bounds={renderer.bounds.center}/{renderer.bounds.size},layer={renderer.gameObject.layer}");
-        cam.transform.position=center+new Vector3(3,1.5f,3);cam.transform.LookAt(center);
+        float subjectHeight=enemy.collider!=null?Math.Max(1,enemy.collider.height*Math.Abs(enemy.collider.transform.lossyScale.y)):2;
+        cam.transform.position=center+new Vector3(1.3f,.65f,1.3f)*subjectHeight;cam.transform.LookAt(center);
         const int size=384;
         var rt=new RenderTexture(size,size,24);rt.Create();cam.targetTexture=rt;
         var previous=RenderTexture.active;

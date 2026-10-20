@@ -117,3 +117,5 @@ HUD is a separate module. Book-slot override is a separate runtime-only module.
 - Repeating the bounded background probe because the rendered evidence exposed this unresolved issue. User PC remains untouched.
 
 - Scale root cause identified: Collider.bounds is EMPTY while native pooled enemy collider is disabled during spawn. Switched to intrinsic CapsuleCollider.height/radius/center plus world transform (valid while disabled); offscreen camera also targets intrinsic center rather than empty bounds center.
+
+- Transform evidence showed native renderer import rotation/offset is unsuitable for Unity Y-up guest meshes. Changed visual parent to native physics root, positioned guest base center at intrinsic capsule feet, and visual-facing follows native rigidbody velocity. Movement/collider code remains untouched. Camera distance now scales with subject height.

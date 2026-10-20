@@ -167,13 +167,14 @@ public sealed class AzerothVisual : MonoBehaviour
         if(visual!=null) { visual.SetActive(false);Object.Destroy(visual); }
         visual=new GameObject("AzerothCreature_"+data.Name);
         visual.layer=original.gameObject.layer;
-        // Inherit native facing and renderer offsets; preserve physics root and hitboxes.
-        visual.transform.SetParent(original.transform,false);
+        // Native model import rotations differ from the converted Unity Y-up assets.
+        // Attach to the physics root, with a separate visual facing from native velocity.
+        visual.transform.SetParent(target.transform,false);
         visual.transform.localPosition=Vector3.zero; visual.transform.localRotation=Quaternion.identity;
         var mesh=data.Template;
         float desired=1f;
         var oldFilter=original.GetComponent<MeshFilter>();
-        float parentScale=Math.Max(.00001f,Math.Abs(original.transform.lossyScale.y));
+        float parentScale=Math.Max(.00001f,Math.Abs(target.transform.lossyScale.y));
         var nativeBounds=original.bounds;
         if(target.collider!=null)
         {
@@ -182,11 +183,11 @@ public sealed class AzerothVisual : MonoBehaviour
             nativeBounds=new Bounds(c.transform.TransformPoint(c.center),new Vector3(c.radius*2,worldHeight,c.radius*2));
         }
         desired=Math.Max(.1f,nativeBounds.size.y)/parentScale;
-        float nativeBottom=(nativeBounds.min.y-original.transform.position.y)/parentScale;
+        var feetWorld=nativeBounds.center-Vector3.up*(nativeBounds.size.y*.5f);
         float height=Math.Max(.01f,mesh.bounds.size.y);
         float scale=Math.Max(.1f,desired)/height;
         visual.transform.localScale=Vector3.one*scale;
-        visual.transform.localPosition=new Vector3(0,nativeBottom-mesh.bounds.min.y*scale,0);
+        visual.transform.localPosition=target.transform.InverseTransformPoint(feetWorld)-new Vector3(mesh.bounds.center.x*scale,mesh.bounds.min.y*scale,mesh.bounds.center.z*scale);
         filter=visual.AddComponent<MeshFilter>(); filter.sharedMesh=mesh;
         replacement=visual.AddComponent<MeshRenderer>(); replacement.sharedMaterial=data.Material;
         if(Plugin.Attached<3) Plugin.Logger.LogInfo($"Visual scale evidence: parentScale={parentScale}, collider={nativeBounds.size}, sourceHeight={height}, localScale={scale}, visualBounds={replacement.bounds.size}, position={replacement.bounds.center}");
@@ -202,6 +203,11 @@ public sealed class AzerothVisual : MonoBehaviour
         if(Time.time<nextFrame) return;
         nextFrame=Time.time+1f/24;
         var position=enemy.transform.position;
+        if(enemy.rb!=null)
+        {
+            var velocity=enemy.rb.velocity;velocity.y=0;
+            if(velocity.sqrMagnitude>.001f) visual.transform.rotation=Quaternion.LookRotation(velocity);
+        }
         string name=(position-previous).sqrMagnitude>.00001f?"run":"idle";
         if(model.Name.Equals("Tarantula",StringComparison.OrdinalIgnoreCase) && name=="run") name="walk";
         previous=position;
