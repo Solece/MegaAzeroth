@@ -1,0 +1,15 @@
+.venv/
+Megabonk-Lab/
+private-assets/
+universal-modder/
+downloads/
+cache/
+um-data/
+backups/
+reports/
+scripts/megabonk-research/
+**/bin/
+**/obj/
+**/__pycache__/
+*.dll
+*.pdb
