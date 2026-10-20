@@ -1,0 +1,2480 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "suppression",
+      "name": "Suppression",
+      "icon": "Spell_Shadow_UnsummonBuilding",
+      "description": "Increases your luck by {v}%.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7178810",
+      "effects": [
+        {
+          "sourceOffset": "0x7177ee8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d4ccccd",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 12,
+          "value": 0.05000000074505806,
+          "statName": "luck",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your luck by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_corruption",
+      "name": "Shadow Embrace",
+      "icon": "Spell_Shadow_AbominationExplosion",
+      "description": "Your damage-over-time effects deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7178878",
+      "effects": [
+        {
+          "sourceOffset": "0x7177f68",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d23d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your damage-over-time effects deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_coa",
+      "name": "Improved Curse of Agony",
+      "icon": "Spell_Shadow_CurseOfSargeras",
+      "description": "Curse of Agony deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x71788e0",
+      "effects": [
+        {
+          "sourceOffset": "0x7177ff0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471791e2",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x3d4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 0,
+          "spells": [
+            "curse_of_agony"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Curse of Agony deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_drain_life",
+      "name": "Improved Drain Life",
+      "icon": "Spell_Shadow_LifeDrain02",
+      "description": "Drain Life deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7178948",
+      "effects": [
+        {
+          "sourceOffset": "0x71780a0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717928f",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "drain_life"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Drain Life deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "nightfall",
+      "name": "Nightfall",
+      "icon": "Spell_Shadow_Twilight",
+      "description": "Milestone. Your Shadow Bolts carry the night: each one that lands corrupts its target for {v}% of the bolt over 12 sec, and every tick of Corruption has a 2% chance to fire a free Shadow Bolt, at most twice a second.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71789b0",
+      "effects": [
+        {
+          "sourceOffset": "0x7178130",
+          "tag": 9,
+          "rawPackedTag": 9,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x9",
+            "0xac",
+            "0x3ecccccd",
+            "0x41400000",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47179314",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "critDot",
+          "spellId": 172,
+          "value": 0.4000000059604645,
+          "duration": 12.0,
+          "triggerEvent": 0,
+          "ticks": 12,
+          "interval": 1.0,
+          "sourceDotEvidence": "VA1459301CD event matcher consumes raw+16;145931CF0 roundf(duration) max1;145932A94 adds remaining same-effect damage;145884032..049 stores totalDamage/N and duration/N",
+          "spells": [
+            "shadow_bolt"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your Shadow Bolts carry the night: each one that lands corrupts its target for {v}% of the bolt over 12 sec, and every tick of Corruption has a 2% chance to fire a free Shadow Bolt, at most twice a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7178170",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3ca3d70a",
+            "0x3f000000",
+            "0x0",
+            "0x47179314",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x4",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717931f",
+            "0x1",
+            "0xa",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.019999999552965164,
+          "internalCooldown": 0.5,
+          "spell": "shadow_bolt",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 4,
+          "triggerEventName": "damageOverTimeTick",
+          "eventValue": 0.0,
+          "spells": [
+            "corruption"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your Shadow Bolts carry the night: each one that lands corrupts its target for {v}% of the bolt over 12 sec, and every tick of Corruption has a 2% chance to fire a free Shadow Bolt, at most twice a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "fel_concentration",
+      "name": "Fel Concentration",
+      "icon": "Spell_Shadow_FingerOfDeath",
+      "description": "Your damage-over-time effects last {v}% longer.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7178a18",
+      "effects": [
+        {
+          "sourceOffset": "0x71782c8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d75c28f",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 4,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your damage-over-time effects last {v}% longer.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "grim_reach",
+      "name": "Grim Reach",
+      "icon": "Spell_Shadow_CallofBone",
+      "description": "Your damage-over-time spells take {v} more target.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 1,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7178a80",
+      "effects": [
+        {
+          "sourceOffset": "0x7178368",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3f800000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 1.0,
+          "modifier": 2,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your damage-over-time spells take {v} more target.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadow_mastery",
+      "name": "Shadow Mastery",
+      "icon": "Spell_Shadow_ShadeTrueSight",
+      "description": "Shadow spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7178ae8",
+      "effects": [
+        {
+          "sourceOffset": "0x7178418",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x503",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.029999999329447746,
+          "modifier": 0,
+          "school": "Shadow",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 5,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Shadow spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "contagion",
+      "name": "Contagion",
+      "icon": "Spell_Shadow_PlagueCloud",
+      "description": "Milestone. When an enemy dies with Corruption or Curse of Agony on it, each jumps to the enemy nearest it.",
+      "prerequisite": "nightfall",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7178b50",
+      "effects": [
+        {
+          "sourceOffset": "0x71784a8",
+          "tag": 14,
+          "rawPackedTag": 14,
+          "packedFlags": 0,
+          "rawWords": [
+            "0xe",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x47179688",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spreadDotOnDeath",
+          "targets": 1,
+          "spells": [
+            "corruption",
+            "curse_of_agony"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. When an enemy dies with Corruption or Curse of Agony on it, each jumps to the enemy nearest it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "amplify_curse",
+      "name": "Amplify Curse",
+      "icon": "Spell_Shadow_Contagion",
+      "description": "Curse of Agony's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7178bb8",
+      "effects": [
+        {
+          "sourceOffset": "0x7178588",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471791e2",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x3da3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 1,
+          "spells": [
+            "curse_of_agony"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Curse of Agony's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "siphon_life",
+      "name": "Siphon Life",
+      "icon": "Spell_Shadow_Requiem",
+      "description": "Every tick of your damage-over-time effects heals you for 1% of it.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 1,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7178c20",
+      "effects": [
+        {
+          "sourceOffset": "0x7178608",
+          "tag": 8,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x8",
+            "0x3f800000",
+            "0x5",
+            "0x3c23d70a",
+            "0x0",
+            "0x0",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 1.0,
+          "status": 5,
+          "statusValue": 0.009999999776482582,
+          "statusDuration": 0.0,
+          "duration": 0.0,
+          "triggerEvent": 4,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Every tick of your damage-over-time effects heals you for 1% of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "dark_pact",
+      "name": "Dark Pact",
+      "icon": "Spell_Shadow_DarkRitual",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7178c88",
+      "effects": [
+        {
+          "sourceOffset": "0x7167d40",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "seed_of_corruption",
+      "name": "Seed of Corruption",
+      "icon": "Spell_Shadow_CurseOfMannoroth",
+      "description": "Capstone. You start every run with Corruption, and enemies that die afflicted by your damage-over-time effects burst for {v}% of their maximum health on everything within 6 yd.",
+      "prerequisite": "contagion",
+      "tree": "Affliction",
+      "treeId": "WarlockCurses",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7178cf0",
+      "effects": [
+        {
+          "sourceOffset": "0x71786e0",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4717931f",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "corruption",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Corruption, and enemies that die afflicted by your damage-over-time effects burst for {v}% of their maximum health on everything within 6 yd.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7178720",
+          "tag": 11,
+          "rawPackedTag": 267,
+          "packedFlags": 1,
+          "rawWords": [
+            "0x10b",
+            "0x3cf5c28f",
+            "0x40c00000",
+            "0x44d0",
+            "0x0",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killExplosion",
+          "value": 0.029999999329447746,
+          "radius": 6.0,
+          "spellId": 17616,
+          "maxPerSecond": 0,
+          "triggerOnAfflictedDeath": true,
+          "deathCondition": 1,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Corruption, and enemies that die afflicted by your damage-over-time effects burst for {v}% of their maximum health on everything within 6 yd.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "demonic_embrace",
+      "name": "Demonic Embrace",
+      "icon": "Spell_Shadow_Metamorphosis",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7179340",
+      "effects": [
+        {
+          "sourceOffset": "0x7178db0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.02500000037252903,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "fel_intellect",
+      "name": "Fel Intellect",
+      "icon": "Spell_Holy_MagicalSentry",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x71793a8",
+      "effects": [
+        {
+          "sourceOffset": "0x7168fe8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ecccccd",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.4000000059604645,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "fel_stamina",
+      "name": "Fel Stamina",
+      "icon": "Spell_Shadow_AntiShadow",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7179410",
+      "effects": [
+        {
+          "sourceOffset": "0x71692e0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.012000000104308128,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_health_funnel",
+      "name": "Improved Health Funnel",
+      "icon": "Spell_Shadow_LifeDrain",
+      "description": "Death Coil and Drain Life cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7179478",
+      "effects": [
+        {
+          "sourceOffset": "0x7178e78",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717a058",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d4ccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 1,
+          "spells": [
+            "death_coil",
+            "drain_life"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Death Coil and Drain Life cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "summon_imp",
+      "name": "Summon Imp",
+      "icon": "Spell_Shadow_SummonImp",
+      "description": "Milestone. An Imp fights at your side, hurling bolts of fire.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71794e0",
+      "effects": [
+        {
+          "sourceOffset": "0x7178f08",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717e968",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d768",
+          "petName": "Imp",
+          "petCreatureEntry": 9512,
+          "petDisplayId": 4449,
+          "petScale": 1.0,
+          "petBaseDamage": 35.5,
+          "petCooldown": 2.0,
+          "petFloat24": 1.0,
+          "petFloat28": 35.5,
+          "petFloat32": 2.0,
+          "petSpellId": 133,
+          "petSchool": 2,
+          "petProvenance": {
+            "rawOffset": "0x717d768",
+            "rva": "0x717e968",
+            "va": "0x14717e968",
+            "byteLength": 48,
+            "sha256": "d58c7c6fb957a8e4567bffce5d6432048a7003d1321bd7d26183a968fb48f6e0",
+            "bytesHex": "60e9174701000000030000000000000028250000611100000000803f00000e4200000040850000000200000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. An Imp fights at your side, hurling bolts of fire.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "unholy_power",
+      "name": "Unholy Power",
+      "icon": "Spell_Shadow_ShadowWordDominate",
+      "description": "Your demons deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7179548",
+      "effects": [
+        {
+          "sourceOffset": "0x7178fa0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d4ccccd",
+            "0x11",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 17,
+          "value": 0.05000000074505806,
+          "statName": "petDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your demons deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_succubus",
+      "name": "Improved Succubus",
+      "icon": "Spell_Shadow_SummonSuccubus",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x71795b0",
+      "effects": [
+        {
+          "sourceOffset": "0x716d9d8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.012000000104308128,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "master_demonologist",
+      "name": "Master Demonologist",
+      "icon": "Spell_Shadow_ShadowPact",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7179618",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "demonic_pact",
+      "name": "Demonic Pact",
+      "icon": "Spell_Shadow_SummonFelHunter",
+      "description": "Milestone. Each kill has an {v}% chance to tear open a rift: an Imp leaps out and fights beside you for 15 sec, up to 5 at once.",
+      "prerequisite": "summon_imp",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7179680",
+      "effects": [
+        {
+          "sourceOffset": "0x7179090",
+          "tag": 2,
+          "rawPackedTag": 2,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x2",
+            "0x3da3d70a",
+            "0x41700000",
+            "0x5",
+            "0x4717e968",
+            "0x1",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killSummon",
+          "chance": 0.07999999821186066,
+          "duration": 15.0,
+          "maxPets": 5,
+          "triggerEvent": 6,
+          "triggerEventName": "kill",
+          "petSourceOffset": "0x717d768",
+          "petName": "Imp",
+          "petCreatureEntry": 9512,
+          "petDisplayId": 4449,
+          "petScale": 1.0,
+          "petBaseDamage": 35.5,
+          "petCooldown": 2.0,
+          "petFloat24": 1.0,
+          "petFloat28": 35.5,
+          "petFloat32": 2.0,
+          "petSpellId": 133,
+          "petSchool": 2,
+          "petProvenance": {
+            "rawOffset": "0x717d768",
+            "rva": "0x717e968",
+            "va": "0x14717e968",
+            "byteLength": 48,
+            "sha256": "d58c7c6fb957a8e4567bffce5d6432048a7003d1321bd7d26183a968fb48f6e0",
+            "bytesHex": "60e9174701000000030000000000000028250000611100000000803f00000e4200000040850000000200000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Each kill has an {v}% chance to tear open a rift: an Imp leaps out and fights beside you for 15 sec, up to 5 at once.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "demonic_knowledge",
+      "name": "Demonic Knowledge",
+      "icon": "Spell_Shadow_ImprovedVampiricEmbrace",
+      "description": "Your demons deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x71796e8",
+      "effects": [
+        {
+          "sourceOffset": "0x7179178",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3dcccccd",
+            "0x11",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 17,
+          "value": 0.10000000149011612,
+          "statName": "petDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your demons deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_enslave",
+      "name": "Improved Enslave Demon",
+      "icon": "Spell_Shadow_EnslaveDemon",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7179750",
+      "effects": [
+        {
+          "sourceOffset": "0x7175a10",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.02500000037252903,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "demonic_sacrifice",
+      "name": "Demonic Sacrifice",
+      "icon": "Spell_Shadow_PsychicScream",
+      "description": "Your demons deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71797b8",
+      "effects": [
+        {
+          "sourceOffset": "0x7179178",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3dcccccd",
+            "0x11",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 17,
+          "value": 0.10000000149011612,
+          "statName": "petDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your demons deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "felguard",
+      "name": "Summon Felguard",
+      "icon": "Spell_Shadow_SummonInfernal",
+      "description": "Capstone. A Felguard joins your demons, and every demon's blow cleaves 2 more enemies near its target for {v}% of it.",
+      "prerequisite": "demonic_pact",
+      "tree": "Demonology",
+      "treeId": "WarlockSummoning",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7179820",
+      "effects": [
+        {
+          "sourceOffset": "0x7179248",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717ea50",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d850",
+          "petName": "Felguard",
+          "petCreatureEntry": 9514,
+          "petDisplayId": 5047,
+          "petScale": 1.0,
+          "petBaseDamage": 46.5,
+          "petCooldown": 1.600000023841858,
+          "petFloat24": 1.0,
+          "petFloat28": 46.5,
+          "petFloat32": 1.600000023841858,
+          "petSpellId": 0,
+          "petSchool": 0,
+          "petProvenance": {
+            "rawOffset": "0x717d850",
+            "rva": "0x717ea50",
+            "va": "0x14717ea50",
+            "byteLength": 48,
+            "sha256": "2413b96b874c37493204bd72c4b906ff364ffb5c24bff2b829bf449418b961e7",
+            "bytesHex": "48ea17470100000008000000000000002a250000b71300000000803f00003a42cdcccc3f000000000000000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. A Felguard joins your demons, and every demon's blow cleaves 2 more enemies near its target for {v}% of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7179288",
+          "tag": 6,
+          "rawPackedTag": 6,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x6",
+            "0x2",
+            "0x3e99999a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chain",
+          "targets": 2,
+          "damageFactor": 0.30000001192092896,
+          "radius": 10.0,
+          "sourceRadiusEvidence": "VA14592FC05 loads raw5d4b760 f32=10; VA145931AB3 passes radius to target selection145964310",
+          "school": "sourcePetOnly",
+          "filterDiscriminant": 6,
+          "filterPackedFlags": 0,
+          "petOnly": true,
+          "filterSemanticEvidence": "Native filter6 jump table raw71866d8 -> VA145934324 returns sourceKind==2; all catalog rows explicitly describe pets/demons/bites",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. A Felguard joins your demons, and every demon's blow cleaves 2 more enemies near its target for {v}% of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "damageFactor"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_shadow_bolt",
+      "name": "Improved Shadow Bolt",
+      "icon": "Spell_Shadow_ShadowBolt",
+      "description": "Shadow Bolt deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717a018",
+      "effects": [
+        {
+          "sourceOffset": "0x71798f8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47179314",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x3d4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 0,
+          "spells": [
+            "shadow_bolt"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Shadow Bolt deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "cataclysm",
+      "name": "Cataclysm",
+      "icon": "Spell_Fire_WindsofWoe",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717a080",
+      "effects": [
+        {
+          "sourceOffset": "0x716b060",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.014999999664723873,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "bane",
+      "name": "Bane",
+      "icon": "Spell_Shadow_DeathPact",
+      "description": "Shadow Bolt and Immolate cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717a0e8",
+      "effects": [
+        {
+          "sourceOffset": "0x71799b8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717ab98",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d23d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 1,
+          "spells": [
+            "shadow_bolt",
+            "immolate"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Shadow Bolt and Immolate cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "aftermath",
+      "name": "Aftermath",
+      "icon": "Spell_Fire_Fire",
+      "description": "Your Fire spells have a {v}% chance to slow what they hit by 40% for 3 sec.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717a150",
+      "effects": [
+        {
+          "sourceOffset": "0x7179a40",
+          "tag": 8,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x8",
+            "0x3d4ccccd",
+            "0x1",
+            "0x3ecccccd",
+            "0x40400000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 0.05000000074505806,
+          "status": 1,
+          "statusValue": 0.4000000059604645,
+          "statusDuration": 3.0,
+          "duration": 3.0,
+          "triggerEvent": 0,
+          "school": "Fire",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your Fire spells have a {v}% chance to slow what they hit by 40% for 3 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadowburn",
+      "name": "Shadow Cleave",
+      "icon": "Spell_Shadow_ScourgeBuild",
+      "description": "Milestone. Shadow Bolt splits: every bolt that lands forks to 2 more enemies for {v}% of it.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717a1b8",
+      "effects": [
+        {
+          "sourceOffset": "0x7179b00",
+          "tag": 6,
+          "rawPackedTag": 6,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x6",
+            "0x2",
+            "0x3e19999a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47179314",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chain",
+          "targets": 2,
+          "damageFactor": 0.15000000596046448,
+          "radius": 10.0,
+          "sourceRadiusEvidence": "VA14592FC05 loads raw5d4b760 f32=10; VA145931AB3 passes radius to target selection145964310",
+          "spells": [
+            "shadow_bolt"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Shadow Bolt splits: every bolt that lands forks to 2 more enemies for {v}% of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "damageFactor"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "devastation",
+      "name": "Devastation",
+      "icon": "Spell_Fire_FlameShock",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717a220",
+      "effects": [
+        {
+          "sourceOffset": "0x7166e18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "destructive_reach",
+      "name": "Destructive Reach",
+      "icon": "Spell_Shadow_CorpseExplode",
+      "description": "Rain of Fire and Hellfire reach {v}% farther.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717a288",
+      "effects": [
+        {
+          "sourceOffset": "0x7179c28",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717ae08",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 3,
+          "spells": [
+            "rain_of_fire",
+            "hellfire"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Rain of Fire and Hellfire reach {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_searing_pain",
+      "name": "Improved Searing Pain",
+      "icon": "Spell_Fire_SoulBurn",
+      "description": "Searing Pain and Immolate deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717a2f0",
+      "effects": [
+        {
+          "sourceOffset": "0x7179ce8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717aec8",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "searing_pain",
+            "immolate"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Searing Pain and Immolate deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "conflagrate",
+      "name": "Conflagrate",
+      "icon": "Spell_Fire_Fireball",
+      "description": "Milestone. Shadow Bolt and Searing Pain make an Immolated enemy explode: {v}% of the hit to every enemy within 6 yd of it.",
+      "prerequisite": "shadowburn",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717a358",
+      "effects": [
+        {
+          "sourceOffset": "0x7179d90",
+          "tag": 4,
+          "rawPackedTag": 4,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x4",
+            "0x3e19999a",
+            "0x40c00000",
+            "0x0",
+            "0x15c",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717af70",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "impactSplash",
+          "value": 0.15000000596046448,
+          "radius": 6.0,
+          "spells": [
+            "shadow_bolt",
+            "searing_pain"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Shadow Bolt and Searing Pain make an Immolated enemy explode: {v}% of the hit to every enemy within 6 yd of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7179dd0",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4717ab8a",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "immolate",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Shadow Bolt and Searing Pain make an Immolated enemy explode: {v}% of the hit to every enemy within 6 yd of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "emberstorm",
+      "name": "Emberstorm",
+      "icon": "Spell_Fire_SelfDestruct",
+      "description": "Fire spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717a3c0",
+      "effects": [
+        {
+          "sourceOffset": "0x7179ea0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.029999999329447746,
+          "modifier": 0,
+          "school": "Fire",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fire spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ruin",
+      "name": "Ruin",
+      "icon": "Spell_Shadow_ShadowWordPain",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717a428",
+      "effects": [
+        {
+          "sourceOffset": "0x716e658",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "intensity",
+      "name": "Intensity",
+      "icon": "Spell_Fire_LavaSpawn",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717a490",
+      "effects": [
+        {
+          "sourceOffset": "0x7167d40",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "rain_of_chaos",
+      "name": "Rain of Chaos",
+      "icon": "Spell_Shadow_RainOfFire",
+      "description": "Capstone. A second Rain of Fire falls on its own every 13 sec, and its burning ground slows what it touches.",
+      "prerequisite": "conflagrate",
+      "tree": "Destruction",
+      "treeId": "WarlockDestruction",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x717a4f8",
+      "effects": [
+        {
+          "sourceOffset": "0x7179f28",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x41500000",
+            "0x4717adee",
+            "0x1",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 13.0,
+          "spell": "rain_of_fire",
+          "periodicBaseCooldown": 8.0,
+          "periodicSpellSchool": "Fire",
+          "periodicSpellSourceOffset": "0x6b8a198",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. A second Rain of Fire falls on its own every 13 sec, and its burning ground slows what it touches.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7179f68",
+          "tag": 8,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x8",
+            "0x3f800000",
+            "0x1",
+            "0x3ecccccd",
+            "0x3fc00000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717adee",
+            "0x1",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 1.0,
+          "status": 1,
+          "statusValue": 0.4000000059604645,
+          "statusDuration": 1.5,
+          "duration": 1.5,
+          "triggerEvent": 0,
+          "spells": [
+            "rain_of_fire"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. A second Rain of Fire falls on its own every 13 sec, and its burning ground slows what it touches.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "warlock",
+  "trees": [
+    {
+      "id": "WarlockCurses",
+      "name": "Affliction",
+      "icon": "Spell_Shadow_DeathCoil",
+      "sourceOffset": "0x717d590",
+      "sourceNodesOffset": "0x7178810",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "WarlockSummoning",
+      "name": "Demonology",
+      "icon": "Spell_Shadow_Metamorphosis",
+      "sourceOffset": "0x717d5d0",
+      "sourceNodesOffset": "0x7179340",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "WarlockDestruction",
+      "name": "Destruction",
+      "icon": "Spell_Shadow_RainOfFire",
+      "sourceOffset": "0x717d610",
+      "sourceNodesOffset": "0x717a018",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b86bb0",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}

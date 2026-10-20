@@ -1,0 +1,1009 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "classId": "shaman",
+  "startingSpell": "lightning_bolt",
+  "damageScale": 1.399999976158142,
+  "cooldownScale": 1.399999976158142,
+  "cooldownFloor": 0.25,
+  "evidence": "Original class shaman row 0x6b86a90; spell membership slice visible row+0x20 and starting spell+0x30. Full source static112-row spell table at raw0x6b87ab0 stride0x78; 102 original class spells. Binary static ability table stride0x78. Native damage at VA0x14595DE6C..0x14595DEDC; cooldown atVA0x145886711..0x14588672F; scale f32 at raw0x5d640d0. Fireball menu observed by root:71damage/1.8s/30m matches70.7/1.82. AoE/cone cast damage scale0.5 table raw0x7186414 read byVA0x14595DE8F. Projectile and target behavior are a cross-engine reimplementation, not a native port. Full13-spell Mage association is the native13-slice class list at raw0x6b86348, followed by Warlock. Status fields0x68/6c/70 and duration/ticks0x58/5c retained verbatim.",
+  "upgradeRules": {
+    "sourceEvidence": "VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+    "damageRarity": [
+      0.18,
+      0.25,
+      0.34,
+      0.46,
+      0.65
+    ],
+    "cooldownRarity": [
+      0.07,
+      0.1,
+      0.13,
+      0.17,
+      0.23
+    ],
+    "targetsRarity": [
+      1,
+      1,
+      1,
+      2,
+      2
+    ],
+    "radiusRarity": [
+      0.12,
+      0.18,
+      0.25,
+      0.35,
+      0.5
+    ],
+    "damageRepeatFalloff": 0.5,
+    "cooldownFactorFloor": 0.2,
+    "extraTargetsCap": 12,
+    "radiusFactorCap": 5.0,
+    "rankDamageBonus": 0.04,
+    "rankDamageFalloff": 0.125,
+    "durationRarity": [
+      0.15,
+      0.22,
+      0.3,
+      0.4,
+      0.6
+    ],
+    "durationFactorCap": 6.0
+  },
+  "spells": [
+    {
+      "id": "lightning_bolt",
+      "name": "Lightning Bolt",
+      "icon": "Spell_Nature_Lightning",
+      "sourceOffset": "0x6b89478",
+      "school": "Nature",
+      "castKindId": 0,
+      "castDamageScale": 1.0,
+      "baseDamage": 36.5,
+      "baseCooldown": 1.399999976158142,
+      "range": 30.0,
+      "radius": 0.0,
+      "targets": 2,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 30.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        2
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b89478, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b89478, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "2",
+          "modifier": "targets",
+          "value": 1,
+          "rarityValues": [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 2 in source ability row 0x6b89478, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original targets upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 403,
+      "sourcePackedBehaviorWord": "0x3",
+      "sourceSchoolDiscriminant": 3,
+      "sourceCastDiscriminant": 0,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "projectile",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "none",
+      "kind": "projectile",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "chain_lightning",
+      "name": "Chain Lightning",
+      "icon": "Spell_Nature_ChainLightning",
+      "sourceOffset": "0x6b894f0",
+      "school": "Nature",
+      "castKindId": 4,
+      "castDamageScale": 1.0,
+      "baseDamage": 39.5,
+      "baseCooldown": 2.4000000953674316,
+      "range": 28.0,
+      "radius": 12.0,
+      "targets": 5,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        2
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b894f0, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b894f0, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "2",
+          "modifier": "targets",
+          "value": 1,
+          "rarityValues": [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 2 in source ability row 0x6b894f0, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original targets upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 421,
+      "sourcePackedBehaviorWord": "0x403",
+      "sourceSchoolDiscriminant": 3,
+      "sourceCastDiscriminant": 4,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "chain",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "none",
+      "kind": "chain",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "earth_shock",
+      "name": "Earth Shock",
+      "icon": "Spell_Nature_EarthShock",
+      "sourceOffset": "0x6b89568",
+      "school": "Nature",
+      "castKindId": 0,
+      "castDamageScale": 1.0,
+      "baseDamage": 93.5,
+      "baseCooldown": 3.0,
+      "range": 20.0,
+      "radius": 0.0,
+      "targets": 1,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        2
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b89568, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b89568, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "2",
+          "modifier": "targets",
+          "value": 1,
+          "rarityValues": [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 2 in source ability row 0x6b89568, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original targets upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 8042,
+      "sourcePackedBehaviorWord": "0x3",
+      "sourceSchoolDiscriminant": 3,
+      "sourceCastDiscriminant": 0,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "projectile",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "none",
+      "kind": "projectile",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "flame_shock",
+      "name": "Flame Shock",
+      "icon": "Spell_Fire_FlameShock",
+      "sourceOffset": "0x6b895e0",
+      "school": "Fire",
+      "castKindId": 6,
+      "castDamageScale": 1.0,
+      "baseDamage": 82.5,
+      "baseCooldown": 3.0,
+      "range": 20.0,
+      "radius": 0.0,
+      "targets": 2,
+      "duration": 6.0,
+      "ticks": 6,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        4,
+        2
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b895e0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b895e0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "4",
+          "modifier": "duration",
+          "value": 0.15,
+          "rarityValues": [
+            0.15,
+            0.22,
+            0.3,
+            0.4,
+            0.6
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 4 in source ability row 0x6b895e0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original duration upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "2",
+          "modifier": "targets",
+          "value": 1,
+          "rarityValues": [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 2 in source ability row 0x6b895e0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original targets upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 8050,
+      "sourcePackedBehaviorWord": "0x602",
+      "sourceSchoolDiscriminant": 2,
+      "sourceCastDiscriminant": 6,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "damageOverTime",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "none",
+      "kind": "damageOverTime",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "frost_shock",
+      "name": "Frost Shock",
+      "icon": "Spell_Frost_FrostShock",
+      "sourceOffset": "0x6b89658",
+      "school": "Frost",
+      "castKindId": 0,
+      "castDamageScale": 1.0,
+      "baseDamage": 58.0,
+      "baseCooldown": 3.5,
+      "range": 20.0,
+      "radius": 0.0,
+      "targets": 2,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 1,
+      "statusValue": 0.5,
+      "statusDuration": 4.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        2
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b89658, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b89658, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "2",
+          "modifier": "targets",
+          "value": 1,
+          "rarityValues": [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 2 in source ability row 0x6b89658, slice 0x6b86d78; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original targets upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 8056,
+      "sourcePackedBehaviorWord": "0x4",
+      "sourceSchoolDiscriminant": 4,
+      "sourceCastDiscriminant": 0,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "projectile",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "slow",
+      "kind": "projectile",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "lightning_shield",
+      "name": "Lightning Shield",
+      "icon": "Spell_Nature_LightningShield",
+      "sourceOffset": "0x6b896d0",
+      "school": "Nature",
+      "castKindId": 9,
+      "castDamageScale": 1.0,
+      "baseDamage": 0.0,
+      "baseCooldown": 15.0,
+      "range": 0.0,
+      "radius": 0.0,
+      "targets": 0,
+      "duration": 15.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 12,
+      "statusValue": 20.5,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b896d0, slice 0x6b874eb; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 324,
+      "sourcePackedBehaviorWord": "0x903",
+      "sourceSchoolDiscriminant": 3,
+      "sourceCastDiscriminant": 9,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "selfBuff",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "thorns",
+      "kind": "selfBuff",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "magma_totem",
+      "name": "Magma Totem",
+      "icon": "Spell_Fire_SelfDestruct",
+      "sourceOffset": "0x6b89748",
+      "school": "Fire",
+      "castKindId": 10,
+      "castDamageScale": 1.0,
+      "baseDamage": 24.0,
+      "baseCooldown": 12.0,
+      "range": 0.0,
+      "radius": 10.0,
+      "targets": 0,
+      "duration": 12.0,
+      "ticks": 6,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b89748, slice 0x6b86ec4; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b89748, slice 0x6b86ec4; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "3",
+          "modifier": "radius",
+          "value": 0.12,
+          "rarityValues": [
+            0.12,
+            0.18,
+            0.25,
+            0.35,
+            0.5
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 3 in source ability row 0x6b89748, slice 0x6b86ec4; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original radius upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "4",
+          "modifier": "duration",
+          "value": 0.15,
+          "rarityValues": [
+            0.15,
+            0.22,
+            0.3,
+            0.4,
+            0.6
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 4 in source ability row 0x6b89748, slice 0x6b86ec4; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original duration upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 8190,
+      "sourcePackedBehaviorWord": "0xa02",
+      "sourceSchoolDiscriminant": 2,
+      "sourceCastDiscriminant": 10,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "totem",
+      "sourceTargetingWord": "0x1ffb",
+      "statusKindName": "none",
+      "kind": "totem",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "searing_totem",
+      "name": "Searing Totem",
+      "icon": "Spell_Fire_SearingTotem",
+      "sourceOffset": "0x6b897c0",
+      "school": "Fire",
+      "castKindId": 10,
+      "castDamageScale": 1.0,
+      "baseDamage": 34.0,
+      "baseCooldown": 10.0,
+      "range": 22.0,
+      "radius": 0.0,
+      "targets": 1,
+      "duration": 15.0,
+      "ticks": 10,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        4,
+        2
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b897c0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b897c0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "4",
+          "modifier": "duration",
+          "value": 0.15,
+          "rarityValues": [
+            0.15,
+            0.22,
+            0.3,
+            0.4,
+            0.6
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 4 in source ability row 0x6b897c0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original duration upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "2",
+          "modifier": "targets",
+          "value": 1,
+          "rarityValues": [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 2 in source ability row 0x6b897c0, slice 0x6b86e67; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original targets upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 3599,
+      "sourcePackedBehaviorWord": "0xa02",
+      "sourceSchoolDiscriminant": 2,
+      "sourceCastDiscriminant": 10,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "totem",
+      "sourceTargetingWord": "0xe16",
+      "statusKindName": "none",
+      "kind": "totem",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "fire_nova",
+      "name": "Fire Nova",
+      "icon": "Spell_Fire_SealOfFire",
+      "sourceOffset": "0x6b89838",
+      "school": "Fire",
+      "castKindId": 2,
+      "castDamageScale": 0.5,
+      "baseDamage": 42.0,
+      "baseCooldown": 5.0,
+      "range": 0.0,
+      "radius": 12.0,
+      "targets": 0,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1,
+        3
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b89838, slice 0x6b86d95; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b89838, slice 0x6b86d95; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "3",
+          "modifier": "radius",
+          "value": 0.12,
+          "rarityValues": [
+            0.12,
+            0.18,
+            0.25,
+            0.35,
+            0.5
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 3 in source ability row 0x6b89838, slice 0x6b86d95; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original radius upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 1535,
+      "sourcePackedBehaviorWord": "0x202",
+      "sourceSchoolDiscriminant": 2,
+      "sourceCastDiscriminant": 2,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "selfAoe",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "none",
+      "kind": "selfAoe",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "healing_wave",
+      "name": "Healing Wave",
+      "icon": "Spell_Nature_MagicImmunity",
+      "sourceOffset": "0x6b898b0",
+      "school": "Nature",
+      "castKindId": 9,
+      "castDamageScale": 1.0,
+      "baseDamage": 0.0,
+      "baseCooldown": 12.0,
+      "range": 0.0,
+      "radius": 0.0,
+      "targets": 0,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 6,
+      "statusValue": 0.2800000011920929,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        1
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b898b0, slice 0x6b86df6; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "1",
+          "modifier": "cooldown",
+          "value": 0.07,
+          "rarityValues": [
+            0.07,
+            0.1,
+            0.13,
+            0.17,
+            0.23
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 1 in source ability row 0x6b898b0, slice 0x6b86df6; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original cooldown upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 331,
+      "sourcePackedBehaviorWord": "0x903",
+      "sourceSchoolDiscriminant": 3,
+      "sourceCastDiscriminant": 9,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "selfBuff",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "heal",
+      "kind": "selfBuff",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    },
+    {
+      "id": "call_of_flame",
+      "name": "Call of Flame",
+      "icon": "Spell_Fire_Immolation",
+      "sourceOffset": "0x6b89928",
+      "school": "Fire",
+      "castKindId": 11,
+      "castDamageScale": 1.0,
+      "baseDamage": 450.0,
+      "baseCooldown": 1.0700000524520874,
+      "range": 0.0,
+      "radius": 8.0,
+      "targets": 0,
+      "duration": 0.0,
+      "ticks": 0,
+      "projectileSpeed": 0.0,
+      "statusKind": 0,
+      "statusValue": 0.0,
+      "statusDuration": 0.0,
+      "allowedUpgrades": [
+        0,
+        3
+      ],
+      "upgrades": [
+        {
+          "id": "0",
+          "modifier": "damage",
+          "value": 0.18,
+          "rarityValues": [
+            0.18,
+            0.25,
+            0.34,
+            0.46,
+            0.65
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 0 in source ability row 0x6b89928, slice 0x6b87581; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original damage upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        },
+        {
+          "id": "3",
+          "modifier": "radius",
+          "value": 0.12,
+          "rarityValues": [
+            0.12,
+            0.18,
+            0.25,
+            0.35,
+            0.5
+          ],
+          "sourceEvidence": "Original allowed-upgrade byte 3 in source ability row 0x6b89928, slice 0x6b87581; common value and all5 tiers from shared original GetUpgradeValue VA1458978C0; VA0x1458978C0 GetUpgradeValue + VA0x14595AC8C apply; source raw tables0x6b948f4/0x6b94920/0x6b94950/0x6b94980/0x6b949b0",
+          "description": "Original radius upgrade; value is common-tier first pick, repetition/caps use source upgradeRules"
+        }
+      ],
+      "sourceSpellId": 16038,
+      "sourcePackedBehaviorWord": "0xb02",
+      "sourceSchoolDiscriminant": 2,
+      "sourceCastDiscriminant": 11,
+      "sourceBehaviorUpperBits": 0,
+      "sourceBehaviorKindHint": "passive",
+      "sourceTargetingWord": "0x0",
+      "statusKindName": "none",
+      "sourcePassive": {
+        "kind": "call_of_flame",
+        "descriptionTemplate": "Your totems explode in flame when they expire, dealing {dmg} Fire damage to every enemy within {r} yd of them, at most once every {iv} sec.",
+        "descriptionProvenance": {
+          "rawOffset": "0x71856ae",
+          "rva": "0x71868ae",
+          "va": "0x1471868ae",
+          "byteLength": 139,
+          "sha256": "72f5c7afad9c41b886df2f9e8546b3f14f1c162fb114de2fa28734fe35ca013e",
+          "bytesHex": "596f757220746f74656d73206578706c6f646520696e20666c616d65207768656e2074686579206578706972652c206465616c696e67207b646d677d20466972652064616d61676520746f20657665727920656e656d792077697468696e207b727d207964206f66207468656d2c206174206d6f7374206f6e6365206576657279207b69767d207365632e"
+        },
+        "cooldownFloorBeforeHaste": 1.5,
+        "cooldownFloorEvidence": "Native VA1458865B0..1458866C3 compares exact source IDs and returns floor; common effectiveCD=max(floor,max(.25,baseCD*1.4*rankCDfactor*talentCDfactor*globalCDfactor))/max(.1,spellStatusModifier)",
+        "runtimeAdapterRequired": true
+      },
+      "kind": "passive",
+      "targeting": "sourceBehaviorPending",
+      "sourceBehaviorEvidence": "Source numeric enum/table verified; full dispatch semantics require native branch evidence"
+    }
+  ],
+  "unsupported": [
+    "Source numeric/catalog data is complete; non-Mage behavior adapters require exact source branch implementation and native verification"
+  ],
+  "durationScale": 1.399999976158142,
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "sourceClass": {
+    "id": "shaman",
+    "name": "Shaman",
+    "startingSpell": "lightning_bolt",
+    "color": "#0070DE",
+    "icon": "Spell_Nature_BloodLust",
+    "description": "Storms that jump from foe to foe, and totems that fight beside you.",
+    "sourceOffset": "0x6b86a90",
+    "sourceWowClassId": 7,
+    "spellIds": [
+      "lightning_bolt",
+      "chain_lightning",
+      "earth_shock",
+      "flame_shock",
+      "frost_shock",
+      "lightning_shield",
+      "magma_totem",
+      "searing_totem",
+      "fire_nova",
+      "healing_wave",
+      "call_of_flame"
+    ],
+    "talentTrees": [
+      {
+        "id": "ShamanElementalCombat",
+        "name": "Elemental",
+        "icon": "Spell_Nature_Lightning",
+        "sourceOffset": "0x717d400",
+        "sourceNodesOffset": "0x7173948",
+        "sourceNodeCount": 13
+      },
+      {
+        "id": "ShamanEnhancement",
+        "name": "Enhancement",
+        "icon": "Spell_Nature_LightningShield",
+        "sourceOffset": "0x717d440",
+        "sourceNodesOffset": "0x7174598",
+        "sourceNodeCount": 13
+      },
+      {
+        "id": "ShamanRestoration",
+        "name": "Restoration",
+        "icon": "Spell_Nature_MagicImmunity",
+        "sourceOffset": "0x717d480",
+        "sourceNodesOffset": "0x71751d8",
+        "sourceNodeCount": 13
+      }
+    ],
+    "sourceBaseHealth": 195.0,
+    "sourceBaseDamageReduction": 0.17000000178813934,
+    "sourceParameter88": 0.0,
+    "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+    "sourceAutoWeapon": {
+      "enabled": false,
+      "damage": 0,
+      "cooldown": 0,
+      "range": 0,
+      "provenance": {
+        "rawOffset": "0x6b86a80",
+        "rva": "0x6b87c80",
+        "va": "0x146b87c80",
+        "byteLength": 16,
+        "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+        "bytesHex": "00000000000000000000000000000000"
+      },
+      "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+    }
+  }
+}

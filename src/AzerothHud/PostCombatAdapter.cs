@@ -18,13 +18,18 @@ sealed class PostCombatAdapter
     static readonly Dictionary<int,SavedRow> damageRows=new();
     readonly Dictionary<int,SavedSummary> summaries=new();
     static Func<string,Texture2D> textures;
-    static bool catalogRead;
+    static string catalogClass="";
+    static string dynamicJson="";
+    string retainedClass="";
     RenderTexture retainedPortrait;
     public void RememberPortrait(Texture source)
     {
         // Lock the first actual live source-head render. Later death poses change mesh bounds
         // and the portrait camera may render the actor's torso, which must not replace the head.
-        if(source==null || retainedPortrait!=null)return;
+        if(retainedClass!=SourcePresentation.ClassId)
+        {if(retainedPortrait!=null){retainedPortrait.Release();UnityEngine.Object.Destroy(retainedPortrait);}retainedPortrait=null;retainedClass=SourcePresentation.ClassId;}
+        if(source==null)return;
+        if(retainedPortrait!=null)return;
         if(retainedPortrait==null)
         {
             retainedPortrait=new RenderTexture(192,192,0,RenderTextureFormat.ARGB32);
@@ -47,13 +52,16 @@ sealed class PostCombatAdapter
     internal static void RefreshSources(string[] ids,int[] ranks,string[] names,string[] descriptions,string[] icons,Func<string,Texture2D> loader)
     {
         textures=loader;
-        if(!catalogRead)
+        if(catalogClass!=SourcePresentation.ClassId)
         {
-            catalogRead=true;
-            ReadCatalog("AzerothAbilities","mage.json","spells","Azeroth:");
-            ReadCatalog("AzerothMageTalents","mage-talents.json","talents","AzerothTalent:");
+            catalogClass=SourcePresentation.ClassId;sources.Clear();dynamicJson="";
+            ReadCatalog("AzerothAbilities",Path.Combine("catalogs",catalogClass+".json"),"spells","Azeroth:");
+            ReadCatalog("AzerothMageTalents",Path.Combine("catalogs",catalogClass+".json"),"talents","AzerothTalent:");
+            if(catalogClass=="mage")
+            {ReadCatalog("AzerothAbilities","mage.json","spells","Azeroth:");ReadCatalog("AzerothMageTalents","mage-talents.json","talents","AzerothTalent:");}
             if(sources.TryGetValue("AzerothTalent:water_elemental",out var pet))sources["Azeroth:water_elemental"]=pet;
         }
+        RefreshDynamicSources();
         for(int i=0;i<ids.Length;i++)
         {
             var key="Azeroth:"+ids[i];
@@ -62,6 +70,29 @@ sealed class PostCombatAdapter
             if(i<icons.Length&&!string.IsNullOrWhiteSpace(icons[i]))spell.Icon=icons[i];
             if(i<ranks.Length)spell.Rank=ranks[i];
         }
+    }
+    static void RefreshDynamicSources()
+    {
+        try
+        {
+            var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothAbilities.ClassAbilityDiagnostics",false)).FirstOrDefault(t=>t!=null);
+            var json=type?.GetProperty("DamageSourcesJson")?.GetValue(null) as string;
+            if(string.IsNullOrEmpty(json)||json==dynamicJson)return;
+            using var document=JsonDocument.Parse(json);
+            foreach(var item in document.RootElement.EnumerateArray())
+            {
+                string id=item.GetProperty("SourceId").GetString()??"";if(id.Length==0)continue;
+                string rawId=id.Substring(id.IndexOf(':')+1);
+                // Talent DoT registry entries may carry their triggering spell's
+                // display metadata. The original talent catalog is authoritative
+                // for a known talent name/icon; retain runtime-only synthetic IDs.
+                if(id.StartsWith("AzerothTalent:",StringComparison.Ordinal)&&sources.TryGetValue(id,out var talent))
+                {talent.Id=rawId;continue;}
+                sources[id]=new SpellView{Id=rawId,Name=item.GetProperty("Name").GetString()??rawId,Icon=item.GetProperty("Icon").GetString()??"",Rank=item.GetProperty("Rank").GetInt32()};
+            }
+            dynamicJson=json;
+        }
+        catch(Exception error){Plugin.Current?.Log.LogWarning("Additional source damage metadata: "+error.Message);}
     }
     static void ReadCatalog(string assemblyName,string file,string array,string prefix)
     {
@@ -87,7 +118,7 @@ sealed class PostCombatAdapter
         string key=source.damageSource;
         if(!key.StartsWith("Azeroth:",StringComparison.Ordinal)&&!key.StartsWith("AzerothTalent:",StringComparison.Ordinal))return;
         int id=row.GetInstanceID();
-        if(!damageRows.TryGetValue(id,out var saved))damageRows[id]=saved=new SavedRow{Row=row,Name=row.t_sourceName?.text,Level=row.t_lvl?.text,Icon=row.icon?.texture,Damage=row.t_dmg?.text,Dps=row.t_dps?.text,Source=key,NativeDamage=source.damage};
+        if(!damageRows.TryGetValue(id,out var saved)||saved.Source!=key)damageRows[id]=saved=new SavedRow{Row=row,Name=row.t_sourceName?.text,Level=row.t_lvl?.text,Icon=row.icon?.texture,Damage=row.t_dmg?.text,Dps=row.t_dps?.text,Source=key,NativeDamage=source.damage};
         if(sources.TryGetValue(key,out var spell))
         {
             if(row.t_sourceName!=null)row.t_sourceName.text=spell.Name;
@@ -116,14 +147,14 @@ sealed class PostCombatAdapter
     {
         if(!mage){Restore();return;}
         RefreshSources(ids,ranks,names,descriptions,icons,loader);
-        if(retainedPortrait!=null)portrait=retainedPortrait;
+        if(retainedPortrait!=null&&retainedClass==SourcePresentation.ClassId)portrait=retainedPortrait;
         PostCombatDiagnostics.Visible=true;PostCombatDiagnostics.CombatHudHidden=true;
         foreach(var ui in Resources.FindObjectsOfTypeAll<DeathStatsUi>())
         {
             if(ui==null || !ui.gameObject.scene.IsValid() || !ui.gameObject.activeInHierarchy)continue;
             int id=ui.GetInstanceID();
             if(!summaries.TryGetValue(id,out var saved))summaries[id]=saved=new SavedSummary{Ui=ui,Name=ui.t_characterName?.text,Portrait=ui.i_character?.texture};
-            if(ui.t_characterName!=null)ui.t_characterName.text="Маг";
+            if(ui.t_characterName!=null)ui.t_characterName.text=SourcePresentation.ClassName;
             if(ui.i_character!=null&&portrait!=null)ui.i_character.texture=portrait;
             saved.Spells.RefreshRow(ui.weaponsParent,font,material,ids,ranks,names,descriptions,icons,loader);
             saved.Spells.PlaceAboveBooks(ui.tomesParent,UiManager.Instance?.deathScreen?.statsWindow?.transform??ui.transform);
@@ -158,7 +189,7 @@ sealed class PostCombatAdapter
         }
         damageRows.Clear();PostCombatDiagnostics.Visible=false;PostCombatDiagnostics.CombatHudHidden=false;PostCombatDiagnostics.SourcePortraitShown=false;PostCombatDiagnostics.DamageRowsMapped=0;PostCombatDiagnostics.ResultSpellCount=0;
     }
-    public void Dispose(){Restore();if(retainedPortrait!=null){retainedPortrait.Release();UnityEngine.Object.Destroy(retainedPortrait);}retainedPortrait=null;sources.Clear();catalogRead=false;textures=null;}
+    public void Dispose(){Restore();if(retainedPortrait!=null){retainedPortrait.Release();UnityEngine.Object.Destroy(retainedPortrait);}retainedPortrait=null;sources.Clear();catalogClass="";retainedClass="";textures=null;}
     internal static string[] DescribeDamage()=>damageRows.Values.Select(s=>$"source={s.Source};nativeDamage={s.NativeDamage:R};name={s.Row?.t_sourceName?.text};level={s.Row?.t_lvl?.text};icon={s.Row?.icon?.texture?.name};sourceIconMatches={sources.TryGetValue(s.Source,out var view)&&s.Row?.icon?.texture!=null&&string.Equals(s.Row.icon.texture.name,view.Icon,StringComparison.OrdinalIgnoreCase)};damageText={s.Row?.t_dmg?.text};dpsText={s.Row?.t_dps?.text};nativeDamageTextUnchanged={s.Row!=null&&s.Row.t_dmg?.text==s.Damage};nativeDpsTextUnchanged={s.Row!=null&&s.Row.t_dps?.text==s.Dps}").ToArray();
     internal string[] DescribeInventory(){var output=new List<string>();foreach(var summary in summaries.Values)output.AddRange(summary.Spells.Describe());return output.ToArray();}
 }

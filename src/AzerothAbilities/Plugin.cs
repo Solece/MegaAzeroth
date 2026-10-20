@@ -17,24 +17,28 @@ using UObject=UnityEngine.Object;
 
 namespace AzerothAbilities;
 
-[BepInPlugin(Id,"Azeroth Mage Abilities","0.3.2")]
+[BepInPlugin(Id,"Azeroth Class Abilities","0.4.0")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id="local.azerothmegabonk.abilities";
     internal static Plugin Current;
     internal SpellCatalog Catalog;
+    internal SpellCatalog LegacyMage;
+    internal ConfigEntry<bool> GenericMage=null!;
     internal ConfigEntry<string> SelectedClass=null!;
     internal ConfigEntry<bool> SpellVisuals=null!;
     private Harmony harmony;
     public override void Load()
     {
         Current=this;
-        SelectedClass=Config.Bind("Abilities","SelectedClass","none","Explicit Azeroth class selection: mage or none. Only mage replaces native weapon casting.");
+        SelectedClass=Config.Bind("Abilities","SelectedClass","none","Fallback source class when HeroRoster is absent; native HeroRoster selection is authoritative when installed.");
+        GenericMage=Config.Bind("Abilities","GenericMageRuntime",false,"Enable the new generic Mage engine only for integration verification; false preserves the validated legacy Mage engine.");
         SpellVisuals=Config.Bind("Abilities","SpellVisuals",true,"Original local Mage spell assets rendered with the Unity adapter.");
         try
         {
             var path=Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,"mage.json");
-            Catalog=SpellCatalog.Load(path);
+            LegacyMage=Catalog=SpellCatalog.Load(path);
+            ClassCatalogs.Load(Path.Combine(Path.GetDirectoryName(path),"catalogs"));
             Log.LogInfo($"Loaded source-backed {Catalog.ClassId} rank-one catalog ({Catalog.Spells.Count} spells), source SHA256 {Catalog.SourceSha256}. Original upgrade modifiers and extended Mage behaviors loaded.");
             AbilityRuntime.Initialize(Catalog);
             SpellVfx.Initialize();MageSpellBehaviors.VisualEvent=SpellVfx.Play;
@@ -50,18 +54,21 @@ public sealed class Plugin : BasePlugin
 public static class HudBridge
 {
     public static bool Active=>AbilityRuntime.Active;
-    public static string ClassId=>Active?"mage":"";
+    public static string ClassId=>Active?AbilityRuntime.Catalog.ClassId:"";
+    public static bool GenericRuntime=>ClassCombat.GenericActive;
+    public static string ClassCombatSnapshotJson=>ClassCombat.SnapshotJson;
     public static string[] SpellIds=>AbilityRuntime.Spells.Select(s=>s.Definition.Id).ToArray();
     public static int[] SpellRanks=>AbilityRuntime.Spells.Select(s=>s.Rank).ToArray();
     public static string[] SpellNames=>AbilityRuntime.Spells.Select(s=>s.Definition.Name).ToArray();
     public static string[] SpellDescriptions=>AbilityRuntime.Spells.Select(DescribeSpell).ToArray();
     public static string[] SpellIcons=>AbilityRuntime.Spells.Select(s=>s.Definition.Icon).ToArray();
-    public static int[] EffectiveQuantities=>AbilityRuntime.Spells.Select(s=>s.Definition.Kind is "projectile" or "missiles" or "instant"?TomeCompatibility.Quantity(s):1).ToArray();
+    public static int[] EffectiveQuantities=>AbilityRuntime.Spells.Select(s=>s.Definition.Targets>0?(ClassCombat.GenericActive?ClassSpellBehaviors.Quantity(s):TomeCompatibility.Quantity(s)):1).ToArray();
     public static float[] EffectiveDamages=>AbilityRuntime.Spells.Select(AbilityRuntime.Damage).ToArray();
-    public static float[] EffectiveRadii=>AbilityRuntime.Spells.Select(s=>s.Definition.Radius*s.RadiusFactor*MageSpellBehaviors.RadiusScale(s)*TomeCompatibility.Size).ToArray();
+    public static float[] EffectiveRadii=>AbilityRuntime.Spells.Select(s=>ClassCombat.GenericActive?ClassSpellBehaviors.Radius(s):s.Definition.Radius*s.RadiusFactor*MageSpellBehaviors.RadiusScale(s)*TomeCompatibility.Size).ToArray();
     public static float[] EffectiveDurations=>AbilityRuntime.Spells.Select(TomeCompatibility.SpellDuration).ToArray();
     private static string DescribeSpell(LearnedSpell spell)
     {
+        if(ClassCombat.GenericActive)return GenericDescription.Spell(spell);
         var d=spell.Definition;var result=$"{d.Name} · Rank {spell.Rank}\nCooldown: {AbilityRuntime.Cooldown(spell):0.##} sec";
         if(d.Kind=="barrier")result+=$"\nAbsorbs {d.StatusValue*(AbilityRuntime.Catalog?.DamageScale??1)*Mathf.Sqrt(spell.DamageFactor)*Mathf.Max(0,MageSpellBehaviors.BarrierMultiplier?.Invoke(spell)??1)*100:0.#}% max HP";
         else if(d.Kind=="passive")result+=$"\n12% hit chance · 15% max HP explosion, damage cap {AbilityRuntime.Damage(spell):0.##}";
@@ -72,8 +79,8 @@ public static class HudBridge
         if(d.Duration>0)result+=$"\nDuration: {TomeCompatibility.SpellDuration(spell):0.##} sec";
         return result;
     }
-    public static float[] CooldownsRemaining=>AbilityRuntime.Spells.Select(s=>Mathf.Max(0,s.NextCast-CombatSimulation.Time)).ToArray();
-    public static float[] CooldownsTotal=>AbilityRuntime.Spells.Select(AbilityRuntime.Cooldown).ToArray();
+    public static float[] CooldownsRemaining=>AbilityRuntime.Spells.Select(s=>ClassCombat.GenericActive&&s.Definition.Kind=="passive"?ClassPassives.CooldownRemaining(s):Mathf.Max(0,s.NextCast-CombatSimulation.Time)).ToArray();
+    public static float[] CooldownsTotal=>AbilityRuntime.Spells.Select(s=>ClassCombat.GenericActive&&s.Definition.Kind=="passive"?ClassPassives.CooldownTotal(s):AbilityRuntime.Cooldown(s)).ToArray();
         public static float[] SourceDamages=>AbilityRuntime.Spells.Select(s=>s.Definition.BaseDamage*s.Definition.CastDamageScale*AbilityRuntime.Catalog.DamageScale*s.DamageFactor).ToArray();
     public static float[] SourceCooldowns=>AbilityRuntime.Spells.Select(s=>s.Definition.BaseCooldown*AbilityRuntime.Catalog.CooldownScale*s.CooldownFactor).ToArray();
     // Call from the Unity game thread. Rarity is the original Azeroth index0..4.
@@ -90,7 +97,7 @@ public static class HudBridge
     public static int CastCount=>AbilityRuntime.CastCount;
     public static int HitCount=>AbilityRuntime.HitCount;
     public static float DamageDealt=>AbilityRuntime.DamageDealt;
-    public static float BarrierRemaining=>MageSpellBehaviors.BarrierRemaining;
+    public static float BarrierRemaining=>ClassCombat.GenericActive?ClassCombat.ShieldRemaining:MageSpellBehaviors.BarrierRemaining;
     public static string LastCastSpell=>AbilityRuntime.LastCastSpell;
     public static Vector3 LastCastDirection=>AbilityRuntime.LastCastDirection;
     public static int SourceVfxSpawned=>SpellVfx.Spawned;
@@ -107,9 +114,10 @@ public static class HudBridge
     public static string[] AvailableChoices=>AbilityRuntime.Choices().Select(c=>c.Label).ToArray();
     public static bool SelectClass(string classId)
     {
-        if(classId is not ("mage" or "none") || Plugin.Current?.Catalog==null)return false;
+        if((classId!="none" && !ClassCatalogs.ClassIds.Contains(classId)) || Plugin.Current?.Catalog==null)return false;
+        if(ClassCatalogs.HasHeroRoster)return false;
         Plugin.Current.SelectedClass.Value=classId;
-        AbilityRuntime.ResetRun();return true;
+        ClassCatalogs.Refresh();AbilityRuntime.ResetRun();return true;
     }
 }
 
@@ -120,65 +128,129 @@ public static class AbilityRuntime
     public static Action<LearnedSpell,Enemy,DamageContainer,float> HitEvent;
     public static Action<LearnedSpell,Vector3> CastEvent;
     private static Vector3? castOrigin;
+    static LearnedSpell autoWeapon;static float nextAuto;
+    static int castSerial,currentCastSerial;static readonly HashSet<int> criticalCasts=new();
+    internal static int CurrentCastSerial=>currentCastSerial;
+    internal static Vector3? OverrideCastOrigin=>castOrigin;
+    internal static float OverrideCastDamage=>castDamageScale;
+    internal static float OverrideCastRange=>castRange;
     private static float castDamageScale=1,castRange;
     public static readonly List<LearnedSpell> Spells=new();
     internal static readonly List<SpellProjectile> Projectiles=new();
     internal static SpellCatalog Catalog;
     private static IntPtr lastInventory;
+    private static IntPtr initializedNativeHealth;
+    private static bool nativeRunVitalsPending;
     private static float nextSummary;
     private static bool reported;
+    internal static readonly Dictionary<string,int> CastsBySpell=new(),HitsBySpell=new();
+    internal static readonly Dictionary<string,float> DamageBySpell=new();
     public static int CastCount {get;private set;}
     public static int HitCount {get;private set;}
     public static float DamageDealt {get;private set;}
     public static string LastCastSpell {get;private set;}="";
     public static Vector3 LastCastDirection {get;private set;}=Vector3.forward;
-    public static bool Active=>Catalog!=null && Plugin.Current?.SelectedClass.Value==Catalog.ClassId;
+    public static bool Active=>Catalog!=null && ClassCatalogs.ActiveClass==Catalog.ClassId;
     internal static void Initialize(SpellCatalog catalog){Catalog=catalog;}
     internal static void Clear()
     {
         foreach(var p in Projectiles)p.Dispose();Projectiles.Clear();Spells.Clear();lastInventory=IntPtr.Zero;
-        MageSpellBehaviors.Clear();SpellVfx.Clear();
+        MageSpellBehaviors.Clear();SpellVfx.Clear();ClassCombat.ClearScene();
     }
     public static void ResetRun()
     {
-        Clear();CombatSimulation.Reset();CastCount=HitCount=0;DamageDealt=0;reported=false;
-        TomeCompatibilityDiagnostics.Reset();
+        Clear();CombatSimulation.Reset();CastCount=HitCount=0;DamageDealt=0;reported=false;CastsBySpell.Clear();HitsBySpell.Clear();DamageBySpell.Clear();DamageSourceRegistry.Clear();
+        TomeCompatibilityDiagnostics.Reset();ClassCombat.Reset();autoWeapon=null;nextAuto=0;criticalCasts.Clear();castSerial=currentCastSerial=0;
+        if(ClassCombat.GenericActive && Catalog.SourceClass.SourceAutoWeapon.Enabled)
+        {var a=Catalog.SourceClass.SourceAutoWeapon;autoWeapon=new LearnedSpell(new SpellDefinition{Id="source_auto_weapon",Name=Catalog.SourceClass.Name+" Auto Attack",Icon=Catalog.SourceClass.Icon,SourceKind=1,SourceSpellId=0,Kind="melee",School="Physical",BaseDamage=a.Damage*1.5f,BaseCooldown=a.Cooldown,Range=a.Range,Targets=1,CastKindId=5,CastDamageScale=1});}
         var starter=StarterOverride?.Invoke(Catalog?.StartingSpell??"fireball")??Catalog?.StartingSpell;
         if(Active && Catalog!=null)Spells.Add(new LearnedSpell(Catalog.Spells.First(s=>s.Id==starter)));
         lastInventory=MyPlayer.Instance?.inventory?.Pointer??IntPtr.Zero;
-        Plugin.Current?.Log.LogInfo($"Azeroth run reset: selected={Plugin.Current.SelectedClass.Value}; source-backed rank-one spells={Spells.Count}");
+        Plugin.Current?.Log.LogInfo($"Azeroth run reset: selected={ClassCatalogs.ActiveClass}; source-backed rank-one spells={Spells.Count}");
     }
     // A native stage change keeps the same run and its learned source upgrades.
     // Only scene-owned projectiles/statuses are discarded; ResetRun is reserved for a new run.
     public static void RebindNativeStage()
     {
         foreach(var projectile in Projectiles)projectile.Dispose();Projectiles.Clear();
-        MageSpellBehaviors.Clear();SpellVfx.Clear();
+        MageSpellBehaviors.Clear();SpellVfx.Clear();ClassCombat.ClearScene();
         foreach(var spell in Spells)spell.NextCast=CombatSimulation.Time;
         lastInventory=MyPlayer.Instance?.inventory?.Pointer??IntPtr.Zero;
         Plugin.Current?.Log.LogInfo($"Azeroth stage rebound: stage={MapController.GetStageIndex()},final={MapController.IsFinalBossStage()}; retained="+string.Join(",",Spells.Select(s=>$"{s.Definition.Id}:{s.Rank}")));
     }
+    internal static void PrepareNativeRunVitals()=>nativeRunVitalsPending=true;
     public static void StartNativePlayer()
     {
-        if(Active && Spells.Count>0 && (MapController.GetStageIndex()>0 || MapController.IsFinalBossStage()))RebindNativeStage();
-        else ResetRun();
+        ClassCatalogs.FinishNativeInventory();
+        bool continuing=Active && Spells.Count>0 && (MapController.GetStageIndex()>0 || MapController.IsFinalBossStage());
+        if(!ClassCatalogs.Refresh())
+        {
+            if(continuing)RebindNativeStage();else ResetRun();
+        }
+        RefreshNativeStartupVitals(!continuing);
+    }
+    private static void RefreshNativeStartupVitals(bool newRun)
+    {
+        if(!ClassCombat.GenericActive)return;
+        var health=MyPlayer.Instance?.inventory?.playerHealth;if(health==null)return;
+        bool fill=newRun && (nativeRunVitalsPending || initializedNativeHealth!=health.Pointer);
+        int beforeHp=health.hp,beforeMax=health.maxHp;
+        float carried=health.leftOverHeal,overheal=health.overheal;
+        var update=AccessTools.Method(typeof(PlayerHealth),"OnStatUpdate");
+        if(update==null)throw new MissingMethodException(typeof(PlayerHealth).FullName,"OnStatUpdate");
+        // The native constructor caches instance stats before the source static
+        // adapters are fully bound. ResetRun's talent postfix has now completed.
+        // Native UpdateMaxValues also heals by the maximum-HP delta; refreshing
+        // a continuing run must preserve its HP and fractional healing instead.
+        try
+        {
+            update.Invoke(health,new object[]{EStat.MaxHealth});
+            update.Invoke(health,new object[]{EStat.HealthRegen});
+        }
+        finally
+        {
+            health.hp=fill?health.maxHp:Math.Min(beforeHp,health.maxHp);
+            health.leftOverHeal=fill?0:carried;
+            health.overheal=Mathf.Min(overheal,health.maxOverheal);
+        }
+        initializedNativeHealth=health.Pointer;nativeRunVitalsPending=false;
+        Plugin.Current?.Log.LogInfo($"Azeroth native vitals initialized: class={Catalog.ClassId},stage={MapController.GetStageIndex()},newRunFill={fill},hp={beforeHp}->{health.hp},maxHp={beforeMax}->{health.maxHp},sourceStat={PlayerStats.GetStat(EStat.MaxHealth):F3}");
     }
     internal static float Stat(EStat stat)
     {
         try{return PlayerStats.GetStat(stat);}catch{return stat is EStat.Projectiles or EStat.ProjectileBounces or EStat.CritChance?0:1;}
     }
-    public static float Cooldown(LearnedSpell s)=>Mathf.Max(Catalog?.CooldownFloor??0.25f,s.Definition.BaseCooldown*(Catalog?.CooldownScale??1)*s.CooldownFactor/Mathf.Max(0.1f,Stat(EStat.AttackSpeed)));
-    public static float Damage(LearnedSpell s)=>s.Definition.BaseDamage*s.Definition.CastDamageScale*(Catalog?.DamageScale??1)*s.DamageFactor*Mathf.Max(0,Stat(EStat.DamageMultiplier));
+    public static float Cooldown(LearnedSpell s)
+    {
+        if(!ClassCombat.GenericActive)return Mathf.Max(Catalog?.CooldownFloor??.25f,s.Definition.BaseCooldown*(Catalog?.CooldownScale??1)*s.CooldownFactor/Mathf.Max(.1f,Stat(EStat.AttackSpeed)));
+        float raw=s.Definition.BaseCooldown*(Catalog?.CooldownScale??1.4f)*s.CooldownFactor*Mathf.Max(0,1-ClassCombat.SpellBonus(s,1));
+        return Mathf.Max(s.Definition.SourcePassive?.CooldownFloorBeforeHaste??.25f,Mathf.Max(.25f,raw))/Mathf.Max(.1f,Stat(EStat.AttackSpeed))/ClassSpellBehaviors.StatusFactor(s);
+    }
+    public static float Damage(LearnedSpell s)
+    {
+        float source=s.Definition.BaseDamage*s.Definition.CastDamageScale*(Catalog?.DamageScale??1)*s.DamageFactor;
+        if(ClassCombat.GenericActive)
+        {
+            source*=Mathf.Max(0,1+ClassCombat.SpellBonus(s,0));
+            // Source learned+4C is modifier5: additive own maximum-health damage.
+            // The cast-kind .5 scale affects the base part, not this additive part.
+            if(s.Definition.BaseDamage>0)source+=ClassCombat.MaximumHealth*ClassCombat.SpellBonus(s,5);
+        }
+        return source*Mathf.Max(0,Stat(EStat.DamageMultiplier));
+    }
     internal static void Tick()
     {
+        ClassCatalogs.Refresh();
         var p=MyPlayer.Instance;
         if(!Active || p==null || !p.hasStarted || p.inventory==null)return;
         if(lastInventory!=p.inventory.Pointer){StartNativePlayer();lastInventory=p.inventory.Pointer;}
         if(!CombatSimulation.CanSimulate)return;
-        MageSpellBehaviors.Tick();
-        if(!reported){reported=true;Plugin.Current?.Log.LogInfo($"Azeroth Mage runtime active; starting {Spells[0].Definition.Id}, source damage={Spells[0].Definition.BaseDamage*Catalog!.DamageScale:F3}, source cooldown={Spells[0].Definition.BaseCooldown*Catalog.CooldownScale:F3}. Megabonk tome/item multipliers applied separately. Native WeaponBase.Use suppressed.");}
+        if(ClassCombat.GenericActive)ClassCombat.Tick();else MageSpellBehaviors.Tick();
+        if(ClassCombat.GenericActive && autoWeapon!=null && !TomeCompatibilityDiagnostics.SuppressAutomaticCasting && CombatSimulation.Time>=nextAuto)
+        {var enemies=Targets(p.transform.position,autoWeapon.Definition.Range,true);if(enemies.Count>0){Hit(autoWeapon,enemies[0],autoWeapon.Definition.BaseDamage*Mathf.Max(0,Stat(EStat.DamageMultiplier)),p.transform.position);nextAuto=CombatSimulation.Time+autoWeapon.Definition.BaseCooldown*1.2f/Mathf.Sqrt(Mathf.Max(.1f,Stat(EStat.AttackSpeed)));}}
+        if(!reported){reported=true;Plugin.Current?.Log.LogInfo($"Azeroth {Catalog.ClassId} runtime active; starting {Spells[0].Definition.Id}, source damage={Spells[0].Definition.BaseDamage*Catalog!.DamageScale:F3}, source cooldown={Spells[0].Definition.BaseCooldown*Catalog.CooldownScale:F3}. Megabonk tome/item multipliers applied separately. Native WeaponBase.Use suppressed.");}
         for(int i=Projectiles.Count-1;i>=0;i--)if(!Projectiles[i].Tick(CombatSimulation.DeltaTime)){Projectiles[i].Dispose();Projectiles.RemoveAt(i);}
-        foreach(var spell in Spells)
+        foreach(var spell in Spells.ToArray())
         {
             if(TomeCompatibilityDiagnostics.SuppressAutomaticCasting)break;
             if(spell.Definition.Kind=="passive")continue;
@@ -215,6 +287,16 @@ public static class AbilityRuntime
     private static bool Cast(LearnedSpell spell,MyPlayer player)
     {
         if(!CombatSimulation.CanSimulate)return false;
+        if(ClassCombat.GenericActive)
+        {
+            int saved=currentCastSerial;currentCastSerial=++castSerial;
+            try
+            {
+                bool casted=ClassSpellBehaviors.TryCast(spell,player);
+                if(casted){RecordCast(spell,player);ClassCombat.Event(7,spell,null,0);}return casted;
+            }
+            finally{currentCastSerial=saved;}
+        }
         if(MageSpellBehaviors.TryCast(spell,player,out var specialCasted))
         {if(specialCasted)RecordCast(spell,player);return specialCasted;}
         var d=spell.Definition;var origin=castOrigin??(player.transform.position+Vector3.up*0.8f);
@@ -242,7 +324,7 @@ public static class AbilityRuntime
     private static void RecordCast(LearnedSpell spell,MyPlayer player,Vector3? target=null)
     {
         if(castOrigin.HasValue){SpellVfx.Play(spell.Definition.Id,"cast",castOrigin.Value,1,.25f);return;}
-        CastCount++;LastCastSpell=spell.Definition.Id;
+        CastCount++;CastsBySpell[spell.Definition.Id]=CastsBySpell.TryGetValue(spell.Definition.Id,out var casted)?casted+1:1;LastCastSpell=spell.Definition.Id;
         LastCastDirection=target.HasValue?(target.Value-player.transform.position).normalized:player.transform.forward;
         if(spell.Definition.Kind is "projectile" or "missiles" or "instant")
         {
@@ -256,7 +338,7 @@ public static class AbilityRuntime
     {
         var player=MyPlayer.Instance;if(!CombatSimulation.CanSimulate || player?.inventory==null || !player.hasStarted)return false;
         var spell=Spells.FirstOrDefault(s=>s.Definition.Id==id);
-        var definition=Catalog.Spells.FirstOrDefault(s=>s.Id==id);if(definition==null)return false;
+        var definition=ClassCatalogs.Definition(id);if(definition==null)return false;
         return Cast(spell??new LearnedSpell(definition),player);
     }
     public static bool LearnStartingSpell(string id)
@@ -267,7 +349,7 @@ public static class AbilityRuntime
     public static bool LaunchPetProjectile(Enemy target,Vector3 origin,float damage)
     {
         if(!CombatSimulation.CanSimulate || target==null || target.IsDeadOrDyingNextFrame())return false;
-        var definition=new SpellDefinition{Id="water_elemental",Name="Water Elemental",School="Frost",Kind="projectile",BaseDamage=50,ProjectileSpeed=28,Range=28,Targets=1,StatusKind=1,StatusValue=.3f,StatusDuration=2};
+        var definition=new SpellDefinition{Id="water_elemental",Name="Water Elemental",Icon="Spell_Frost_SummonWaterElemental",School="Frost",Kind="projectile",BaseDamage=50,ProjectileSpeed=28,Range=28,Targets=1,StatusKind=1,StatusValue=.3f,StatusDuration=2};
         Projectiles.Add(new SpellProjectile(new LearnedSpell(definition),target,origin,damage,28,28));return true;
     }
     public static bool CastFreeSpellAt(string id,Vector3 origin,float damageMultiplier=1,float rangeOverride=0)
@@ -276,26 +358,60 @@ public static class AbilityRuntime
         try{castOrigin=origin;castDamageScale=Mathf.Max(0,damageMultiplier);castRange=rangeOverride;return CastFreeSpell(id);}
         finally{castOrigin=oldOrigin;castDamageScale=oldScale;castRange=oldRange;}
     }
-    public static void Hit(LearnedSpell spell,Enemy target,float damage,Vector3 from)
+    public static void Hit(LearnedSpell spell,Enemy target,float damage,Vector3 from,int castToken=0)
+        =>HitMeasured(spell,target,damage,from,castToken);
+    internal static float HitMeasured(LearnedSpell spell,Enemy target,float damage,Vector3 from,int castToken=0,bool allowCritical=true)
     {
-        if(!CombatSimulation.CanSimulate || target==null || target.IsDeadOrDyingNextFrame())return;
-        MageSpellBehaviors.BeforeHit(spell,target);if(target.IsDeadOrDyingNextFrame())return;
+        if(!CombatSimulation.CanSimulate || target==null || target.IsDeadOrDyingNextFrame())return 0;
+        if(ClassCombat.GenericActive)ClassPassives.BeforeHit(spell,target);else MageSpellBehaviors.BeforeHit(spell,target);if(target.IsDeadOrDyingNextFrame())return 0;
+        if(ClassCombat.GenericActive)damage*=ClassCombat.DamageFactor(spell,target);
+        DamageSourceRegistry.Register("Azeroth:"+spell.Definition.Id,spell);
         var dc=new DamageContainer(0,"Azeroth:"+spell.Definition.Id)
         {
             damage=damage,direction=(target.transform.position-from).normalized,knockback=0,
             element=spell.Definition.School=="Fire"?EElement.Fire:spell.Definition.School=="Frost"?EElement.Ice:EElement.Neutral,
             crit=false,isExecute=false,enemy=target
         };
-        var hp=target.hp;
-        TomeCompatibility.ApplyCritical(dc);
-        BeforeHitEvent?.Invoke(spell,target,dc);
-        TomeCompatibilityDiagnostics.RecordHit(spell,target,dc);
-        target.DamageFromPlayerOther(dc);
-        MageSpellBehaviors.AfterHit(spell,target,dc);HitEvent?.Invoke(spell,target,dc,hp);
+        var hp=target.hp;float actual=0;
+        if(allowCritical)TomeCompatibility.ApplyCritical(dc);
+        try
+        {
+            BeforeHitEvent?.Invoke(spell,target,dc);
+            TomeCompatibilityDiagnostics.RecordHit(spell,target,dc);
+            target.DamageFromPlayerOther(dc);
+            actual=Mathf.Max(0,hp-target.hp);
+            if(ClassCombat.GenericActive)
+            {
+                ClassSpellBehaviors.AfterHit(spell,target,dc,actual);ClassPassives.AfterHit(spell,target,dc,actual);
+                ClassCombat.Event(1,spell,target,actual);
+                if(dc.crit)
+                {
+                    ClassCombat.Event(2,spell,target,actual);int token=castToken!=0?castToken:currentCastSerial;
+                    if(token!=0 && criticalCasts.Add(token))ClassCombat.Event(3,spell,target,actual);
+                }
+            }
+            else MageSpellBehaviors.AfterHit(spell,target,dc);
+        }
+        finally{HitEvent?.Invoke(spell,target,dc,hp);}
         SpellVfx.Play(spell.Definition.Id,"impact",target.transform.position+Vector3.up*.8f,1,.2f);
-        HitCount++;DamageDealt+=Mathf.Max(0,hp-target.hp);
+        HitCount++;DamageDealt+=actual;
+        var id=spell.Definition.Id;HitsBySpell[id]=HitsBySpell.TryGetValue(id,out var count)?count+1:1;DamageBySpell[id]=(DamageBySpell.TryGetValue(id,out var dealt)?dealt:0)+actual;
         if(HitCount<=8)Plugin.Current?.Log.LogInfo($"Azeroth hit {spell.Definition.Id}: enemy={target.id},requested={damage:F3},hp={hp:F3}->{target.hp:F3}");
+        return actual;
     }
+    internal static float HitTalentDot(LearnedSpell spell,Enemy target,float damage,string id)
+    {
+        if(!CombatSimulation.CanSimulate || target==null || target.IsDeadOrDyingNextFrame())return 0;
+        DamageSourceRegistry.Register("AzerothTalent:"+id,spell);
+        var dc=new DamageContainer(0,"AzerothTalent:"+id){damage=damage,crit=false,knockback=0,enemy=target,direction=Vector3.zero,element=spell.Definition.School=="Fire"?EElement.Fire:spell.Definition.School=="Frost"?EElement.Ice:EElement.Neutral};
+        float before=target.hp;
+        try{BeforeHitEvent?.Invoke(spell,target,dc);TomeCompatibilityDiagnostics.RecordHit(spell,target,dc);target.DamageFromPlayerOther(dc);}
+        finally{HitEvent?.Invoke(spell,target,dc,before);}
+        float actual=Mathf.Max(0,before-target.hp);HitCount++;DamageDealt+=actual;
+        string key="talent:"+id;HitsBySpell[key]=HitsBySpell.TryGetValue(key,out var count)?count+1:1;DamageBySpell[key]=(DamageBySpell.TryGetValue(key,out var dealt)?dealt:0)+actual;
+        return actual;
+    }
+    internal static void AddProjectile(LearnedSpell spell,Enemy target,Vector3 origin,float damage,float delay=0)=>Projectiles.Add(new SpellProjectile(spell,target,origin,damage,launchDelay:delay,castToken:currentCastSerial));
     internal static List<AbilityChoice> Choices(int rarity=0)
     {
         var result=new List<AbilityChoice>();
@@ -331,28 +447,32 @@ internal sealed class AbilityChoice
 {
     internal SpellDefinition Spell; internal UpgradeDefinition Upgrade; internal AbilityChoice(SpellDefinition spell,UpgradeDefinition upgrade){Spell=spell;Upgrade=upgrade;}
     internal string Label=>Upgrade==null?"Learn "+Spell.Name:Spell.Name+": "+Upgrade.Description;
-    internal string Description=>Upgrade?.Description ?? (Spell.Kind switch
+    internal string Description=>Upgrade?.Description ?? (ClassCombat.GenericActive?GenericDescription.Spell(new LearnedSpell(Spell)):(Spell.Kind switch
     {
         "barrier"=>$"Absorbs {Spell.StatusValue*AbilityRuntime.Catalog.DamageScale*100:0.#}% max HP for {Spell.Duration*AbilityRuntime.Catalog.DurationScale:0.#} sec; refreshes when broken.",
         "passive"=>$"12% spell-hit chance to polymorph for 10 sec; up to 3 sheep. Next hit explodes for 15% max HP, capped at {Spell.BaseDamage*AbilityRuntime.Catalog.DamageScale:0.#}; radius {Spell.Radius:0.#}.",
         "groundAoe"=>$"{Spell.BaseDamage*AbilityRuntime.Catalog.DamageScale/Math.Max(1,Spell.Ticks):0.##} {Spell.School} damage per tick for {Spell.Duration*AbilityRuntime.Catalog.DurationScale:0.#} sec; radius {Spell.Radius:0.#}.",
         _=>$"Rank 1 · {Spell.BaseDamage*Spell.CastDamageScale*AbilityRuntime.Catalog.DamageScale:0.##} {Spell.School} damage · {Spell.BaseCooldown*AbilityRuntime.Catalog.CooldownScale:0.##} sec cooldown."
-    });
+    }));
 }
 
 internal sealed class SpellProjectile
 {
     private readonly LearnedSpell spell;private Enemy target;private uint enemyId;
-    private readonly float damage,speed,range,size,launchAt;
+    private readonly float damage,speed,range,size,launchAt;private readonly int castToken;
+    private readonly bool appliesDot;
+    private Vector3 dotLegOrigin;private float dotLegStarted,dotLegDue,dotLegDistance,dotDistanceBefore;
     private readonly HashSet<uint> hitEnemies=new();
     private int bounces;
     private Vector3 pos;private float distance;private GameObject visual;
-    internal SpellProjectile(LearnedSpell spell,Enemy target,Vector3 position,float damage,float speedOverride=0,float rangeOverride=0,float launchDelay=0)
+    internal SpellProjectile(LearnedSpell spell,Enemy target,Vector3 position,float damage,float speedOverride=0,float rangeOverride=0,float launchDelay=0,int castToken=0)
     {
-        this.spell=spell;this.target=target;enemyId=target.id;pos=position;this.damage=damage;
+        this.castToken=castToken;this.spell=spell;this.target=target;enemyId=target.id;pos=position;this.damage=damage;
         speed=(speedOverride>0?speedOverride:spell.Definition.ProjectileSpeed)*TomeCompatibility.ProjectileSpeed;
         range=(rangeOverride>0?rangeOverride:spell.Definition.Range)*TomeCompatibility.Duration;
         size=TomeCompatibility.Size;bounces=TomeCompatibility.ExtraBounces;launchAt=CombatSimulation.Time+Mathf.Max(0,launchDelay);
+        appliesDot=ClassCombat.GenericActive&&spell.Definition.Kind=="damageOverTime";
+        if(appliesDot)BeginDotLeg(launchAt);
         TomeCompatibilityDiagnostics.ProjectileCreated();
         if(launchDelay<=0)EnsureVisual();
     }
@@ -361,7 +481,13 @@ internal sealed class SpellProjectile
         if(visual==null && Plugin.Current!.SpellVisuals.Value && AbilityBehaviour.RenderVisuals)
         {visual=SpellVfx.Projectile(spell.Definition.Id,pos,size);if(visual!=null)TomeCompatibilityDiagnostics.ProjectileVisualCreated();}
     }
-    internal object Snapshot()=>new{Spell=spell.Definition.Id,Enemy=enemyId,X=pos.x,Y=pos.y,Z=pos.z,Distance=distance,Range=range,Speed=speed,Size=size,Bounces=bounces,LaunchRemaining=Mathf.Max(0,launchAt-CombatSimulation.Time),HasVisual=visual!=null};
+    private void BeginDotLeg(float started)
+    {
+        dotLegOrigin=pos;dotLegStarted=started;dotDistanceBefore=distance;
+        var delta=target.transform.position-pos;delta.y=0;dotLegDistance=delta.magnitude;
+        dotLegDue=started+dotLegDistance/Mathf.Max(.0001f,speed);
+    }
+    internal object Snapshot()=>new{Spell=spell.Definition.Id,Enemy=enemyId,X=pos.x,Y=pos.y,Z=pos.z,Distance=distance,Range=range,Speed=speed,Size=size,Bounces=bounces,LaunchRemaining=Mathf.Max(0,launchAt-CombatSimulation.Time),AppliesDamageOverTime=appliesDot,DotDeliveryRemaining=appliesDot?Mathf.Max(0,dotLegDue-CombatSimulation.Time):0,HasVisual=visual!=null};
     internal bool Tick(float dt)
     {
         if(!CombatSimulation.CanSimulate)return true;
@@ -369,11 +495,24 @@ internal sealed class SpellProjectile
         if(target==null || target.id!=enemyId || target.IsDeadOrDyingNextFrame() || distance>range)return false;
         EnsureVisual();
         var endpoint=target.collider!=null?target.collider.bounds.center:target.transform.position+Vector3.up;
+        if(appliesDot)
+        {
+            float progress=Mathf.Clamp01((CombatSimulation.Time-dotLegStarted)/Mathf.Max(.0001f,dotLegDue-dotLegStarted));
+            pos=Vector3.Lerp(dotLegOrigin,endpoint,progress);distance=dotDistanceBefore+dotLegDistance*progress;
+            if(visual!=null){visual.transform.position=pos;var facing=endpoint-pos;if(facing.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(facing);}
+            if(CombatSimulation.Time<dotLegDue)return true;
+            hitEnemies.Add(enemyId);pos=endpoint;
+            ClassSpellBehaviors.ApplySpellDot(spell,target,damage,castToken);TomeCompatibilityDiagnostics.ProjectileHit();
+            if(bounces<=0)return false;
+            var nextDot=AbilityRuntime.Targets(endpoint,Mathf.Max(0,range-distance),false).FirstOrDefault(e=>!hitEnemies.Contains(e.id));
+            if(nextDot==null)return false;
+            bounces--;target=nextDot;enemyId=nextDot.id;BeginDotLeg(CombatSimulation.Time);TomeCompatibilityDiagnostics.ProjectileBounced();return true;
+        }
         var step=speed*dt;
         if((endpoint-pos).sqrMagnitude<=Mathf.Max(0.2f*size,step)*Mathf.Max(0.2f*size,step))
         {
             var from=pos;hitEnemies.Add(enemyId);pos=endpoint;
-            AbilityRuntime.Hit(spell,target,damage,from);TomeCompatibilityDiagnostics.ProjectileHit();
+            AbilityRuntime.Hit(spell,target,damage,from,castToken);TomeCompatibilityDiagnostics.ProjectileHit();
             if(bounces<=0)return false;
             var next=AbilityRuntime.Targets(endpoint,Mathf.Max(0,range-distance),false).FirstOrDefault(e=>!hitEnemies.Contains(e.id));
             if(next==null)return false;
@@ -393,7 +532,7 @@ public sealed class AbilityBehaviour : MonoBehaviour
     private bool failed;
     private void Update()
     {
-        try{AbilityRuntime.Tick();}catch(Exception ex){if(!failed){failed=true;Plugin.Current?.Log.LogError("Azeroth spell tick failed; Mage selection, learned ranks and native weapon suppression retained: "+ex);}}
+        try{AbilityRuntime.Tick();}catch(Exception ex){if(!failed){failed=true;Plugin.Current?.Log.LogError("Azeroth spell tick failed; class selection, learned ranks and native weapon suppression retained: "+ex);}}
     }
     internal static GameObject Orb(Vector3 position,string school)
     {
@@ -430,3 +569,12 @@ internal static class StartRunPatch
 
 
 
+
+[HarmonyPatch(typeof(MapSelectionUi),nameof(MapSelectionUi.StartMap))]
+internal static class SourcePrepareInventoryPatch
+{
+    // Source class/race bases and selected talents must be bound before the
+    // native inventory constructor caches its first PlayerStatsNew values.
+    [HarmonyPriority(Priority.First)]
+    static void Prefix(){AbilityRuntime.PrepareNativeRunVitals();ClassCatalogs.PrepareNativeInventory();}
+}

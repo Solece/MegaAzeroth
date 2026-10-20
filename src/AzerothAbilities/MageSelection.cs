@@ -34,6 +34,7 @@ public sealed class MageSelectionBehaviour : MonoBehaviour
         nextRefresh = Time.unscaledTime + 0.25f;
         try
         {
+            if(ClassCatalogs.HasHeroRoster){SetVisible(false);return;}
             var plugin = Plugin.Current;
             if (plugin?.Catalog == null) return;
             if (IsRunStarted()) { SetVisible(false); return; }

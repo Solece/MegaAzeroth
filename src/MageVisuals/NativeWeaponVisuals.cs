@@ -16,7 +16,7 @@ internal static class NativeWeaponVisuals
     static Type bridge;
     internal static bool Active
     {
-        get{bridge??=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothAbilities.HudBridge")).FirstOrDefault(t=>t!=null);return bridge!=null && (bool)(bridge.GetProperty("Active")?.GetValue(null)??false);}
+        get{bridge??=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothAbilities.HudBridge")).FirstOrDefault(t=>t!=null);return HeroAppearance.HasActiveSourceClass || (bridge!=null && (bool)(bridge.GetProperty("Active")?.GetValue(null)??false));}
     }
     internal static int Count=>hidden.Values.Count(x=>x.Renderer!=null);
     internal static int EnabledCount=>hidden.Values.Count(x=>x.Renderer!=null && x.Renderer.enabled);

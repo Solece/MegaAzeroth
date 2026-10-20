@@ -1,0 +1,2509 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "convection",
+      "name": "Convection",
+      "icon": "Spell_Nature_WispSplode",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7173948",
+      "effects": [
+        {
+          "sourceOffset": "0x716b060",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.014999999664723873,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "concussion",
+      "name": "Concussion",
+      "icon": "Spell_Fire_Fireball",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x71739b0",
+      "effects": [
+        {
+          "sourceOffset": "0x716e9c0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d23d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.03999999910593033,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "earths_grasp",
+      "name": "Elemental Warding",
+      "icon": "Spell_Nature_StoneClawTotem",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7173a18",
+      "effects": [
+        {
+          "sourceOffset": "0x71730e0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.019999999552965164,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "call_of_flame",
+      "name": "Call of Flame",
+      "icon": "Spell_Fire_Immolation",
+      "description": "Fire Nova, Magma Totem and Flame Shock deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7173a80",
+      "effects": [
+        {
+          "sourceOffset": "0x71731a0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47174370",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "spells": [
+            "fire_nova",
+            "magma_totem",
+            "flame_shock"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fire Nova, Magma Totem and Flame Shock deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "lightning_overload",
+      "name": "Lightning Overload",
+      "icon": "Spell_Nature_CallStorm",
+      "description": "Milestone. Lightning Bolt and Chain Lightning have a {v}% chance to strike again for free.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7173ae8",
+      "effects": [
+        {
+          "sourceOffset": "0x7173298",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3ecccccd",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x7",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47174478",
+            "0x1",
+            "0x2",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.4000000059604645,
+          "internalCooldown": 0.0,
+          "spell": "",
+          "repeatTriggeringSpell": true,
+          "triggerEvent": 7,
+          "triggerEventName": "cast",
+          "eventValue": 0.0,
+          "spells": [
+            "lightning_bolt",
+            "chain_lightning"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Lightning Bolt and Chain Lightning have a {v}% chance to strike again for free.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "reverberation",
+      "name": "Reverberation",
+      "icon": "Spell_Frost_FrostWard",
+      "description": "Your shocks' cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7173b50",
+      "effects": [
+        {
+          "sourceOffset": "0x71733a8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47174578",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x3d75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 1,
+          "spells": [
+            "earth_shock",
+            "flame_shock",
+            "frost_shock"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your shocks' cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "call_of_thunder",
+      "name": "Call of Thunder",
+      "icon": "Spell_Nature_Lightning",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7173bb8",
+      "effects": [
+        {
+          "sourceOffset": "0x7173430",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.019999999552965164,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_fire_totems",
+      "name": "Improved Fire Totems",
+      "icon": "Spell_Fire_SealOfFire",
+      "description": "Searing and Magma Totem cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7173c20",
+      "effects": [
+        {
+          "sourceOffset": "0x71734d8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471746b8",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3dcccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 1,
+          "spells": [
+            "searing_totem",
+            "magma_totem"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Searing and Magma Totem cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "elemental_fury",
+      "name": "Elemental Fury",
+      "icon": "Spell_Fire_Volcano",
+      "description": "Milestone. Chain Lightning jumps to 3 more enemies and loses nothing with each jump.",
+      "prerequisite": "lightning_overload",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7173c88",
+      "effects": [
+        {
+          "sourceOffset": "0x7173580",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47174465",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x40400000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 3.0,
+          "modifier": 2,
+          "spells": [
+            "chain_lightning"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Chain Lightning jumps to 3 more enemies and loses nothing with each jump.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x71735c0",
+          "tag": 23,
+          "rawPackedTag": 23,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x17",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chainNoFalloff",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Chain Lightning jumps to 3 more enemies and loses nothing with each jump.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "lightning_mastery",
+      "name": "Lightning Mastery",
+      "icon": "Spell_Lightning_LightningBolt01",
+      "description": "Nature spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7173cf0",
+      "effects": [
+        {
+          "sourceOffset": "0x7173698",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x303",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d8f5c29",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07000000029802322,
+          "modifier": 0,
+          "school": "Nature",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 3,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Nature spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "storm_reach",
+      "name": "Storm Reach",
+      "icon": "Spell_Nature_StormReach",
+      "description": "Chain Lightning jumps {v}% farther.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 2,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7173d58",
+      "effects": [
+        {
+          "sourceOffset": "0x7173730",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47174465",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x3e4ccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.20000000298023224,
+          "modifier": 3,
+          "spells": [
+            "chain_lightning"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Chain Lightning jumps {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "elemental_devastation",
+      "name": "Elemental Devastation",
+      "icon": "Spell_Fire_ElementalDevastation",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7173dc0",
+      "effects": [
+        {
+          "sourceOffset": "0x71737e0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3df5c28f",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.11999999731779099,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "elemental_mastery",
+      "name": "Elemental Mastery",
+      "icon": "Spell_Nature_WispHeal",
+      "description": "Capstone. You start every run with Chain Lightning, and a second Chain Lightning casts itself every 3 sec.",
+      "prerequisite": "elemental_fury",
+      "tree": "Elemental",
+      "treeId": "ShamanElementalCombat",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7173e28",
+      "effects": [
+        {
+          "sourceOffset": "0x7173858",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x47174465",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "chain_lightning",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Chain Lightning, and a second Chain Lightning casts itself every 3 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7173898",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40400000",
+            "0x47174465",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 3.0,
+          "spell": "chain_lightning",
+          "periodicBaseCooldown": 2.4000000953674316,
+          "periodicSpellSchool": "Nature",
+          "periodicSpellSourceOffset": "0x6b894f0",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Chain Lightning, and a second Chain Lightning casts itself every 3 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ancestral_knowledge",
+      "name": "Ancestral Knowledge",
+      "icon": "Spell_Shadow_GrimWard",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7174598",
+      "effects": [
+        {
+          "sourceOffset": "0x716d888",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.019999999552965164,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shield_spec_shaman",
+      "name": "Shield Specialization",
+      "icon": "INV_Shield_06",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7174600",
+      "effects": [
+        {
+          "sourceOffset": "0x7165fd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.009999999776482582,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "guardian_totems",
+      "name": "Guardian Totems",
+      "icon": "Spell_Nature_StoneSkinTotem",
+      "description": "Your totems last {v}% longer.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 2,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7174668",
+      "effects": [
+        {
+          "sourceOffset": "0x7173f50",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0xa04",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3df5c28f",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.11999999731779099,
+          "modifier": 4,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 10,
+          "filterCastKind": 10,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your totems last {v}% longer.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "thundering_strikes",
+      "name": "Thundering Strikes",
+      "icon": "Ability_ThunderBolt",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x71746d0",
+      "effects": [
+        {
+          "sourceOffset": "0x716b340",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.014999999664723873,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "windfury",
+      "name": "Windfury",
+      "icon": "Spell_Nature_Cyclone",
+      "description": "Milestone. Your Lightning Bolts, Earth Shocks and Frost Shocks have a {v}% chance to strike twice more at once.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7174738",
+      "effects": [
+        {
+          "sourceOffset": "0x7174028",
+          "tag": 7,
+          "rawPackedTag": 7,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x7",
+            "0x3eb33333",
+            "0x2",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471751f8",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "repeatedHit",
+          "chance": 0.3499999940395355,
+          "count": 2,
+          "damageFactor": 1.0,
+          "spells": [
+            "lightning_bolt",
+            "earth_shock",
+            "frost_shock"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your Lightning Bolts, Earth Shocks and Frost Shocks have a {v}% chance to strike twice more at once.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "two_hand_shaman",
+      "name": "Improved Lightning Bolt",
+      "icon": "Spell_Nature_Lightning",
+      "description": "Lightning Bolt deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71747a0",
+      "effects": [
+        {
+          "sourceOffset": "0x7174100",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47174457",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x3d75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 0,
+          "spells": [
+            "lightning_bolt"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Lightning Bolt deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "elemental_weapons",
+      "name": "Elemental Weapons",
+      "icon": "Spell_Fire_FlameTounge",
+      "description": "Flame Shock and Frost Shock deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7174808",
+      "effects": [
+        {
+          "sourceOffset": "0x71741c0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471753a0",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "spells": [
+            "flame_shock",
+            "frost_shock"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Flame Shock and Frost Shock deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "anticipation_shaman",
+      "name": "Anticipation",
+      "icon": "Spell_Nature_MirrorImage",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7174870",
+      "effects": [
+        {
+          "sourceOffset": "0x71692e0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.012000000104308128,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "maelstrom",
+      "name": "Maelstrom Weapon",
+      "icon": "Spell_Lightning_LightningBolt01",
+      "description": "Milestone. Every {v}th spell you cast is followed by a free Chain Lightning.",
+      "prerequisite": "windfury",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x71748d8",
+      "effects": [
+        {
+          "sourceOffset": "0x7174260",
+          "tag": 1,
+          "rawPackedTag": 1,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x47174465",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "criticalCounterCast",
+          "count": 5,
+          "maxPerSecond": 0,
+          "spell": "chain_lightning",
+          "triggerEvent": 7,
+          "triggerEventName": "cast",
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Every {v}th spell you cast is followed by a free Chain Lightning.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "enhancing_totems",
+      "name": "Enhancing Totems",
+      "icon": "Spell_Nature_EarthBindTotem",
+      "description": "Your totems deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7174940",
+      "effects": [
+        {
+          "sourceOffset": "0x7174310",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0xa04",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3df5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.11999999731779099,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 10,
+          "filterCastKind": 10,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your totems deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "flurry_shaman",
+      "name": "Flurry",
+      "icon": "Ability_GhoulFrenzy",
+      "description": "A critical strike sends you into a flurry: cooldowns recover {v}% faster for 5 sec.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71749a8",
+      "effects": [
+        {
+          "sourceOffset": "0x7174380",
+          "tag": 15,
+          "rawPackedTag": 271,
+          "packedFlags": 1,
+          "rawWords": [
+            "0x10f",
+            "0x3dcccccd",
+            "0x1",
+            "0x40a00000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "triggeredTimedStatBuff",
+          "stat": 1,
+          "value": 0.10000000149011612,
+          "count": 1,
+          "duration": 5.0,
+          "triggerEvent": 2,
+          "triggerEventName": "criticalHit",
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "A critical strike sends you into a flurry: cooldowns recover {v}% faster for 5 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "parry_shaman",
+      "name": "Parry",
+      "icon": "Ability_Parry",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7174a10",
+      "effects": [
+        {
+          "sourceOffset": "0x716c260",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.029999999329447746,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "stormstrike",
+      "name": "Feral Spirit",
+      "icon": "Spell_Nature_SpiritWolf",
+      "description": "Capstone. Two spirit wolves fight beside you, and their bites carry Windfury: a {v}% chance to strike twice more at once.",
+      "prerequisite": "maelstrom",
+      "tree": "Enhancement",
+      "treeId": "ShamanEnhancement",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7174a78",
+      "effects": [
+        {
+          "sourceOffset": "0x7174458",
+          "tag": 7,
+          "rawPackedTag": 7,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x7",
+            "0x3ecccccd",
+            "0x2",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "repeatedHit",
+          "chance": 0.4000000059604645,
+          "count": 2,
+          "damageFactor": 1.0,
+          "school": "sourcePetOnly",
+          "filterDiscriminant": 6,
+          "filterPackedFlags": 0,
+          "petOnly": true,
+          "filterSemanticEvidence": "Native filter6 jump table raw71866d8 -> VA145934324 returns sourceKind==2; all catalog rows explicitly describe pets/demons/bites",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Two spirit wolves fight beside you, and their bites carry Windfury: a {v}% chance to strike twice more at once.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7174498",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x471670b8",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x7165eb8",
+          "petName": "Spirit Wolf",
+          "petCreatureEntry": 9516,
+          "petDisplayId": 776,
+          "petScale": 0.8999999761581421,
+          "petBaseDamage": 28.0,
+          "petCooldown": 1.399999976158142,
+          "petFloat24": 0.8999999761581421,
+          "petFloat28": 28.0,
+          "petFloat32": 1.399999976158142,
+          "petSpellId": 0,
+          "petSchool": 3,
+          "petProvenance": {
+            "rawOffset": "0x7165eb8",
+            "rva": "0x71670b8",
+            "va": "0x1471670b8",
+            "byteLength": 48,
+            "sha256": "b2fc9b623a41ddc095b2ca04ca7481fe2e22670bc4f5e8594af44f10614eba97",
+            "bytesHex": "ac701647010000000b000000000000002c250000080300006666663f0000e0413333b33f000000000300000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Two spirit wolves fight beside you, and their bites carry Windfury: a {v}% chance to strike twice more at once.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x71744d8",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x471670b8",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x7165eb8",
+          "petName": "Spirit Wolf",
+          "petCreatureEntry": 9516,
+          "petDisplayId": 776,
+          "petScale": 0.8999999761581421,
+          "petBaseDamage": 28.0,
+          "petCooldown": 1.399999976158142,
+          "petFloat24": 0.8999999761581421,
+          "petFloat28": 28.0,
+          "petFloat32": 1.399999976158142,
+          "petSpellId": 0,
+          "petSchool": 3,
+          "petProvenance": {
+            "rawOffset": "0x7165eb8",
+            "rva": "0x71670b8",
+            "va": "0x1471670b8",
+            "byteLength": 48,
+            "sha256": "b2fc9b623a41ddc095b2ca04ca7481fe2e22670bc4f5e8594af44f10614eba97",
+            "bytesHex": "ac701647010000000b000000000000002c250000080300006666663f0000e0413333b33f000000000300000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Two spirit wolves fight beside you, and their bites carry Windfury: a {v}% chance to strike twice more at once.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_healing_wave",
+      "name": "Improved Healing Wave",
+      "icon": "Spell_Nature_MagicImmunity",
+      "description": "Healing Wave's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x71751d8",
+      "effects": [
+        {
+          "sourceOffset": "0x7174b48",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47175d3b",
+            "0x1",
+            "0xc",
+            "0x0",
+            "0x3d75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 1,
+          "spells": [
+            "healing_wave"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Healing Wave's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "tidal_focus",
+      "name": "Tidal Focus",
+      "icon": "Spell_Frost_ManaRecharge",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7175240",
+      "effects": [
+        {
+          "sourceOffset": "0x7168fe8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ecccccd",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.4000000059604645,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "totemic_focus",
+      "name": "Totemic Focus",
+      "icon": "Spell_Nature_MoonGlow",
+      "description": "Your totems' cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x71752a8",
+      "effects": [
+        {
+          "sourceOffset": "0x7174bf8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0xa04",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3cf5c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.029999999329447746,
+          "modifier": 1,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 10,
+          "filterCastKind": 10,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your totems' cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "natures_guidance",
+      "name": "Nature's Guidance",
+      "icon": "Spell_Frost_Stun",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7175310",
+      "effects": [
+        {
+          "sourceOffset": "0x716d9d8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.012000000104308128,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "twin_totems",
+      "name": "Call of the Elements",
+      "icon": "Spell_Totem_WardOfDraining",
+      "description": "Milestone. You start every run with Searing Totem, and every totem you set down sets a second one beside it.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7175378",
+      "effects": [
+        {
+          "sourceOffset": "0x7174cd0",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x471746a8",
+            "0x1",
+            "0xd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "searing_totem",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. You start every run with Searing Totem, and every totem you set down sets a second one beside it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7174d10",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x7",
+            "0x0",
+            "0xa04",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 1.0,
+          "internalCooldown": 0.0,
+          "spell": "",
+          "repeatTriggeringSpell": true,
+          "triggerEvent": 7,
+          "triggerEventName": "cast",
+          "eventValue": 0.0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 10,
+          "filterCastKind": 10,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. You start every run with Searing Totem, and every totem you set down sets a second one beside it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "restorative_totems",
+      "name": "Restorative Totems",
+      "icon": "Spell_Nature_ManaRegenTotem",
+      "description": "Your totems deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71753e0",
+      "effects": [
+        {
+          "sourceOffset": "0x7174de0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0xa04",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 10,
+          "filterCastKind": 10,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your totems deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "tidal_mastery",
+      "name": "Tidal Mastery",
+      "icon": "Spell_Nature_Tranquility",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7175448",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "healing_way",
+      "name": "Healing Way",
+      "icon": "Spell_Nature_HealingWay",
+      "description": "Healing Wave heals {v}% more.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x71754b0",
+      "effects": [
+        {
+          "sourceOffset": "0x7174e68",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47175d3b",
+            "0x1",
+            "0xc",
+            "0x0",
+            "0x3e19999a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.15000000596046448,
+          "modifier": 0,
+          "spells": [
+            "healing_wave"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Healing Wave heals {v}% more.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "reincarnation",
+      "name": "Reincarnation",
+      "icon": "Spell_Nature_Reincarnation",
+      "description": "Milestone. A blow that would kill you leaves you at 50% health instead, once every 2 min.",
+      "prerequisite": "twin_totems",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7175518",
+      "effects": [
+        {
+          "sourceOffset": "0x7174ee0",
+          "tag": 19,
+          "rawPackedTag": 19,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x13",
+            "0x42f00000",
+            "0x3f000000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "cheatDeath",
+          "interval": 120.0,
+          "value": 0.5,
+          "duration": 0.0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. A blow that would kill you leaves you at 50% health instead, once every 2 min.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "purification",
+      "name": "Purification",
+      "icon": "Spell_Frost_WizardMark",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7175580",
+      "effects": [
+        {
+          "sourceOffset": "0x716d888",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.019999999552965164,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "totemic_mastery",
+      "name": "Totemic Mastery",
+      "icon": "Spell_Nature_NullWard",
+      "description": "Magma Totem reaches {v}% farther and Searing Totem fires at more targets.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71755e8",
+      "effects": [
+        {
+          "sourceOffset": "0x7174fc8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47174358",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 3,
+          "spells": [
+            "magma_totem"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Magma Totem reaches {v}% farther and Searing Totem fires at more targets.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7175008",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471746a8",
+            "0x1",
+            "0xd",
+            "0x0",
+            "0x3eae147b",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.3400000035762787,
+          "modifier": 2,
+          "spells": [
+            "searing_totem"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Magma Totem reaches {v}% farther and Searing Totem fires at more targets.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ancestral_healing",
+      "name": "Ancestral Healing",
+      "icon": "Spell_Nature_UndyingStrength",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7175650",
+      "effects": [
+        {
+          "sourceOffset": "0x71692e0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.012000000104308128,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "totemic_call",
+      "name": "Totemic Wrath",
+      "icon": "Spell_Fire_SealOfFire",
+      "description": "Capstone. You start every run with Magma Totem, and a second Searing Totem drops on its own every 14 sec.",
+      "prerequisite": "reincarnation",
+      "tree": "Restoration",
+      "treeId": "ShamanRestoration",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x71756b8",
+      "effects": [
+        {
+          "sourceOffset": "0x71750e8",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x47174358",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "magma_totem",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Magma Totem, and a second Searing Totem drops on its own every 14 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7175128",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x41600000",
+            "0x471746a8",
+            "0x1",
+            "0xd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 14.0,
+          "spell": "searing_totem",
+          "periodicBaseCooldown": 10.0,
+          "periodicSpellSchool": "Fire",
+          "periodicSpellSourceOffset": "0x6b897c0",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Magma Totem, and a second Searing Totem drops on its own every 14 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "shaman",
+  "trees": [
+    {
+      "id": "ShamanElementalCombat",
+      "name": "Elemental",
+      "icon": "Spell_Nature_Lightning",
+      "sourceOffset": "0x717d400",
+      "sourceNodesOffset": "0x7173948",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "ShamanEnhancement",
+      "name": "Enhancement",
+      "icon": "Spell_Nature_LightningShield",
+      "sourceOffset": "0x717d440",
+      "sourceNodesOffset": "0x7174598",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "ShamanRestoration",
+      "name": "Restoration",
+      "icon": "Spell_Nature_MagicImmunity",
+      "sourceOffset": "0x717d480",
+      "sourceNodesOffset": "0x71751d8",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b86a90",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}

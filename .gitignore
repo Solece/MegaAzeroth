@@ -13,3 +13,4 @@ scripts/megabonk-research/
 **/__pycache__/
 *.dll
 *.pdb
+builds/

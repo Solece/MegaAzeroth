@@ -592,7 +592,7 @@ public sealed class FeatureProbe : MonoBehaviour
     [HideFromIl2Cpp] static void Require(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     [HideFromIl2Cpp] static void Equal(float first,float second,float epsilon,string label)=>Require(Mathf.Abs(first-second)<=epsilon,label+": "+first+" != "+second);
     [HideFromIl2Cpp] void Isolate(string id,int levels,int rarity=1)=>Require(Bool(Call(Tome,"UseIsolatedTomeForProbe",id,levels,rarity)),"Native isolated tome fixture rejected "+id);
-    [HideFromIl2Cpp] void ResetAreasAndProjectiles(){Call(Tome,"SetAutomaticCastingForProbe",false);Call(Tome,"ClearProjectilesForProbe");Call("AzerothAbilities.MageSpellBehaviors","Clear");}
+    [HideFromIl2Cpp] void ResetAreasAndProjectiles(){Call(Tome,"SetAutomaticCastingForProbe",false);Call(Tome,"ClearProjectilesForProbe");if((bool)Read("AzerothAbilities.ClassAbilityDiagnostics","UsesGenericRuntime"))Call("AzerothAbilities.ClassAbilityDiagnostics","ClearEffectsForProbe");else Call("AzerothAbilities.MageSpellBehaviors","Clear");}
     [HideFromIl2Cpp] Dictionary<uint,float> HitPoints()
     {var values=new Dictionary<uint,float>();foreach(var pair in EnemyManager.Instance.enemies)if(pair.Value!=null)values[pair.Key]=pair.Value.hp;return values;}
     [HideFromIl2Cpp] float NativeHpLost(Dictionary<uint,float> before)

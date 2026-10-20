@@ -1,0 +1,2397 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "imp_hawk",
+      "name": "Improved Aspect of the Hawk",
+      "icon": "Spell_Nature_RavenForm",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716c3d0",
+      "effects": [
+        {
+          "sourceOffset": "0x716b060",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.014999999664723873,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "endurance_training",
+      "name": "Endurance Training",
+      "icon": "Spell_Nature_Reincarnation",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716c438",
+      "effects": [
+        {
+          "sourceOffset": "0x7167d40",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_monkey",
+      "name": "Improved Aspect of the Monkey",
+      "icon": "Ability_Hunter_AspectOfTheMonkey",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716c4a0",
+      "effects": [
+        {
+          "sourceOffset": "0x7165fd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.009999999776482582,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "pathfinding",
+      "name": "Pathfinding",
+      "icon": "Ability_Mount_JungleTiger",
+      "description": "Increases your movement speed by {v}%.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716c508",
+      "effects": [
+        {
+          "sourceOffset": "0x716b2a8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d23d70a",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 7,
+          "value": 0.03999999910593033,
+          "statName": "movementSpeed",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your movement speed by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "tame_beast",
+      "name": "Tame Beast",
+      "icon": "Ability_Hunter_BeastTaming",
+      "description": "Milestone. A wolf fights at your side, biting what you shoot.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716c570",
+      "effects": [
+        {
+          "sourceOffset": "0x716be68",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717e9a0",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d7a0",
+          "petName": "Wolf",
+          "petCreatureEntry": 9510,
+          "petDisplayId": 165,
+          "petScale": 1.0,
+          "petBaseDamage": 67.0,
+          "petCooldown": 1.2000000476837158,
+          "petFloat24": 1.0,
+          "petFloat28": 67.0,
+          "petFloat32": 1.2000000476837158,
+          "petSpellId": 0,
+          "petSchool": 0,
+          "petProvenance": {
+            "rawOffset": "0x717d7a0",
+            "rva": "0x717e9a0",
+            "va": "0x14717e9a0",
+            "byteLength": 48,
+            "sha256": "4af9cd1f38a07e276771277addfe3d33a777e1d56c001de9f0e0387ccb201d1c",
+            "bytesHex": "98e9174701000000040000000000000026250000a50000000000803f000086429a99993f000000000000000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. A wolf fights at your side, biting what you shoot.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "unleashed_fury",
+      "name": "Unleashed Fury",
+      "icon": "Ability_BullRush",
+      "description": "Your pets deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716c5d8",
+      "effects": [
+        {
+          "sourceOffset": "0x716bf18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3e4ccccd",
+            "0x11",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 17,
+          "value": 0.20000000298023224,
+          "statName": "petDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your pets deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ferocity_hunter",
+      "name": "Ferocity",
+      "icon": "INV_Misc_MonsterClaw_04",
+      "description": "Increases your and your pets' critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716c640",
+      "effects": [
+        {
+          "sourceOffset": "0x7166e18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your and your pets' critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "spirit_bond",
+      "name": "Spirit Bond",
+      "icon": "Ability_Druid_DemoralizingRoar",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716c6a8",
+      "effects": [
+        {
+          "sourceOffset": "0x716c018",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3f4ccccd",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.800000011920929,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "frenzy_hunter",
+      "name": "Frenzy",
+      "icon": "INV_Misc_MonsterClaw_03",
+      "description": "Milestone. Your pets' bites have a {v}% chance to fire a free Multi-Shot.",
+      "prerequisite": "tame_beast",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716c710",
+      "effects": [
+        {
+          "sourceOffset": "0x716c090",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3f400000",
+            "0x0",
+            "0x0",
+            "0x4716d282",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.75,
+          "internalCooldown": 0.0,
+          "spell": "multi_shot",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 0,
+          "triggerEventName": "hit",
+          "eventValue": 0.0,
+          "school": "sourcePetOnly",
+          "filterDiscriminant": 6,
+          "filterPackedFlags": 0,
+          "petOnly": true,
+          "filterSemanticEvidence": "Native filter6 jump table raw71866d8 -> VA145934324 returns sourceKind==2; all catalog rows explicitly describe pets/demons/bites",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your pets' bites have a {v}% chance to fire a free Multi-Shot.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "bestial_discipline",
+      "name": "Bestial Discipline",
+      "icon": "Spell_Nature_AbolishMagic",
+      "description": "Your pets deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716c778",
+      "effects": [
+        {
+          "sourceOffset": "0x716bf18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3e4ccccd",
+            "0x11",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 17,
+          "value": 0.20000000298023224,
+          "statName": "petDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your pets deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "intimidation",
+      "name": "Intimidation",
+      "icon": "Ability_Devour",
+      "description": "Auto Shot and Multi-Shot deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716c7e0",
+      "effects": [
+        {
+          "sourceOffset": "0x716c1a8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716d388",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 0,
+          "spells": [
+            "auto_shot",
+            "multi_shot"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Auto Shot and Multi-Shot deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ferocious_inspiration",
+      "name": "Ferocious Inspiration",
+      "icon": "Ability_Hunter_BeastCall",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716c848",
+      "effects": [
+        {
+          "sourceOffset": "0x716c260",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.029999999329447746,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "bestial_wrath",
+      "name": "Bestial Wrath",
+      "icon": "Ability_Druid_FerociousBite",
+      "description": "Capstone. A raptor joins your wolf, and your pets' bites tear through 2 more enemies nearby for {v}% of the bite.",
+      "prerequisite": "frenzy_hunter",
+      "tree": "Beast Mastery",
+      "treeId": "HunterBeastMastery",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x716c8b0",
+      "effects": [
+        {
+          "sourceOffset": "0x716c2d8",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717e9e0",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d7e0",
+          "petName": "Raptor",
+          "petCreatureEntry": 9511,
+          "petDisplayId": 1959,
+          "petScale": 1.0,
+          "petBaseDamage": 53.0,
+          "petCooldown": 1.2000000476837158,
+          "petFloat24": 1.0,
+          "petFloat28": 53.0,
+          "petFloat32": 1.2000000476837158,
+          "petSpellId": 0,
+          "petSchool": 0,
+          "petProvenance": {
+            "rawOffset": "0x717d7e0",
+            "rva": "0x717e9e0",
+            "va": "0x14717e9e0",
+            "byteLength": 48,
+            "sha256": "ac95eede439d34d2558a5e84963478d4e31814733cb742242b207e2d2bb6f9ac",
+            "bytesHex": "d8e9174701000000060000000000000027250000a70700000000803f000054429a99993f000000000000000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. A raptor joins your wolf, and your pets' bites tear through 2 more enemies nearby for {v}% of the bite.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x716c318",
+          "tag": 6,
+          "rawPackedTag": 6,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x6",
+            "0x2",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chain",
+          "targets": 2,
+          "damageFactor": 1.0,
+          "radius": 10.0,
+          "sourceRadiusEvidence": "VA14592FC05 loads raw5d4b760 f32=10; VA145931AB3 passes radius to target selection145964310",
+          "school": "sourcePetOnly",
+          "filterDiscriminant": 6,
+          "filterPackedFlags": 0,
+          "petOnly": true,
+          "filterSemanticEvidence": "Native filter6 jump table raw71866d8 -> VA145934324 returns sourceKind==2; all catalog rows explicitly describe pets/demons/bites",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. A raptor joins your wolf, and your pets' bites tear through 2 more enemies nearby for {v}% of the bite.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "damageFactor"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "lethal_shots",
+      "name": "Lethal Shots",
+      "icon": "Ability_SearingArrow",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716d188",
+      "effects": [
+        {
+          "sourceOffset": "0x7166e18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "efficiency",
+      "name": "Efficiency",
+      "icon": "Spell_Frost_WizardMark",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716d1f0",
+      "effects": [
+        {
+          "sourceOffset": "0x716b060",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.014999999664723873,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_arcane_shot",
+      "name": "Improved Arcane Shot",
+      "icon": "Ability_ImpalingBolt",
+      "description": "Arcane Shot's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716d258",
+      "effects": [
+        {
+          "sourceOffset": "0x716c9d0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716dbc3",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x3d75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 1,
+          "spells": [
+            "arcane_shot"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Arcane Shot's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_serpent_sting",
+      "name": "Improved Serpent Sting",
+      "icon": "Ability_Hunter_Quickshot",
+      "description": "Serpent Sting deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716d2c0",
+      "effects": [
+        {
+          "sourceOffset": "0x716ca88",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716dc76",
+            "0x1",
+            "0xd",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "serpent_sting"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Serpent Sting deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "piercing_shots",
+      "name": "Piercing Shots",
+      "icon": "Ability_PierceDamage",
+      "description": "Milestone. Auto Shot pierces: every arrow also strikes 1 enemy beyond its target for {v}% of it.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716d328",
+      "effects": [
+        {
+          "sourceOffset": "0x716cb20",
+          "tag": 6,
+          "rawPackedTag": 6,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x6",
+            "0x1",
+            "0x3f4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716d37c",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chain",
+          "targets": 1,
+          "damageFactor": 0.800000011920929,
+          "radius": 10.0,
+          "sourceRadiusEvidence": "VA14592FC05 loads raw5d4b760 f32=10; VA145931AB3 passes radius to target selection145964310",
+          "spells": [
+            "auto_shot"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Auto Shot pierces: every arrow also strikes 1 enemy beyond its target for {v}% of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "damageFactor"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "mortal_shots",
+      "name": "Mortal Shots",
+      "icon": "INV_Spear_07",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716d390",
+      "effects": [
+        {
+          "sourceOffset": "0x716cbe8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3d75c28f",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.05999999865889549,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ranged_spec",
+      "name": "Ranged Weapon Specialization",
+      "icon": "INV_Weapon_Rifle_06",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716d3f8",
+      "effects": [
+        {
+          "sourceOffset": "0x7168f70",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.014999999664723873,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_multi_shot",
+      "name": "Improved Multi-Shot",
+      "icon": "Ability_UpgradeMoonGlaive",
+      "description": "Multi-Shot fires at {v} more targets.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716d460",
+      "effects": [
+        {
+          "sourceOffset": "0x716cca0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716d282",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x3f800000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 1.0,
+          "modifier": 2,
+          "spells": [
+            "multi_shot"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Multi-Shot fires at {v} more targets.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "rapid_fire",
+      "name": "Rapid Fire",
+      "icon": "Ability_Hunter_RunningShot",
+      "description": "Milestone. Every {v}th shot you fire is followed by a free Aimed Shot.",
+      "prerequisite": "piercing_shots",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716d4c8",
+      "effects": [
+        {
+          "sourceOffset": "0x716cd90",
+          "tag": 1,
+          "rawPackedTag": 1,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x4716df33",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x7",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716df50",
+            "0x1",
+            "0x4",
+            "0x0"
+          ],
+          "kind": "criticalCounterCast",
+          "count": 6,
+          "maxPerSecond": 0,
+          "spell": "aimed_shot",
+          "triggerEvent": 7,
+          "triggerEventName": "cast",
+          "spells": [
+            "auto_shot",
+            "arcane_shot",
+            "multi_shot",
+            "concussive_shot"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Every {v}th shot you fire is followed by a free Aimed Shot.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "barrage",
+      "name": "Barrage",
+      "icon": "Ability_Marksmanship",
+      "description": "Multi-Shot and Volley deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716d530",
+      "effects": [
+        {
+          "sourceOffset": "0x716ce50",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716e030",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "multi_shot",
+            "volley"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Multi-Shot and Volley deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "hawk_eye",
+      "name": "Hawk Eye",
+      "icon": "Ability_TownWatch",
+      "description": "You deal {v}% more damage to elites and bosses.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716d598",
+      "effects": [
+        {
+          "sourceOffset": "0x716cee0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d4ccccd",
+            "0x13",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 19,
+          "value": 0.05000000074505806,
+          "statName": "damageVsElitesAndBosses",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "You deal {v}% more damage to elites and bosses.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "scatter_shot",
+      "name": "Scatter Shot",
+      "icon": "Ability_GolemStormBolt",
+      "description": "Concussive Shot and Aimed Shot cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716d600",
+      "effects": [
+        {
+          "sourceOffset": "0x716cfa0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716e180",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d8f5c29",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07000000029802322,
+          "modifier": 1,
+          "spells": [
+            "concussive_shot",
+            "aimed_shot"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Concussive Shot and Aimed Shot cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "kill_shot",
+      "name": "Kill Shot",
+      "icon": "INV_Weapon_Rifle_08",
+      "description": "Capstone. You start every run with Aimed Shot; its cooldown is {v}% shorter and a killing blow readies it again, at most every 2 sec.",
+      "prerequisite": "rapid_fire",
+      "tree": "Marksmanship",
+      "treeId": "HunterMarksmanship",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x716d668",
+      "effects": [
+        {
+          "sourceOffset": "0x716d040",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716df33",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x3e19999a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.15000000596046448,
+          "modifier": 1,
+          "spells": [
+            "aimed_shot"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Aimed Shot; its cooldown is {v}% shorter and a killing blow readies it again, at most every 2 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x716d080",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4716df33",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "aimed_shot",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Aimed Shot; its cooldown is {v}% shorter and a killing blow readies it again, at most every 2 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x716d0c0",
+          "tag": 10,
+          "rawPackedTag": 10,
+          "packedFlags": 0,
+          "rawWords": [
+            "0xa",
+            "0x40000000",
+            "0x1",
+            "0x0",
+            "0x4716df33",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killCooldownReset",
+          "interval": 2.0,
+          "spells": [
+            "aimed_shot"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Aimed Shot; its cooldown is {v}% shorter and a killing blow readies it again, at most every 2 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "monster_slaying",
+      "name": "Monster Slaying",
+      "icon": "INV_Misc_Head_Dragon_Black",
+      "description": "You deal {v}% more damage to elites and bosses.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716dea8",
+      "effects": [
+        {
+          "sourceOffset": "0x716d738",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x13",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 19,
+          "value": 0.029999999329447746,
+          "statName": "damageVsElitesAndBosses",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "You deal {v}% more damage to elites and bosses.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "deflection_hunter",
+      "name": "Deflection",
+      "icon": "Ability_Parry",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716df10",
+      "effects": [
+        {
+          "sourceOffset": "0x7165fd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.009999999776482582,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "clever_traps",
+      "name": "Clever Traps",
+      "icon": "Spell_Nature_TimeStop",
+      "description": "Your traps cover {v}% more ground.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716df78",
+      "effects": [
+        {
+          "sourceOffset": "0x716d7f8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716e9c8",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 3,
+          "spells": [
+            "explosive_trap",
+            "immolation_trap",
+            "frost_trap"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your traps cover {v}% more ground.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "survivalist",
+      "name": "Survivalist",
+      "icon": "Spell_Shadow_Twilight",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716dfe0",
+      "effects": [
+        {
+          "sourceOffset": "0x716d888",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.019999999552965164,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "entrapment",
+      "name": "Entrapment",
+      "icon": "Spell_Nature_StrangleVines",
+      "description": "Milestone. Your traps hold what they hit: every hit of a trap has a {v}% chance to root the enemy for 2 sec.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716e048",
+      "effects": [
+        {
+          "sourceOffset": "0x716d8f8",
+          "tag": 8,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x8",
+            "0x3f000000",
+            "0x2",
+            "0x40000000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716e9c8",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 0.5,
+          "status": 2,
+          "statusValue": 2.0,
+          "statusDuration": 0.0,
+          "duration": 2.0,
+          "triggerEvent": 0,
+          "spells": [
+            "explosive_trap",
+            "immolation_trap",
+            "frost_trap"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your traps hold what they hit: every hit of a trap has a {v}% chance to root the enemy for 2 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "savage_strikes",
+      "name": "Savage Strikes",
+      "icon": "Ability_Racial_BloodRage",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716e0b0",
+      "effects": [
+        {
+          "sourceOffset": "0x716d9d8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.012000000104308128,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "trap_mastery",
+      "name": "Trap Mastery",
+      "icon": "Ability_Ensnare",
+      "description": "Your traps' cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716e118",
+      "effects": [
+        {
+          "sourceOffset": "0x716da40",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716e9c8",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x3da3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 1,
+          "spells": [
+            "explosive_trap",
+            "immolation_trap",
+            "frost_trap"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your traps' cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "surefooted",
+      "name": "Surefooted",
+      "icon": "Ability_Kick",
+      "description": "Increases your movement speed by {v}%.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716e180",
+      "effects": [
+        {
+          "sourceOffset": "0x716dac8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 7,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "movementSpeed",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your movement speed by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "explosive_ammo",
+      "name": "Explosive Ammunition",
+      "icon": "Spell_Fire_SelfDestruct",
+      "description": "Milestone. Enemies killed by your Auto Shot or Multi-Shot explode for {v}% of their maximum health on everything within 6 yd.",
+      "prerequisite": "entrapment",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716e1e8",
+      "effects": [
+        {
+          "sourceOffset": "0x716db48",
+          "tag": 11,
+          "rawPackedTag": 11,
+          "packedFlags": 0,
+          "rawWords": [
+            "0xb",
+            "0x3e4ccccd",
+            "0x40c00000",
+            "0x35f4",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716d388",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killExplosion",
+          "value": 0.20000000298023224,
+          "radius": 6.0,
+          "spellId": 13812,
+          "maxPerSecond": 0,
+          "triggerOnAfflictedDeath": false,
+          "deathCondition": 0,
+          "spells": [
+            "auto_shot",
+            "multi_shot"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Enemies killed by your Auto Shot or Multi-Shot explode for {v}% of their maximum health on everything within 6 yd.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "killer_instinct",
+      "name": "Killer Instinct",
+      "icon": "Spell_Holy_BlessingOfStamina",
+      "description": "Fire spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716e250",
+      "effects": [
+        {
+          "sourceOffset": "0x716dc28",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "school": "Fire",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fire spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "lightning_reflexes",
+      "name": "Lightning Reflexes",
+      "icon": "Spell_Nature_Invisibilty",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716e2b8",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "counterattack",
+      "name": "Counterattack",
+      "icon": "Ability_Warrior_Challange",
+      "description": "When an enemy strikes you in melee, {v}% chance to set off a free Explosive Trap.",
+      "prerequisite": "",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716e320",
+      "effects": [
+        {
+          "sourceOffset": "0x716dd00",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3e19999a",
+            "0x3f800000",
+            "0x0",
+            "0x4716e9a1",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.15000000596046448,
+          "internalCooldown": 1.0,
+          "spell": "explosive_trap",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 8,
+          "triggerEventName": "meleeDamageTaken",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "When an enemy strikes you in melee, {v}% chance to set off a free Explosive Trap.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "wyvern_sting",
+      "name": "Wyvern Sting",
+      "icon": "INV_Spear_02",
+      "description": "Capstone. You start every run with Frost Trap, and an Explosive Trap sets itself at your feet every 5 sec.",
+      "prerequisite": "explosive_ammo",
+      "tree": "Survival",
+      "treeId": "HunterSurvival",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x716e388",
+      "effects": [
+        {
+          "sourceOffset": "0x716ddb8",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4716e9be",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "frost_trap",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Frost Trap, and an Explosive Trap sets itself at your feet every 5 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x716ddf8",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40a00000",
+            "0x4716e9a1",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 5.0,
+          "spell": "explosive_trap",
+          "periodicBaseCooldown": 6.0,
+          "periodicSpellSchool": "Fire",
+          "periodicSpellSourceOffset": "0x6b88758",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Frost Trap, and an Explosive Trap sets itself at your feet every 5 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "hunter",
+  "trees": [
+    {
+      "id": "HunterBeastMastery",
+      "name": "Beast Mastery",
+      "icon": "Ability_Hunter_BeastTaming",
+      "sourceOffset": "0x717d1a8",
+      "sourceNodesOffset": "0x716c3d0",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "HunterMarksmanship",
+      "name": "Marksmanship",
+      "icon": "Ability_Marksmanship",
+      "sourceOffset": "0x717d1e8",
+      "sourceNodesOffset": "0x716d188",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "HunterSurvival",
+      "name": "Survival",
+      "icon": "Ability_Hunter_SwiftStrike",
+      "sourceOffset": "0x717d228",
+      "sourceNodesOffset": "0x716dea8",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b868e0",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}

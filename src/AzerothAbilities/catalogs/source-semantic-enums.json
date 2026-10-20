@@ -1,0 +1,146 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "schools": {
+    "0": "Physical",
+    "1": "Holy",
+    "2": "Fire",
+    "3": "Nature",
+    "4": "Frost",
+    "5": "Shadow",
+    "6": "Arcane"
+  },
+  "castKinds": {
+    "0": "projectile",
+    "1": "instant",
+    "2": "selfAoe",
+    "3": "groundAoe",
+    "4": "chain",
+    "5": "melee",
+    "6": "damageOverTime",
+    "7": "finisher",
+    "8": "cone",
+    "9": "selfBuff",
+    "10": "totem",
+    "11": "passive"
+  },
+  "statusKinds": {
+    "0": "none",
+    "1": "slow",
+    "2": "root",
+    "3": "stun",
+    "4": "fear",
+    "5": "lifesteal",
+    "6": "heal",
+    "7": "shield",
+    "8": "damageBuff",
+    "9": "hasteBuff",
+    "10": "damageDebuff",
+    "11": "invulnerability",
+    "12": "thorns"
+  },
+  "triggerEvents": {
+    "0": "hit",
+    "1": "hit",
+    "2": "criticalHit",
+    "3": "castWithCriticalHit",
+    "4": "damageOverTimeTick",
+    "6": "kill",
+    "7": "cast",
+    "8": "meleeDamageTaken",
+    "9": "healthBelow",
+    "10": "shieldBreak",
+    "11": "preventedDeath"
+  },
+  "sourceStats": {
+    "0": "allDamage",
+    "1": "haste",
+    "2": "maximumHealth",
+    "3": "criticalChance",
+    "4": "criticalDamage",
+    "5": "damageReduction",
+    "6": "healthPerSecond",
+    "7": "movementSpeed",
+    "12": "luck",
+    "13": "echoChance",
+    "14": "lifesteal",
+    "15": "healthPerKill",
+    "16": "originalAutoWeaponDamage",
+    "17": "petDamage",
+    "18": "damageVsControlled",
+    "19": "damageVsElitesAndBosses",
+    "20": "damageVsBelowThirtyPercentHealth",
+    "22": "reflectMeleeDamage",
+    "24": "maximumHealthRegenPerSecond",
+    "25": "damagePerTenPercentReduction",
+    "26": "damageFromReductionOverCap",
+    "27": "additionalReductionCap",
+    "28": "damageWhileShielded"
+  },
+  "raceBonuses": {
+    "0": "maximumHealth",
+    "1": "allDamage",
+    "2": "cooldownReduction",
+    "3": "movementSpeed",
+    "4": "criticalChance",
+    "5": "damageReduction",
+    "6": "healthPerSecond",
+    "7": "pickupRange",
+    "8": "experience",
+    "9": "gold",
+    "10": "luck",
+    "11": "healthPerKill"
+  },
+  "filters": {
+    "0": "all",
+    "1": "spellId",
+    "2": "spellIdList",
+    "3": "schoolExcludingPets",
+    "4": "castKindExcludingPets",
+    "5": "originalAutoWeapon",
+    "6": "petsOnly"
+  },
+  "sourceFilterEvidence": "VA1459342C0..1459344E9; raw71866d8 first-stage7-entry jump table; raw71866f4 second-stage7-entry jump table. Filter4 compares sourceSpell+0x75 and filter+1. Filter6 requires sourceKind2. Filter3 school excludes sourceKind2. Filter5 requires sourceKind0 and sourceSpellId0.",
+  "triggerEventEvidence": "Exact effect payload at+0x20 (tag0/1),+0x10(tag15/17/18) matched against original descriptions. Spell optional empty means repeat triggering spell. tag0+8=f32 internalCooldownSeconds; tag1+8=u32 maxPerSecond, not+0x20.",
+  "castDispatchEvidence": "VA14595DE6C..14595DEFC; raw7186870 signed-relative12-entry dispatch and raw7186414 cast2..8 damage scaling7float table; full native function RVA595dc00 length0x3fb4",
+  "talentPayloadNote": "Low byte is enum tag. Upper bytes are enum-specific payload (tag3 school,tag11 deathCondition,tag15 stat), not universal flags.",
+  "talentRankScaling": {
+    "nativeFunction": "VA1458DB210..1458DB576",
+    "jumpTableRawOffset": "0x7181848",
+    "scaleAmountAtPlus4": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      7,
+      15,
+      17,
+      18
+    ],
+    "scaleAmountAtPlus8": [
+      6,
+      9
+    ],
+    "scaleValueAtPlus4PreserveDeathCondition": [
+      11
+    ],
+    "hitStatus8": "Chance(+4) scales when statusKind(+8)!=-1; alternate status -1 scales magnitude(+12) and preserves chance. Current354source rows use ordinary status payload.",
+    "outerCollectorScale": [
+      30,
+      31
+    ],
+    "note": "Unlisted payload fields preserve exact constants; do not multiply duration/radius/cap/count or event discriminants by rank."
+  },
+  "sourceLuck": {
+    "baseline": 0,
+    "composition": "raceBonus+gearBonus+talentBonus+timedStats",
+    "rarityFormula": "u=1+playerLuck+min(level*0.01,0.30)+extraLuck; weights=[60,25*u,10*u*u,4*u*u*u,u*u*u*u]",
+    "evidence": "Source stats rebuild VA14590A850..14590B8FC; Luck initializes0 and adds raceKind10,gearKind13,SourceStat12 before storing player+0x49c. Rarity source VA145958960..1459589E9 (offer kind0); offer kind1 VA1459588AB..14595892C adds0.5 additionalLuck. Offer kind classification must be checked before applying extra0.5."
+  },
+  "sourceAutoWeaponEvidence": "Native class table raw71863a0 stores native-class pointers = visible class row-0x10.16-byte prefix contains optional flag+damage+cooldown+range. Warrior27.5/1.6/6; Paladin27/1.8/6; Rogue14/1.2/6; allothers disabled. SourceStat16 consumed only in separate auto-attack path VA145913D20..145913E75.",
+  "unresolved": [
+    "Source class native+0x88 is retained as sourceParameter88; semantic not proven, do not apply as regeneration",
+    "Exact native timing/scaling for newly decoded effect families still requires corresponding event-adapter implementation and runtime verification",
+    "No Moonkin form effect exists in354 source talent rows; no invented form"
+  ]
+}

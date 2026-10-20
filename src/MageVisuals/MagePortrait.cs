@@ -24,16 +24,16 @@ public sealed class MagePortrait:MonoBehaviour
         try
         {
             if(!MageVisualBridge.IsAttached){MageVisualBridge.PortraitTexture=null;subject=null;return;}
-            if(subject==null || !subject.activeInHierarchy)subject=GameObject.Find("AzerothMage_HumanMale");
+            if(subject!=HeroAppearance.ActiveVisual || subject==null || !subject.activeInHierarchy)subject=HeroAppearance.ActiveVisual;
             if(subject==null)return;
             var renderer=subject.GetComponent<MeshRenderer>();if(renderer==null)return;
             if(camera==null || texture==null){Release();Build();}
             if(!texture.IsCreated())texture.Create();
             if(camera.targetTexture!=texture)camera.targetTexture=texture;
-            var bounds=renderer.bounds;float h=bounds.size.y;var target=bounds.center+Vector3.up*h*.33f;
+            var bounds=renderer.bounds;float h=bounds.size.y;var target=MageVisualBridge.PortraitWorldRadius>0?MageVisualBridge.PortraitWorldCenter:bounds.center+Vector3.up*h*.33f;
             var forward=subject.transform.forward;
             camera.cullingMask=1<<subject.layer;
-            camera.orthographicSize=h*.16f;camera.transform.position=target+forward*h*.7f;camera.transform.LookAt(target);
+            camera.orthographicSize=MageVisualBridge.PortraitWorldRadius>0?MageVisualBridge.PortraitWorldRadius:h*.16f;camera.transform.position=target+forward*h*.7f;camera.transform.LookAt(target);
             camera.Render();MageVisualBridge.PortraitTexture=texture;
         }
         catch(Exception ex){retryAt=Time.unscaledTime+1;subject=null;Release();if(Time.unscaledTime>=nextFailureLog){nextFailureLog=Time.unscaledTime+5;Plugin.Logger.LogWarning("Mage portrait will retry after native scene/asset change: "+ex);}}

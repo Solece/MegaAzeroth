@@ -1,0 +1,2962 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "imp_wrath",
+      "name": "Improved Wrath",
+      "icon": "Spell_Nature_AbolishMagic",
+      "description": "Wrath's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717acb8",
+      "effects": [
+        {
+          "sourceOffset": "0x717a5a8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717b79f",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3d23d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 1,
+          "spells": [
+            "wrath"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Wrath's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "natures_grasp",
+      "name": "Nature's Grasp",
+      "icon": "Spell_Nature_NaturesWrath",
+      "description": "When an enemy strikes you in melee, {v}% chance to cast a free Entangling Roots.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717ad20",
+      "effects": [
+        {
+          "sourceOffset": "0x717a650",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3d75c28f",
+            "0x40000000",
+            "0x0",
+            "0x4717b83d",
+            "0x1",
+            "0x10",
+            "0x0",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.05999999865889549,
+          "internalCooldown": 2.0,
+          "spell": "entangling_roots",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 8,
+          "triggerEventName": "meleeDamageTaken",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "When an enemy strikes you in melee, {v}% chance to cast a free Entangling Roots.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_moonfire",
+      "name": "Improved Moonfire",
+      "icon": "Spell_Nature_StarFall",
+      "description": "Moonfire deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717ad88",
+      "effects": [
+        {
+          "sourceOffset": "0x717a708",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717b8fd",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "moonfire"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Moonfire deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "natural_weapons",
+      "name": "Natural Weapons",
+      "icon": "INV_Staff_01",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717adf0",
+      "effects": [
+        {
+          "sourceOffset": "0x7166390",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.02500000037252903,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "omen_of_clarity",
+      "name": "Omen of Clarity",
+      "icon": "Spell_Nature_CrystalBall",
+      "description": "Milestone. Every spell you cast has an {v}% chance to call down a free Starfire.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717ae58",
+      "effects": [
+        {
+          "sourceOffset": "0x717a7d0",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3e3851ec",
+            "0x0",
+            "0x0",
+            "0x4717b9c8",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.18000000715255737,
+          "internalCooldown": 0.0,
+          "spell": "starfire",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 7,
+          "triggerEventName": "cast",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Every spell you cast has an {v}% chance to call down a free Starfire.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "vengeance_druid",
+      "name": "Vengeance",
+      "icon": "Spell_Nature_Purge",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717aec0",
+      "effects": [
+        {
+          "sourceOffset": "0x716e658",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_starfire",
+      "name": "Improved Starfire",
+      "icon": "Spell_Arcane_StarFire",
+      "description": "Starfire's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717af28",
+      "effects": [
+        {
+          "sourceOffset": "0x717a898",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717b9c8",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x3da3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 1,
+          "spells": [
+            "starfire"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Starfire's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "moonglow",
+      "name": "Moonglow",
+      "icon": "Spell_Nature_Sentinal",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717af90",
+      "effects": [
+        {
+          "sourceOffset": "0x717a928",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.029999999329447746,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "starfall",
+      "name": "Starfall",
+      "icon": "Spell_Arcane_StarFire",
+      "description": "Milestone. Stars fall around you: a free Starfire every 4 sec.",
+      "prerequisite": "omen_of_clarity",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717aff8",
+      "effects": [
+        {
+          "sourceOffset": "0x717a978",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40800000",
+            "0x4717b9c8",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 4.0,
+          "spell": "starfire",
+          "periodicBaseCooldown": 4.5,
+          "periodicSpellSchool": "Arcane",
+          "periodicSpellSourceOffset": "0x6b8a5d0",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Stars fall around you: a free Starfire every 4 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_hurricane",
+      "name": "Gale Winds",
+      "icon": "Spell_Nature_Cyclone",
+      "description": "Hurricane reaches {v}% farther.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717b060",
+      "effects": [
+        {
+          "sourceOffset": "0x717aa18",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717bc0d",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 3,
+          "spells": [
+            "hurricane"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Hurricane reaches {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "moonfury",
+      "name": "Moonfury",
+      "icon": "Spell_Nature_MoonGlow",
+      "description": "Arcane and Nature spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717b0c8",
+      "effects": [
+        {
+          "sourceOffset": "0x717aa88",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x603",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.029999999329447746,
+          "modifier": 0,
+          "school": "Arcane",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Arcane and Nature spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717aac8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x303",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.029999999329447746,
+          "modifier": 0,
+          "school": "Nature",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 3,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Arcane and Nature spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "natures_reach",
+      "name": "Nature's Reach",
+      "icon": "Spell_Nature_NatureTouchGrow",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717b130",
+      "effects": [
+        {
+          "sourceOffset": "0x7173430",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.019999999552965164,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "force_of_nature",
+      "name": "Force of Nature",
+      "icon": "Spell_Nature_ForceOfNature",
+      "description": "Capstone. Two treants fight at your side, and you start every run with Moonfire.",
+      "prerequisite": "starfall",
+      "tree": "Balance",
+      "treeId": "DruidBalance",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x717b198",
+      "effects": [
+        {
+          "sourceOffset": "0x717aba8",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717ea18",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d818",
+          "petName": "Treant",
+          "petCreatureEntry": 9515,
+          "petDisplayId": 2078,
+          "petScale": 0.30000001192092896,
+          "petBaseDamage": 77.0,
+          "petCooldown": 1.5,
+          "petFloat24": 0.30000001192092896,
+          "petFloat28": 77.0,
+          "petFloat32": 1.5,
+          "petSpellId": 0,
+          "petSchool": 3,
+          "petProvenance": {
+            "rawOffset": "0x717d818",
+            "rva": "0x717ea18",
+            "va": "0x14717ea18",
+            "byteLength": 48,
+            "sha256": "a56ade95c17406a871e697500389106400dae6950a3ad2e170447f8f9f6a653f",
+            "bytesHex": "10ea17470100000006000000000000002b2500001e0800009a99993e00009a420000c03f000000000300000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Two treants fight at your side, and you start every run with Moonfire.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717abe8",
+          "tag": 29,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717ea18",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d818",
+          "petName": "Treant",
+          "petCreatureEntry": 9515,
+          "petDisplayId": 2078,
+          "petScale": 0.30000001192092896,
+          "petBaseDamage": 77.0,
+          "petCooldown": 1.5,
+          "petFloat24": 0.30000001192092896,
+          "petFloat28": 77.0,
+          "petFloat32": 1.5,
+          "petSpellId": 0,
+          "petSchool": 3,
+          "petProvenance": {
+            "rawOffset": "0x717d818",
+            "rva": "0x717ea18",
+            "va": "0x14717ea18",
+            "byteLength": 48,
+            "sha256": "a56ade95c17406a871e697500389106400dae6950a3ad2e170447f8f9f6a653f",
+            "bytesHex": "10ea17470100000006000000000000002b2500001e0800009a99993e00009a420000c03f000000000300000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Two treants fight at your side, and you start every run with Moonfire.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717ac28",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4717b8fd",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "moonfire",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Two treants fight at your side, and you start every run with Moonfire.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ferocity_druid",
+      "name": "Ferocity",
+      "icon": "Ability_Hunter_Pet_Hyena",
+      "description": "Swipe and Shred deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717be88",
+      "effects": [
+        {
+          "sourceOffset": "0x717b288",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717c468",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "spells": [
+            "swipe",
+            "shred"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Swipe and Shred deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "feral_aggression",
+      "name": "Feral Aggression",
+      "icon": "Ability_Druid_DemoralizingRoar",
+      "description": "Regenerate {v}% of your maximum health per second.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717bef0",
+      "effects": [
+        {
+          "sourceOffset": "0x717b310",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ac49ba6",
+            "0x18",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 24,
+          "value": 0.001500000013038516,
+          "statName": "maximumHealthRegenPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v}% of your maximum health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "feral_instinct",
+      "name": "Feral Instinct",
+      "icon": "Ability_Ambush",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717bf58",
+      "effects": [
+        {
+          "sourceOffset": "0x717b370",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d4ccccd",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.05000000074505806,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "brutal_impact",
+      "name": "Enrage",
+      "icon": "Ability_Druid_Enrage",
+      "description": "When an enemy strikes you in melee, {v}% chance to answer with a free Swipe.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717bfc0",
+      "effects": [
+        {
+          "sourceOffset": "0x717b3d8",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3dcccccd",
+            "0x40000000",
+            "0x0",
+            "0x4717c459",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.10000000149011612,
+          "internalCooldown": 2.0,
+          "spell": "swipe",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 8,
+          "triggerEventName": "meleeDamageTaken",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "When an enemy strikes you in melee, {v}% chance to answer with a free Swipe.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "rake",
+      "name": "Rake",
+      "icon": "Ability_Druid_Disembowel",
+      "description": "Milestone. Your hide thickens: 20% more maximum health and 8% less damage taken. You start every run with Swipe and Shred, and everything they hit bleeds for {v}% of the blow over 6 sec.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717c028",
+      "effects": [
+        {
+          "sourceOffset": "0x717b470",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4717c459",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "swipe",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your hide thickens: 20% more maximum health and 8% less damage taken. You start every run with Swipe and Shred, and everything they hit bleeds for {v}% of the blow over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717b4b0",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4717c45e",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "shred",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your hide thickens: 20% more maximum health and 8% less damage taken. You start every run with Swipe and Shred, and everything they hit bleeds for {v}% of the blow over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717b4f0",
+          "tag": 9,
+          "rawPackedTag": 9,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x9",
+            "0x71e",
+            "0x3f800000",
+            "0x40c00000",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717c468",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "critDot",
+          "spellId": 1822,
+          "value": 1.0,
+          "duration": 6.0,
+          "triggerEvent": 0,
+          "ticks": 6,
+          "interval": 1.0,
+          "sourceDotEvidence": "VA1459301CD event matcher consumes raw+16;145931CF0 roundf(duration) max1;145932A94 adds remaining same-effect damage;145884032..049 stores totalDamage/N and duration/N",
+          "spells": [
+            "swipe",
+            "shred"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your hide thickens: 20% more maximum health and 8% less damage taken. You start every run with Swipe and Shred, and everything they hit bleeds for {v}% of the blow over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717b530",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3e4ccccd",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.20000000298023224,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your hide thickens: 20% more maximum health and 8% less damage taken. You start every run with Swipe and Shred, and everything they hit bleeds for {v}% of the blow over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717b570",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.07999999821186066,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your hide thickens: 20% more maximum health and 8% less damage taken. You start every run with Swipe and Shred, and everything they hit bleeds for {v}% of the blow over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "sharpened_claws",
+      "name": "Sharpened Claws",
+      "icon": "INV_Misc_MonsterClaw_04",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717c090",
+      "effects": [
+        {
+          "sourceOffset": "0x716b340",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.014999999664723873,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "predatory_strikes",
+      "name": "Predatory Strikes",
+      "icon": "Ability_Hunter_Pet_Cat",
+      "description": "Swipe's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717c0f8",
+      "effects": [
+        {
+          "sourceOffset": "0x717b6c0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717c459",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3dcccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 1,
+          "spells": [
+            "swipe"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Swipe's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "thick_hide",
+      "name": "Thick Hide",
+      "icon": "INV_Misc_Pelt_Bear_03",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717c160",
+      "effects": [
+        {
+          "sourceOffset": "0x7175cd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.02500000037252903,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "blood_frenzy",
+      "name": "Blood Frenzy",
+      "icon": "Ability_GhoulFrenzy",
+      "description": "Milestone. Your critical strikes rip the target open: it bleeds for {v}% of the hit over 6 sec.",
+      "prerequisite": "rake",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717c1c8",
+      "effects": [
+        {
+          "sourceOffset": "0x717b768",
+          "tag": 9,
+          "rawPackedTag": 9,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x9",
+            "0x437",
+            "0x3f800000",
+            "0x40c00000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "critDot",
+          "spellId": 1079,
+          "value": 1.0,
+          "duration": 6.0,
+          "triggerEvent": 2,
+          "ticks": 6,
+          "interval": 1.0,
+          "sourceDotEvidence": "VA1459301CD event matcher consumes raw+16;145931CF0 roundf(duration) max1;145932A94 adds remaining same-effect damage;145884032..049 stores totalDamage/N and duration/N",
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your critical strikes rip the target open: it bleeds for {v}% of the hit over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "savage_fury",
+      "name": "Savage Fury",
+      "icon": "Ability_Druid_Ravage",
+      "description": "Shred deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717c230",
+      "effects": [
+        {
+          "sourceOffset": "0x717b838",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717c45e",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3e19999a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.15000000596046448,
+          "modifier": 0,
+          "spells": [
+            "shred"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Shred deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "heart_of_wild",
+      "name": "Heart of the Wild",
+      "icon": "Spell_Holy_BlessingOfAgility",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717c298",
+      "effects": [
+        {
+          "sourceOffset": "0x717b8d0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d0f5c29",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.03500000014901161,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "primal_fury",
+      "name": "Primal Fury",
+      "icon": "Ability_Racial_Cannibalize",
+      "description": "{v}% of all the damage you deal heals you.",
+      "prerequisite": "",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717c300",
+      "effects": [
+        {
+          "sourceOffset": "0x71728e8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ba3d70a",
+            "0xe",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 14,
+          "value": 0.004999999888241291,
+          "statName": "lifesteal",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "{v}% of all the damage you deal heals you.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "leader_of_pack",
+      "name": "Dire Bear Form",
+      "icon": "Ability_Racial_BearForm",
+      "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+      "prerequisite": "blood_frenzy",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 6,
+      "column": 0,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x717c368",
+      "effects": [
+        {
+          "sourceOffset": "0x717b960",
+          "tag": 25,
+          "rawPackedTag": 25,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x19",
+            "0x25a2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "shapeshift",
+          "spellId": 9634,
+          "sourceEvidence": "Source effect25 switch RVA5907119: Bear9634 -> display2281 (Tauren2289); Cat768 -> display892 (Tauren8571); Shadow15473 retains hero model",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717b9a0",
+          "tag": 28,
+          "rawPackedTag": 28,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1c",
+            "0x0",
+            "0x4717c45e",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "shred",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717b9e0",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40400000",
+            "0x4717c459",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 3.0,
+          "spell": "swipe",
+          "periodicBaseCooldown": 3.0,
+          "periodicSpellSchool": "Physical",
+          "periodicSpellSourceOffset": "0x6b8a918",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717ba20",
+          "tag": 8,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x8",
+            "0x3f800000",
+            "0x6",
+            "0x3b449ba6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717c459",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 1.0,
+          "status": 6,
+          "statusValue": 0.003000000026077032,
+          "statusDuration": 0.0,
+          "duration": 0.0,
+          "triggerEvent": 0,
+          "spells": [
+            "swipe"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717ba60",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3e800000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.25,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717baa0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3dcccccd",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.10000000149011612,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Dire Bear Form: 25% more maximum health and 10% less damage taken. A free Swipe tears around you every 3 sec, and every enemy Swipe hits heals you for 0.3% of your maximum health. You start every run with Shred instead of Wrath. You can't also learn Cat Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ],
+      "excludes": [
+        "cat_form"
+      ],
+      "exclusionEvidence": "Original source descriptions explicitly forbid simultaneously learning Dire Bear Form and Cat Form."
+    },
+    {
+      "id": "cat_form",
+      "name": "Cat Form",
+      "icon": "Ability_Druid_CatForm",
+      "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+      "prerequisite": "blood_frenzy",
+      "tree": "Feral Combat",
+      "treeId": "DruidFeralCombat",
+      "tier": 6,
+      "column": 2,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x717c3d0",
+      "effects": [
+        {
+          "sourceOffset": "0x717bc20",
+          "tag": 25,
+          "rawPackedTag": 25,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x19",
+            "0x300",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "shapeshift",
+          "spellId": 768,
+          "sourceEvidence": "Source effect25 switch RVA5907119: Bear9634 -> display2281 (Tauren2289); Cat768 -> display892 (Tauren8571); Shadow15473 retains hero model",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717bc60",
+          "tag": 28,
+          "rawPackedTag": 28,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1c",
+            "0x0",
+            "0x4717c45e",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "shred",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717bca0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.10000000149011612,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717bce0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.10000000149011612,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717bd20",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3e19999a",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 7,
+          "value": 0.15000000596046448,
+          "statName": "movementSpeed",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717bd60",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717c45e",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3e4ccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.20000000298023224,
+          "modifier": 1,
+          "spells": [
+            "shred"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You fight in Cat Form: 10% more damage, 10% more critical strike chance and 15% faster movement, and Shred's cooldown is 20% shorter. You start every run with Shred instead of Wrath. You can't also learn Dire Bear Form.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ],
+      "excludes": [
+        "leader_of_pack"
+      ],
+      "exclusionEvidence": "Original source descriptions explicitly forbid simultaneously learning Dire Bear Form and Cat Form."
+    },
+    {
+      "id": "imp_motw",
+      "name": "Improved Mark of the Wild",
+      "icon": "Spell_Nature_Regeneration",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717cad0",
+      "effects": [
+        {
+          "sourceOffset": "0x716d888",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.019999999552965164,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "furor",
+      "name": "Furor",
+      "icon": "Spell_Holy_BlessingOfStamina",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x717cb38",
+      "effects": [
+        {
+          "sourceOffset": "0x7166260",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3f19999a",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.6000000238418579,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_healing_touch",
+      "name": "Improved Healing Touch",
+      "icon": "Spell_Nature_HealingTouch",
+      "description": "Regrowth and Rejuvenation heal {v}% more.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717cba0",
+      "effects": [
+        {
+          "sourceOffset": "0x717c500",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717d6e0",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "regrowth",
+            "rejuvenation"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regrowth and Rejuvenation heal {v}% more.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "natures_focus",
+      "name": "Nature's Focus",
+      "icon": "Spell_Nature_HealingWaveGreater",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x717cc08",
+      "effects": [
+        {
+          "sourceOffset": "0x71660f8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.019999999552965164,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "swiftmend",
+      "name": "Swiftmend",
+      "icon": "INV_Relics_IdolofRejuvenation",
+      "description": "Milestone. Falling below 40% health makes a free Regrowth bloom on you, once every 8 sec.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717cc70",
+      "effects": [
+        {
+          "sourceOffset": "0x717c5d8",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3f800000",
+            "0x41000000",
+            "0x0",
+            "0x4717d6cc",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x9",
+            "0x3ecccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 1.0,
+          "internalCooldown": 8.0,
+          "spell": "regrowth",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 9,
+          "triggerEventName": "healthBelow",
+          "eventValue": 0.4000000059604645,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Falling below 40% health makes a free Regrowth bloom on you, once every 8 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "reflection",
+      "name": "Reflection",
+      "icon": "Spell_Frost_WindWalkOn",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x717ccd8",
+      "effects": [
+        {
+          "sourceOffset": "0x7166260",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3f19999a",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.6000000238418579,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "tranquil_spirit",
+      "name": "Tranquil Spirit",
+      "icon": "Spell_Holy_ElunesGrace",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717cd40",
+      "effects": [
+        {
+          "sourceOffset": "0x717b8d0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d0f5c29",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.03500000014901161,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_rejuvenation",
+      "name": "Improved Rejuvenation",
+      "icon": "Spell_Nature_Rejuvenation",
+      "description": "Rejuvenation's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x717cda8",
+      "effects": [
+        {
+          "sourceOffset": "0x717c6f8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717d6d4",
+            "0x1",
+            "0xc",
+            "0x0",
+            "0x3da3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 1,
+          "spells": [
+            "rejuvenation"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Rejuvenation's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "tranquility",
+      "name": "Tranquility",
+      "icon": "Spell_Nature_Tranquility",
+      "description": "Milestone. Every heal you cast also strikes every enemy within 12 yd for {v}% of the healing as Nature damage.",
+      "prerequisite": "swiftmend",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717ce10",
+      "effects": [
+        {
+          "sourceOffset": "0x717c778",
+          "tag": 21,
+          "rawPackedTag": 21,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x15",
+            "0x40400000",
+            "0x41400000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "healDamageNova",
+          "damageFactor": 3.0,
+          "radius": 12.0,
+          "school": "Nature",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Every heal you cast also strikes every enemy within 12 yd for {v}% of the healing as Nature damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "gift_of_nature",
+      "name": "Gift of Nature",
+      "icon": "Spell_Nature_ProtectionformNature",
+      "description": "Your heals and shields are {v}% stronger.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x717ce78",
+      "effects": [
+        {
+          "sourceOffset": "0x717c868",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x904",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 9,
+          "filterCastKind": 9,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your heals and shields are {v}% stronger.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_tranquility",
+      "name": "Improved Tranquility",
+      "icon": "Spell_Nature_Tranquility",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717cee0",
+      "effects": [
+        {
+          "sourceOffset": "0x7167cd0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.014999999664723873,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "natural_shapeshifter",
+      "name": "Natural Shapeshifter",
+      "icon": "Spell_Nature_WispSplode",
+      "description": "Insect Swarm and Moonfire deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x717cf48",
+      "effects": [
+        {
+          "sourceOffset": "0x717c920",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4717db00",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "insect_swarm",
+            "moonfire"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Insect Swarm and Moonfire deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "tree_of_life",
+      "name": "Tree of Life",
+      "icon": "Spell_Nature_ResistNature",
+      "description": "Capstone. Healing beyond your maximum health becomes a shield, up to 20% of it, and a free Rejuvenation blooms on you every 6 sec.",
+      "prerequisite": "tranquility",
+      "tree": "Restoration",
+      "treeId": "DruidRestoration",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x717cfb0",
+      "effects": [
+        {
+          "sourceOffset": "0x717c9c8",
+          "tag": 20,
+          "rawPackedTag": 20,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x14",
+            "0x3e4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "overhealShield",
+          "cap": 0.20000000298023224,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Healing beyond your maximum health becomes a shield, up to 20% of it, and a free Rejuvenation blooms on you every 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x717ca08",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40c00000",
+            "0x4717d6d4",
+            "0x1",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 6.0,
+          "spell": "rejuvenation",
+          "periodicBaseCooldown": 8.0,
+          "periodicSpellSchool": "Nature",
+          "periodicSpellSourceOffset": "0x6b8a7b0",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Healing beyond your maximum health becomes a shield, up to 20% of it, and a free Rejuvenation blooms on you every 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "druid",
+  "trees": [
+    {
+      "id": "DruidBalance",
+      "name": "Balance",
+      "icon": "Spell_Nature_StarFall",
+      "sourceOffset": "0x717d658",
+      "sourceNodesOffset": "0x717acb8",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "DruidFeralCombat",
+      "name": "Feral Combat",
+      "icon": "Ability_Racial_BearForm",
+      "sourceOffset": "0x717d698",
+      "sourceNodesOffset": "0x717be88",
+      "sourceNodeCount": 14
+    },
+    {
+      "id": "DruidRestoration",
+      "name": "Restoration",
+      "icon": "Spell_Nature_HealingTouch",
+      "sourceOffset": "0x717d6d8",
+      "sourceNodesOffset": "0x717cad0",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b86c40",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}

@@ -1,0 +1,2429 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "unbreakable_will",
+      "name": "Unbreakable Will",
+      "icon": "Spell_Magic_MageArmor",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7171010",
+      "effects": [
+        {
+          "sourceOffset": "0x7170970",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c03126f",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.00800000037997961,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "wand_spec",
+      "name": "Wand Specialization",
+      "icon": "INV_Wand_01",
+      "description": "Smite deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7171078",
+      "effects": [
+        {
+          "sourceOffset": "0x71709e0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47171bd7",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3d23d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 0,
+          "spells": [
+            "smite"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Smite deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_pw_shield",
+      "name": "Improved Power Word: Shield",
+      "icon": "Spell_Holy_PowerWordShield",
+      "description": "Power Word: Shield absorbs {v}% more.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x71710e0",
+      "effects": [
+        {
+          "sourceOffset": "0x7170a88",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47171c7f",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3e4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.20000000298023224,
+          "modifier": 0,
+          "spells": [
+            "pw_shield"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Power Word: Shield absorbs {v}% more.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "martyrdom",
+      "name": "Martyrdom",
+      "icon": "Spell_Nature_Tranquility",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7171148",
+      "effects": [
+        {
+          "sourceOffset": "0x7170b18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.014999999664723873,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "divine_aegis",
+      "name": "Divine Aegis",
+      "icon": "Spell_Holy_DivineIntervention",
+      "description": "Milestone. You start every run with Power Word: Shield, and a shield on you that breaks bursts in holy light: {v}% of what it absorbed strikes every enemy within 10 yd.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71711b0",
+      "effects": [
+        {
+          "sourceOffset": "0x7170b70",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x47171c7f",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "pw_shield",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. You start every run with Power Word: Shield, and a shield on you that breaks bursts in holy light: {v}% of what it absorbed strikes every enemy within 10 yd.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7170bb0",
+          "tag": 3,
+          "rawPackedTag": 259,
+          "packedFlags": 1,
+          "rawWords": [
+            "0x103",
+            "0x3dcccccd",
+            "0x41200000",
+            "0x3b85",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "shieldBreakBurst",
+          "school": "Holy",
+          "value": 0.10000000149011612,
+          "radius": 10.0,
+          "spellId": 15237,
+          "maxPerSecond": 10,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. You start every run with Power Word: Shield, and a shield on you that breaks bursts in holy light: {v}% of what it absorbed strikes every enemy within 10 yd.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "mental_agility",
+      "name": "Mental Agility",
+      "icon": "Ability_Hibernation",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7171218",
+      "effects": [
+        {
+          "sourceOffset": "0x716b060",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.014999999664723873,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "meditation",
+      "name": "Meditation",
+      "icon": "Spell_Nature_Sleep",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7171280",
+      "effects": [
+        {
+          "sourceOffset": "0x7168fe8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ecccccd",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.4000000059604645,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "mental_strength",
+      "name": "Mental Strength",
+      "icon": "Spell_Nature_EnchantArmor",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x71712e8",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "rapture",
+      "name": "Rapture",
+      "icon": "Spell_Holy_PowerInfusion",
+      "description": "Milestone. A broken Power Word: Shield is raised again at once, at most once every 15 sec.",
+      "prerequisite": "divine_aegis",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7171350",
+      "effects": [
+        {
+          "sourceOffset": "0x7170d20",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3f800000",
+            "0x41700000",
+            "0x0",
+            "0x47171c7f",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 1.0,
+          "internalCooldown": 15.0,
+          "spell": "pw_shield",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 10,
+          "triggerEventName": "shieldBreak",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. A broken Power Word: Shield is raised again at once, at most once every 15 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "force_of_will",
+      "name": "Force of Will",
+      "icon": "Spell_Nature_SlowingTotem",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x71713b8",
+      "effects": [
+        {
+          "sourceOffset": "0x7170df0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c03126f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.00800000037997961,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "silent_resolve",
+      "name": "Silent Resolve",
+      "icon": "Spell_Nature_ManaRegenTotem",
+      "description": "Increases your luck by {v}%.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7171420",
+      "effects": [
+        {
+          "sourceOffset": "0x7170e68",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 12,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "luck",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your luck by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_inner_fire",
+      "name": "Improved Inner Fire",
+      "icon": "Spell_Holy_InnerFire",
+      "description": "Power Word: Shield's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7171488",
+      "effects": [
+        {
+          "sourceOffset": "0x7170ed0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47171c7f",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3dcccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 1,
+          "spells": [
+            "pw_shield"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Power Word: Shield's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "penance",
+      "name": "Penance",
+      "icon": "Spell_Holy_SearingLight",
+      "description": "Capstone. You strike out on your own: a free Penance about every 3 sec, three bolts of holy light at the nearest enemies.",
+      "prerequisite": "rapture",
+      "tree": "Discipline",
+      "treeId": "PriestDiscipline",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x71714f0",
+      "effects": [
+        {
+          "sourceOffset": "0x7170f50",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x0",
+            "0x4717213e",
+            "0x1",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 0.0,
+          "spell": "penance",
+          "periodicBaseCooldown": 2.200000047683716,
+          "periodicSpellSchool": "Holy",
+          "periodicSpellSourceOffset": "0x6b8ae40",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You strike out on your own: a free Penance about every 3 sec, three bolts of holy light at the nearest enemies.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "holy_spec",
+      "name": "Holy Specialization",
+      "icon": "Spell_Holy_SealOfSalvation",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7171c68",
+      "effects": [
+        {
+          "sourceOffset": "0x7170df0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c03126f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.00800000037997961,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_renew",
+      "name": "Improved Renew",
+      "icon": "Spell_Holy_Renew",
+      "description": "Renew heals {v}% more.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7171cd0",
+      "effects": [
+        {
+          "sourceOffset": "0x71715b0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471727a5",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "spells": [
+            "renew"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Renew heals {v}% more.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "divine_fury",
+      "name": "Divine Fury",
+      "icon": "Spell_Holy_SealOfWrath",
+      "description": "Smite and Holy Fire cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7171d38",
+      "effects": [
+        {
+          "sourceOffset": "0x7171648",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47172828",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3cf5c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.029999999329447746,
+          "modifier": 1,
+          "spells": [
+            "smite",
+            "holy_fire"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Smite and Holy Fire cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "holy_reach",
+      "name": "Holy Reach",
+      "icon": "Spell_Holy_Purify",
+      "description": "Holy Nova reaches {v}% farther.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7171da0",
+      "effects": [
+        {
+          "sourceOffset": "0x71716d8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471728cb",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 3,
+          "spells": [
+            "holy_nova"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Holy Nova reaches {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "holy_nova_talent",
+      "name": "Radiance",
+      "icon": "Spell_Holy_HolyNova",
+      "description": "Milestone. A Holy Nova bursts from you on its own every 24 sec.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7171e08",
+      "effects": [
+        {
+          "sourceOffset": "0x7171768",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x41c00000",
+            "0x471728cb",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 24.0,
+          "spell": "holy_nova",
+          "periodicBaseCooldown": 4.0,
+          "periodicSpellSchool": "Holy",
+          "periodicSpellSourceOffset": "0x6b890b8",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. A Holy Nova bursts from you on its own every 24 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "inspiration",
+      "name": "Inspiration",
+      "icon": "Spell_Holy_LayOnHands",
+      "description": "Your Holy critical strikes heal you for {v}% of your maximum health, at most once a second.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7171e70",
+      "effects": [
+        {
+          "sourceOffset": "0x7171818",
+          "tag": 17,
+          "rawPackedTag": 17,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x11",
+            "0x3b03126f",
+            "0x3f800000",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x103",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "triggeredHeal",
+          "value": 0.0020000000949949026,
+          "interval": 1.0,
+          "triggerEvent": 2,
+          "triggerEventName": "criticalHit",
+          "school": "Holy",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 1,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your Holy critical strikes heal you for {v}% of your maximum health, at most once a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "searing_light",
+      "name": "Searing Light",
+      "icon": "Spell_Holy_SearingLightPriest",
+      "description": "Smite and Holy Fire deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7171ed8",
+      "effects": [
+        {
+          "sourceOffset": "0x71718f0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47172828",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 0,
+          "spells": [
+            "smite",
+            "holy_fire"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Smite and Holy Fire deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "spiritual_guidance",
+      "name": "Spiritual Guidance",
+      "icon": "Spell_Holy_SpiritualGuidence",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7171f40",
+      "effects": [
+        {
+          "sourceOffset": "0x7168f70",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.014999999664723873,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "holy_fire_talent",
+      "name": "Purifying Flame",
+      "icon": "Spell_Holy_SearingLight",
+      "description": "Milestone. Smite and Holy Fire critical strikes set their target alight for {v}% of the hit over 6 sec.",
+      "prerequisite": "holy_nova_talent",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7171fa8",
+      "effects": [
+        {
+          "sourceOffset": "0x71719c0",
+          "tag": 9,
+          "rawPackedTag": 9,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x9",
+            "0x3a42",
+            "0x3e99999a",
+            "0x40c00000",
+            "0x2",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47172828",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "critDot",
+          "spellId": 14914,
+          "value": 0.30000001192092896,
+          "duration": 6.0,
+          "triggerEvent": 2,
+          "ticks": 6,
+          "interval": 1.0,
+          "sourceDotEvidence": "VA1459301CD event matcher consumes raw+16;145931CF0 roundf(duration) max1;145932A94 adds remaining same-effect damage;145884032..049 stores totalDamage/N and duration/N",
+          "spells": [
+            "smite",
+            "holy_fire"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Smite and Holy Fire critical strikes set their target alight for {v}% of the hit over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "spiritual_healing",
+      "name": "Spiritual Healing",
+      "icon": "Spell_Nature_MoonGlow",
+      "description": "Your heals and shields are {v}% stronger.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7172010",
+      "effects": [
+        {
+          "sourceOffset": "0x7171aa0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x904",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3df5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.11999999731779099,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 9,
+          "filterCastKind": 9,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your heals and shields are {v}% stronger.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "blessed_recovery",
+      "name": "Blessed Recovery",
+      "icon": "Spell_Holy_BlessedRecovery",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7172078",
+      "effects": [
+        {
+          "sourceOffset": "0x716d888",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.019999999552965164,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "holy_concentration",
+      "name": "Holy Concentration",
+      "icon": "Spell_Holy_SpellWarding",
+      "description": "Holy spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71720e0",
+      "effects": [
+        {
+          "sourceOffset": "0x7169500",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x103",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.019999999552965164,
+          "modifier": 0,
+          "school": "Holy",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 1,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Holy spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "chastise",
+      "name": "Chastise",
+      "icon": "Spell_Holy_SealOfWrath",
+      "description": "Capstone. Smite strikes 1 more enemy, and every Smite cast that critically strikes sets off a free Holy Nova.",
+      "prerequisite": "holy_fire_talent",
+      "tree": "Holy",
+      "treeId": "PriestHoly",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7172148",
+      "effects": [
+        {
+          "sourceOffset": "0x7171b78",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47171bd7",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x3f800000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 1.0,
+          "modifier": 2,
+          "spells": [
+            "smite"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Smite strikes 1 more enemy, and every Smite cast that critically strikes sets off a free Holy Nova.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7171bb8",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x471728cb",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47171bd7",
+            "0x1",
+            "0x5",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 1.0,
+          "internalCooldown": 0.0,
+          "spell": "holy_nova",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 3,
+          "triggerEventName": "castWithCriticalHit",
+          "eventValue": 0.0,
+          "spells": [
+            "smite"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Smite strikes 1 more enemy, and every Smite cast that critically strikes sets off a free Holy Nova.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "spirit_tap",
+      "name": "Spirit Tap",
+      "icon": "Spell_Shadow_Requiem",
+      "description": "Every kill heals you for {v} health.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7172af0",
+      "effects": [
+        {
+          "sourceOffset": "0x7172208",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3f000000",
+            "0xf",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 15,
+          "value": 0.5,
+          "statName": "healthPerKill",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Every kill heals you for {v} health.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "blackout",
+      "name": "Blackout",
+      "icon": "Spell_Shadow_GatherShadows",
+      "description": "Your Shadow spells have a {v}% chance to stun what they hit for 1.5 sec.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7172b58",
+      "effects": [
+        {
+          "sourceOffset": "0x7172298",
+          "tag": 8,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x8",
+            "0x3ca3d70a",
+            "0x3",
+            "0x3fc00000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x503",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 0.019999999552965164,
+          "status": 3,
+          "statusValue": 1.5,
+          "statusDuration": 0.0,
+          "duration": 1.5,
+          "triggerEvent": 0,
+          "school": "Shadow",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 5,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your Shadow spells have a {v}% chance to stun what they hit for 1.5 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_swp",
+      "name": "Improved Shadow Word: Pain",
+      "icon": "Spell_Shadow_ShadowWordPain",
+      "description": "Shadow Word: Pain lasts {v}% longer.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 2,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7172bc0",
+      "effects": [
+        {
+          "sourceOffset": "0x7172348",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47173541",
+            "0x1",
+            "0x7",
+            "0x0",
+            "0x3e19999a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.15000000596046448,
+          "modifier": 4,
+          "spells": [
+            "sw_pain"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Shadow Word: Pain lasts {v}% longer.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadow_focus",
+      "name": "Shadow Focus",
+      "icon": "Spell_Shadow_BurningSpirit",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7172c28",
+      "effects": [
+        {
+          "sourceOffset": "0x7166e18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadow_weaving",
+      "name": "Shadow Weaving",
+      "icon": "Spell_Shadow_BlackPlague",
+      "description": "Milestone. Your Shadow spells also strike what they hit for {v}% of its maximum health.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7172c90",
+      "effects": [
+        {
+          "sourceOffset": "0x7172418",
+          "tag": 5,
+          "rawPackedTag": 5,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x5",
+            "0x3c23d70a",
+            "0x0",
+            "0x0",
+            "0x503",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "targetMaxHealthDamage",
+          "value": 0.009999999776482582,
+          "school": "Shadow",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 5,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your Shadow spells also strike what they hit for {v}% of its maximum health.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_mind_blast",
+      "name": "Improved Mind Blast",
+      "icon": "Spell_Shadow_UnholyFrenzy",
+      "description": "Mind Blast's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7172cf8",
+      "effects": [
+        {
+          "sourceOffset": "0x71724e0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471736d0",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x3d75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 1,
+          "spells": [
+            "mind_blast"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Mind Blast's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "darkness",
+      "name": "Darkness",
+      "icon": "Spell_Shadow_Twilight",
+      "description": "Shadow spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7172d60",
+      "effects": [
+        {
+          "sourceOffset": "0x7172558",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x503",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.019999999552965164,
+          "modifier": 0,
+          "school": "Shadow",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 5,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Shadow spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_psychic_scream",
+      "name": "Improved Psychic Scream",
+      "icon": "Spell_Shadow_PsychicScream",
+      "description": "Psychic Scream's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7172dc8",
+      "effects": [
+        {
+          "sourceOffset": "0x7172610",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471737ff",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x3df5c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.11999999731779099,
+          "modifier": 1,
+          "spells": [
+            "psychic_scream"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Psychic Scream's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadowy_apparitions",
+      "name": "Shadowy Apparitions",
+      "icon": "Spell_Shadow_Haunting",
+      "description": "Milestone. You start every run with Shadow Word: Pain instead of Smite, and its ticks have a {v}% chance to loose a shadowy apparition: a free Mind Blast, at most twice a second.",
+      "prerequisite": "shadow_weaving",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7172e30",
+      "effects": [
+        {
+          "sourceOffset": "0x71726b8",
+          "tag": 28,
+          "rawPackedTag": 28,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1c",
+            "0x0",
+            "0x47173541",
+            "0x1",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "sw_pain",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. You start every run with Shadow Word: Pain instead of Smite, and its ticks have a {v}% chance to loose a shadowy apparition: a free Mind Blast, at most twice a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x71726f8",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3d23d70a",
+            "0x3f000000",
+            "0x0",
+            "0x471736d0",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x4",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47173541",
+            "0x1",
+            "0x7",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.03999999910593033,
+          "internalCooldown": 0.5,
+          "spell": "mind_blast",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 4,
+          "triggerEventName": "damageOverTimeTick",
+          "eventValue": 0.0,
+          "spells": [
+            "sw_pain"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. You start every run with Shadow Word: Pain instead of Smite, and its ticks have a {v}% chance to loose a shadowy apparition: a free Mind Blast, at most twice a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadow_reach",
+      "name": "Shadow Reach",
+      "icon": "Spell_Shadow_ChillTouch",
+      "description": "Mind Flay reaches {v}% farther.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7172e98",
+      "effects": [
+        {
+          "sourceOffset": "0x7172810",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47173a02",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 3,
+          "spells": [
+            "mind_flay"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Mind Flay reaches {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadow_power",
+      "name": "Shadow Power",
+      "icon": "Spell_Shadow_SealOfKings",
+      "description": "Your damage-over-time effects deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7172f00",
+      "effects": [
+        {
+          "sourceOffset": "0x716ffa0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your damage-over-time effects deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_vampiric",
+      "name": "Improved Vampiric Embrace",
+      "icon": "Spell_Shadow_ImprovedVampiricEmbrace",
+      "description": "{v}% of all the damage you deal heals you.",
+      "prerequisite": "",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7172f68",
+      "effects": [
+        {
+          "sourceOffset": "0x71728e8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3ba3d70a",
+            "0xe",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 14,
+          "value": 0.004999999888241291,
+          "statName": "lifesteal",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "{v}% of all the damage you deal heals you.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadowform",
+      "name": "Shadowform",
+      "icon": "Spell_Shadow_Shadowform",
+      "description": "Capstone. You take on Shadowform for the whole run, and when an enemy dies with Shadow Word: Pain on it, it bursts for {v}% of its maximum health on everything within 6 yd and the pain jumps to the enemy nearest it.",
+      "prerequisite": "shadowy_apparitions",
+      "tree": "Shadow",
+      "treeId": "PriestShadow",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7172fd0",
+      "effects": [
+        {
+          "sourceOffset": "0x7172958",
+          "tag": 25,
+          "rawPackedTag": 25,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x19",
+            "0x3c71",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "shapeshift",
+          "spellId": 15473,
+          "sourceEvidence": "Source effect25 switch RVA5907119: Bear9634 -> display2281 (Tauren2289); Cat768 -> display892 (Tauren8571); Shadow15473 retains hero model",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You take on Shadowform for the whole run, and when an enemy dies with Shadow Word: Pain on it, it bursts for {v}% of its maximum health on everything within 6 yd and the pain jumps to the enemy nearest it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7172998",
+          "tag": 11,
+          "rawPackedTag": 267,
+          "packedFlags": 1,
+          "rawWords": [
+            "0x10b",
+            "0x3d23d70a",
+            "0x40c00000",
+            "0x44d0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47173541",
+            "0x1",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killExplosion",
+          "value": 0.03999999910593033,
+          "radius": 6.0,
+          "spellId": 17616,
+          "maxPerSecond": 0,
+          "triggerOnAfflictedDeath": true,
+          "deathCondition": 1,
+          "spells": [
+            "sw_pain"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You take on Shadowform for the whole run, and when an enemy dies with Shadow Word: Pain on it, it bursts for {v}% of its maximum health on everything within 6 yd and the pain jumps to the enemy nearest it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x71729d8",
+          "tag": 14,
+          "rawPackedTag": 14,
+          "packedFlags": 0,
+          "rawWords": [
+            "0xe",
+            "0x1",
+            "0x1",
+            "0x0",
+            "0x47173541",
+            "0x1",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spreadDotOnDeath",
+          "targets": 1,
+          "spells": [
+            "sw_pain"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You take on Shadowform for the whole run, and when an enemy dies with Shadow Word: Pain on it, it bursts for {v}% of its maximum health on everything within 6 yd and the pain jumps to the enemy nearest it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "priest",
+  "trees": [
+    {
+      "id": "PriestDiscipline",
+      "name": "Discipline",
+      "icon": "Spell_Holy_WordFortitude",
+      "sourceOffset": "0x717d338",
+      "sourceNodesOffset": "0x7171010",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "PriestHoly",
+      "name": "Holy",
+      "icon": "Spell_Holy_HolyBolt",
+      "sourceOffset": "0x717d378",
+      "sourceNodesOffset": "0x7171c68",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "PriestShadow",
+      "name": "Shadow",
+      "icon": "Spell_Shadow_ShadowWordPain",
+      "sourceOffset": "0x717d3b8",
+      "sourceNodesOffset": "0x7172af0",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b86a00",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}

@@ -18,7 +18,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.TestBattle;
 
-[BepInPlugin("local.azerothmegabonk.testbattle","Azeroth Mage Test Battle","0.1.0")]
+[BepInPlugin("local.azerothmegabonk.testbattle","Azeroth Mage Test Battle","0.1.1")]
 public sealed class Plugin:BasePlugin
 {
     internal static string Report;
@@ -27,12 +27,17 @@ public sealed class Plugin:BasePlugin
     public override void Load()
     {
         var args=Environment.GetCommandLineArgs();
-        if(!args.Contains("-azeroth-test-battle"))return;
-        Smoke=args.Contains("-azeroth-test-smoke");
+        bool menuOnly=args.Contains("-azeroth-test-menu");
+        if(!menuOnly&&!args.Contains("-azeroth-test-battle"))return;
+        Smoke=!menuOnly&&args.Contains("-azeroth-test-smoke");
         if(Smoke && !Application.isBatchMode){Log.LogError("Background smoke requires -batchmode; auto-start cancelled.");return;}
-        Report=Path.GetFullPath(Path.Combine(Paths.GameRootPath,Smoke?"../reports/mage-battle-smoke.log":"../reports/mage-battle-autostart-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".log"));
-        File.WriteAllText(Report,DateTimeOffset.Now+" Test battle armed; Mage + Desert, native movement/spawns, no progression save writes.\n");
+        Report=Path.GetFullPath(Path.Combine(Paths.GameRootPath,menuOnly?"../reports/test-menu-session-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+"-"+Environment.ProcessId+".log":Smoke?"../reports/mage-battle-smoke.log":"../reports/mage-battle-autostart-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".log"));
+        Directory.CreateDirectory(Path.GetDirectoryName(Report));
+        File.WriteAllText(Report,DateTimeOffset.Now+(menuOnly?" Source-class test menu armed; normal native menu, no automatic map start, session progression/config saves suppressed.\n":" Test battle armed; native movement/spawns, no progression save writes.\n"));
         new Harmony("local.azerothmegabonk.testbattle").PatchAll(typeof(Plugin).Assembly);
+        // Menu mode takes precedence even if an old shortcut supplies both flags.
+        // Preserve normal native class/map choice and arm only the session save guard.
+        if(menuOnly){Log.LogInfo("Source-class test menu: choose any of nine native roster classes; automatic battle runner disabled; session save guard active.");return;}
         AddComponent<BattleRunner>();
         Log.LogInfo("Mage test battle auto-start enabled. Native menus remain available in the Menu launcher.");
     }
@@ -85,7 +90,11 @@ public sealed class BattleRunner:MonoBehaviour
             {
                 var menu=Object.FindObjectOfType<MainMenu>();
                 if(menu==null || bridge==null)return;
-                if(!(bool)bridge.GetMethod("SelectClass").Invoke(null,new object[]{"mage"}))throw new InvalidOperationException("Mage selection failed");
+                var sourceHero=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothHeroes.HeroBridge",false)).FirstOrDefault(t=>t!=null);
+                if(sourceHero==null)
+                {if(!(bool)bridge.GetMethod("SelectClass").Invoke(null,new object[]{"mage"}))throw new InvalidOperationException("Mage selection failed");}
+                else if(string.IsNullOrEmpty(sourceHero.GetProperty("SelectedClassId")?.GetValue(null) as string))
+                    throw new InvalidOperationException("Native source hero selection is empty");
                 Plugin.Note("Mage selected before map load; tome slots="+InventoryUtility.GetNumAvailableTomeSlots());
                 menu.GoToMapSelection();stage=1;next=Time.realtimeSinceStartup+2;return;
             }

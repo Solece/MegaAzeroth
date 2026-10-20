@@ -225,3 +225,19 @@ Installed route-safe original buildings on all three ordinary stages, single-bod
 Replaced the flat list/intermediate tabs with three simultaneous source trees plus sidebar, following recovered original Rust layout/constants. Source backgrounds, icons, rank values and prerequisite links retained. Mage-compatible0.1.3 passed23 native checks and rendered inspection before installation; backup/hash records retained. User game not stopped. Full nine-class gameplay remains isolated pending its own runtime validation.
 
 Background model-check incident: a standalone development utility raised unhandled .NET parsing/assertion failures and displayed a Windows crash dialog. The exact owned ModelChecks process was closed. The utility now uses UseAppHost=false and a top-level exception handler with stderr/nonzero exit; controlled failure returned1 with a log, normal checks returned0, and no ModelChecks/WerFault processes remained. No Windows/WER/global registry settings changed.
+
+## All-class integration: final isolated candidate
+
+- Integrated frozen F3 source (42E8CC09) with fractional native healing/carry, shield admission, source-clock DoT delivery and noncritical DoT ticks. This source is not yet installed in the user runtime.
+- Added explicitly armed VitalsProbe and optional native test-menu mode: nine source choices, temporary max999 talents, native saves suppressed and no battle autostart.
+- Hunter first pause-resume check failed without a state snapshot; retained as failed evidence. Repeat PID65168 passed112/0 with recorded actual native resume, no production unpause override.
+
+All-class native startup regression: Roster0.1.3 introduced a PassiveData.GetName hook at native RVA381570, shared with StageData.GetName already hooked by Elwynn. Shaman65624/52368 stack-overflowed before class fixture admission. Removed only the shared-address GetName hook in0.1.4; source names remain in CharacterInfoUI, unique PassiveData.GetDescription RVA38D030 retains the SmartFormat fix. Retained failed reports; native rerun required.
+
+F4 source vitals: static native GetStat included selected talent HP, but PlayerHealth constructor cached source base only. After native StartPlayer and complete talent ResetRun postfix, refresh native MaxHealth/HealthRegen caches. Fill only a new run; preserve current HP/fractional carry/overheal on stage refresh. Actual cached-max assertion added; all-class acceptance restarts with this final candidate.
+
+## All-heroes v3 accepted
+
+druid PID12668 116PASS/0FAIL; hunter PID26292 113PASS/0FAIL; warrior PID64712 112PASS/0FAIL; paladin PID53516 113PASS/0FAIL; rogue PID52240 112PASS/0FAIL; priest PID42180 114PASS/0FAIL; shaman PID66396 113PASS/0FAIL; mage PID47352 119PASS/0FAIL; warlock PID61420 113PASS/0FAIL
+
+Packaged menu47840 passed195 checks; packaged Mage67540 passed. Feature62292:20PASS/0FAIL/2SKIP. Native vitals Druid/Paladin/Priest passed. Warlock63996 retained original permanent pets and all11 spells through3ordinary stages,2stage bosses and live Pharaoh3 final arena, including forced UnloadUnusedAssets on4scenes. Standalone source checks696 passed; controlled failure exit1 is handled, successful exit0, no Windows apphost. Build accepted beside stablev2; no user game process stopped. Original source assets stay local and are excluded from Git.

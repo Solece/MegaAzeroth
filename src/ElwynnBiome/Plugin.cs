@@ -25,7 +25,11 @@ public sealed class Plugin : BasePlugin
     internal static bool ProbeAllowed => Application.isBatchMode && Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST") == "1";
     internal static bool FirstSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-elwynn-smoke");
     internal static bool FeatureSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-feature-smoke");
-    internal static bool Smoke => FirstSmoke || FeatureSmoke;
+    internal static bool TreeSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-talent-tree-smoke");
+    internal static bool HeroMenuSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-hero-menu-smoke");
+    internal static bool HeroClassSmoke => HeroClassProbe.Armed;
+    internal static bool VitalsSmoke => VitalsProbe.Armed;
+    internal static bool Smoke => FirstSmoke || FeatureSmoke || TreeSmoke || HeroMenuSmoke || HeroClassSmoke || VitalsSmoke;
     Harmony harmony;
     public override void Load()
     {
@@ -40,6 +44,10 @@ public sealed class Plugin : BasePlugin
         AddComponent<BiomeRuntime>();
         if (FirstSmoke) AddComponent<BiomeSmokeProbe>();
         if (FeatureSmoke) AddComponent<FeatureProbe>();
+        if (TreeSmoke) AddComponent<TalentTreeProbe>();
+        if (HeroMenuSmoke) AddComponent<HeroMenuProbe>();
+        if (HeroClassSmoke) AddComponent<HeroClassProbe>();
+        if (VitalsSmoke) AddComponent<VitalsProbe>();
         Note("Elwynn v2 all-stage palettes and original buildings armed; native generation, movement, spawn and progression retained. Probe=" + Smoke);
     }
     internal static BiomeAssets EnsureAssets()

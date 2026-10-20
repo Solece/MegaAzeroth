@@ -15,7 +15,7 @@ using XpUtility = Inventory__Items__Pickups.XpUtility;
 
 namespace AzerothHud;
 
-[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.7.6")]
+[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.8.0")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
@@ -32,7 +32,7 @@ public sealed class Plugin : BasePlugin
         AssetRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "assets");
         harmony=new Harmony("local.azerothmegabonk.hud");harmony.PatchAll(typeof(Plugin).Assembly);
         AddComponent<HudBehaviour>();
-        Log.LogInfo("Azeroth HUD 0.7.4 loaded; native gold/timer retained, native XP strip decorations masked, source player frame below native top row.");
+        Log.LogInfo("Azeroth HUD 0.8.0 loaded for all source classes; native gold/timer retained, native XP strip decorations masked, source player frame below native top row.");
     }
 }
 
@@ -50,7 +50,7 @@ public sealed class HudBehaviour : MonoBehaviour
     readonly List<UiImage> images = new();
     readonly List<UiText> labels = new();
     UiImage portraitImage, hpFill, shieldFill, xpFill;
-    UiText heroLabel, levelLabel, hpLabel, shieldLabel, xpLabel;
+    UiText heroLabel, levelLabel, hpLabel, shieldLabel, xpLabel, spellsTitle;
     int playerImageCount,playerLabelCount;
     UiImage playerFrame;
     readonly UiImage[] tomeIcons=new UiImage[4], spellFrames=new UiImage[16], spellIcons=new UiImage[16], cooldownMasks=new UiImage[16];
@@ -74,9 +74,9 @@ public sealed class HudBehaviour : MonoBehaviour
     int[] ranks = Array.Empty<int>();
     float[] remaining = Array.Empty<float>(), totals = Array.Empty<float>();
     Texture portrait;
-    Texture magePortrait;
+    Texture sourcePortrait;
     string heroName="";
-    bool mageActive;
+    bool sourceHeroActive;
     sealed class TomeView
     {
         public Texture Icon; public string Name; public int Level;
@@ -108,7 +108,7 @@ public sealed class HudBehaviour : MonoBehaviour
                 ReadBridge();if(!uiBuilt)BuildUi();
                 SetVisible(false);pauseInventory.Restore();encounterInventory.Restore();
                 HudDiagnostics.PostCombat=true;
-                if(uiBuilt)postCombat.Refresh(mageActive,font,fontMaterial,magePortrait,spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
+                if(uiBuilt)postCombat.Refresh(sourceHeroActive,font,fontMaterial,sourcePortrait,spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
                 return;
             }
             HudDiagnostics.PostCombat=false;postCombat.Restore();
@@ -132,12 +132,12 @@ public sealed class HudBehaviour : MonoBehaviour
                     if (rank>0) tomes.Add(new(td.GetIcon(),td.GetName(),rank));
                 }
             ReadBridge();
-            if(mageActive)postCombat.RememberPortrait(magePortrait);
+            if(sourceHeroActive)postCombat.RememberPortrait(sourcePortrait);
             PostCombatAdapter.RefreshSources(spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
             if(!uiBuilt) BuildUi();
             if(!uiBuilt)return;
-            encounterInventory.Refresh(mageActive,font,fontMaterial,spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
-            pauseInventory.Refresh(paused, mageActive, font, fontMaterial, spellIds, ranks, spellNames, spellDescriptions, spellIconStems, Tex);
+            encounterInventory.Refresh(sourceHeroActive,font,fontMaterial,spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
+            pauseInventory.Refresh(paused, sourceHeroActive, font, fontMaterial, spellIds, ranks, spellNames, spellDescriptions, spellIconStems, Tex);
             HudDiagnostics.Paused=paused;
             HudDiagnostics.NativeXp=xp;HudDiagnostics.Level=level;HudDiagnostics.XpInLevel=xpInLevel;HudDiagnostics.XpLevelMaximum=xpLevelMax;HudDiagnostics.XpProgress=xpProgress;
             if(paused){SetVisible(false);return;}
@@ -162,8 +162,8 @@ public sealed class HudBehaviour : MonoBehaviour
     [HideFromIl2Cpp]
     void ReadBridge()
     {
-        mageActive=false;
-        magePortrait=null;
+        sourceHeroActive=false;
+        sourcePortrait=null;
         bridge ??= AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothAbilities.HudBridge")).FirstOrDefault(t=>t!=null);
         if (bridge==null) return;
         spellIds=ReadStatic(bridge,"SpellIds") as string[] ?? Array.Empty<string>();
@@ -175,16 +175,17 @@ public sealed class HudBehaviour : MonoBehaviour
         totals=ReadStatic(bridge,"CooldownsTotal") as float[] ?? Array.Empty<float>();
         if(ReadStatic(bridge,"Active") is bool bridgeActive && bridgeActive && ReadStatic(bridge,"ClassId") is string classId && classId.Length>0)
         {
-            heroName=char.ToUpperInvariant(classId[0])+classId.Substring(1);
-            mageActive=classId.Equals("mage",StringComparison.OrdinalIgnoreCase);
+            SourcePresentation.ClassId=classId;
+            heroName=SourcePresentation.ClassName;
+            sourceHeroActive=SourcePresentation.IsSourceClass;
             // Azeroth Ice Barrier has its own pool; it is additional to the native player shield.
-            if(mageActive && ReadStatic(bridge,"BarrierRemaining") is float barrier)
+            if(sourceHeroActive && ReadStatic(bridge,"BarrierRemaining") is float barrier)
                 shield+=Math.Max(0,barrier);
-            if(mageActive)
+            if(sourceHeroActive)
             {
                 portraitBridge ??= AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothMegabonk.MageVisuals.MageVisualBridge")).FirstOrDefault(t=>t!=null);
-                if(portraitBridge!=null && ReadStatic(portraitBridge,"PortraitTexture") is Texture head && head!=null)
-                    magePortrait=head;
+                if(portraitBridge!=null && SourcePresentation.PortraitReady && ReadStatic(portraitBridge,"PortraitTexture") is Texture head && head!=null)
+                    sourcePortrait=head;
             }
         }
     }
@@ -222,7 +223,7 @@ public sealed class HudBehaviour : MonoBehaviour
     void SetVisible(bool visible)
     {
         if(canvasObject!=null && canvasObject.activeSelf!=visible)canvasObject.SetActive(visible);
-        if(!visible){nativeHud.Restore(Plugin.Current?.Enabled.Value==true && mageActive && MyPlayer.Instance?.inventory!=null);itemLayout.Restore();}
+        if(!visible){nativeHud.Restore(Plugin.Current?.Enabled.Value==true && sourceHeroActive && MyPlayer.Instance?.inventory!=null);itemLayout.Restore();}
     }
     [HideFromIl2Cpp]
     RectTransform RectObject(string name)
@@ -343,7 +344,7 @@ public sealed class HudBehaviour : MonoBehaviour
         Image("RightGryphon",new Rect(618,-168,160,160),cap,Color.white,1,new Rect(1,0,-1,1));
         var empty=Tex("Interface/Buttons/UI-EmptySlot.png");
         var booksTitle=Label("BooksTitle",new Rect(389,-102,250,26),22,1);booksTitle.Text.text="Книжки";booksTitle.Text.color=Gold;
-        var spellsTitle=Label("MageAbilitiesTitle",new Rect(-619,-102,800,26),22,1);spellsTitle.Text.text="Способности мага";spellsTitle.Text.color=Gold;
+        spellsTitle=Label("SourceAbilitiesTitle",new Rect(-619,-102,800,26),22,1);spellsTitle.Text.text="Способности мага";spellsTitle.Text.color=Gold;
         for(int i=0;i<4;i++)
         {
             float x=384+i*61;
@@ -368,11 +369,12 @@ public sealed class HudBehaviour : MonoBehaviour
     {
         float scale=Mathf.Clamp(Plugin.Current.Scale.Value,.5f,2);
         scaler.referenceResolution=new Vector2(1920/scale,1080/scale);
-        var visiblePortrait=mageActive?(magePortrait!=null?magePortrait:Tex("Interface/Icons/Spell_Fire_FlameBolt.png")):portrait;
+        var visiblePortrait=sourceHeroActive?(sourcePortrait??SourcePresentation.StaticPortrait??portrait):portrait;
         portraitImage.Image.texture=visiblePortrait;portraitImage.Image.enabled=visiblePortrait!=null;
-        var portraitBounds=mageActive&&magePortrait!=null?PlayerRect(42,12,64,64):PlayerRect(52,22,44,44);
+        var portraitBounds=sourceHeroActive&&sourcePortrait!=null?PlayerRect(42,12,64,64):PlayerRect(52,22,44,44);
         portraitImage.Bounds=portraitBounds;
-        heroLabel.Text.text=heroName.Equals("Mage",StringComparison.OrdinalIgnoreCase)?"Маг":heroName;
+        heroLabel.Text.text=heroName;
+        spellsTitle.Text.text="Способности: "+heroName;
         levelLabel.Text.text=level.ToString();
         hpLabel.Text.text=$"{hp} / {maxHp}";
         shieldLabel.Text.text=shield>0?$"Щит {shield:0}":"Щит —";
@@ -452,7 +454,7 @@ public sealed class HudBehaviour : MonoBehaviour
         pauseInventory.Enforce();
         encounterInventory.Enforce();
         postCombat.Enforce();
-        if(Plugin.Current?.Enabled.Value==true && mageActive && MyPlayer.Instance?.inventory!=null)nativeHud.EnforceXpOnly();
+        if(Plugin.Current?.Enabled.Value==true && sourceHeroActive && MyPlayer.Instance?.inventory!=null)nativeHud.EnforceXpOnly();
         if(active&&uiBuilt&&canvasObject!=null&&canvasObject.activeSelf)
         {
             nativeHud.Enforce();

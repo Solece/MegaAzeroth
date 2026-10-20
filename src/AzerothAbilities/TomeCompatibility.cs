@@ -14,7 +14,7 @@ internal static class TomeCompatibility
     // WeaponUtility.GetAttackQuantity (RVA4346F0) truncates the PLAYER bonus,
     // then adds it to the weapon/source quantity. RoundToInt is not equivalent.
     internal static int ExtraProjectiles=>(int)AbilityRuntime.Stat(EStat.Projectiles);
-    internal static int Quantity(LearnedSpell spell)=>Math.Max(1,spell.Definition.Targets+spell.ExtraTargets+ExtraProjectiles);
+    internal static int Quantity(LearnedSpell spell)=>ClassCombat.GenericActive?ClassSpellBehaviors.Quantity(spell):Math.Max(1,spell.Definition.Targets+spell.ExtraTargets+ExtraProjectiles);
     internal static int ExtraBounces=>Math.Max(0,(int)AbilityRuntime.Stat(EStat.ProjectileBounces));
     internal static float Size=>Mathf.Max(.1f,AbilityRuntime.Stat(EStat.SizeMultiplier));
     internal static float ProjectileSpeed=>Mathf.Max(.1f,AbilityRuntime.Stat(EStat.ProjectileSpeedMultiplier));
@@ -22,7 +22,7 @@ internal static class TomeCompatibility
     // The Duration tome changes DurationMultiplier (base1). The similarly named
     // EffectDurationMultiplier has native base0 and is not this tome's stat.
     internal static float EffectDuration=>Duration;
-    internal static float SpellDuration(LearnedSpell spell)=>spell.Definition.Duration*(AbilityRuntime.Catalog?.DurationScale??1)*spell.DurationFactor*Duration;
+    internal static float SpellDuration(LearnedSpell spell)=>ClassCombat.GenericActive?ClassSpellBehaviors.Duration(spell):spell.Definition.Duration*(AbilityRuntime.Catalog?.DurationScale??1)*spell.DurationFactor*Duration;
     internal static void ApplyCritical(DamageContainer dc)
     {
         // Native DamageUtility handles chance over100% and its extra multiplier.

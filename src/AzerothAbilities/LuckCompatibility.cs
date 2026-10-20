@@ -39,8 +39,9 @@ internal static class LuckCompatibility
 
     internal static ERarity ResolveQuality(UpgradeButton button)
     {
-        var quality = button.rarity;
-        if (quality >= ERarity.Common && quality <= ERarity.Legendary) AcceptedNativeQualities++;
+        var quality = ClassCombat.GenericActive?SourceQuality.Roll():button.rarity;
+        if (ClassCombat.GenericActive)SourceQuality.Rolls++;
+        else if (quality >= ERarity.Common && quality <= ERarity.Legendary) AcceptedNativeQualities++;
         else { quality = Rarity.GetUpgradeOfferRarity(Luck); NewTemplateRolls++; }
         if (quality < ERarity.Common || quality > ERarity.Legendary)
             throw new InvalidDataException("Native upgrade rarity returned outside its verified five-tier range");
@@ -75,7 +76,8 @@ internal static class LuckCompatibility
             Button = button.Pointer.ToInt64(), Spell = choice.Spell.Id, IsUpgrade = upgrade, UpgradeKind = kind,
             NativeTemplateRarity = nativeBefore.ToString(), Quality = quality.ToString(), QualityValue = (int)quality,
             SourceRarityIndex = (int)quality - 1, CurrentLuck = Luck,
-            NativeQualityAccepted = nativeBefore >= ERarity.Common && nativeBefore <= ERarity.Legendary,
+            NativeQualityAccepted = !ClassCombat.GenericActive && nativeBefore >= ERarity.Common && nativeBefore <= ERarity.Legendary,
+            RolledSourceQuality = ClassCombat.GenericActive,SourceWeights = ClassCombat.GenericActive?SourceQuality.Weights(Luck,SourceQuality.Level):null,
             RolledForNewTemplate = nativeBefore == ERarity.New, AppliedCardRarity = button.rarity.ToString(),
             DisplayedRarity = button.t_rarity?.text, SourceDelta = choice.Upgrade?.Value ?? 0,
             ExpectedSourceDelta = expected, SourceValueMatchesQuality = matches,
@@ -123,8 +125,9 @@ public static class LuckCompatibilityDiagnostics
     public static string LastSamplingJson => LuckCompatibility.LastSampling;
     public static string SnapshotJson => JsonSerializer.Serialize(new
     {
-        Mode = "Verified native Megabonk rarity adaptation; original Azeroth upgrade tier values",
-        ExactAzerothDistributionRecovered = false, CurrentLuck,
+        Mode = ClassCombat.GenericActive?"Recovered original Azeroth spell quality roulette; native Megabonk books unchanged":"Verified native Megabonk rarity adaptation; original Azeroth upgrade tier values",
+        ExactAzerothDistributionRecovered = ClassCombat.GenericActive, CurrentLuck,
+        CurrentSourceWeights=SourceQuality.Weights(CurrentLuck,SourceQuality.Level),SourceLevel=SourceQuality.Level,SourceQuality.Rolls,
         QualityNames = new[] { "Common", "Uncommon", "Rare", "Epic", "Legendary" },
         NativeBaseWeights = LuckCompatibility.NativeBaseWeights,
         CurrentNativeWeights = LuckCompatibility.Weights(CurrentLuck),

@@ -16,23 +16,25 @@ public sealed class SpellCatalog
     public List<SpellDefinition> Spells { get; set; } = new();
     public List<string> Unsupported { get; set; } = new();
 
+    public SourceClassDefinition SourceClass {get;set;}=new();
+    public string SourceVersion {get;set;}="";
+
     public static SpellCatalog Load(string path)
     {
         var catalog = JsonSerializer.Deserialize<SpellCatalog>(File.ReadAllText(path),new JsonSerializerOptions {PropertyNameCaseInsensitive=true})
             ?? throw new InvalidDataException("Empty spell catalog");
-        if(catalog.SourceSha256.Length != 64 || catalog.ClassId != "mage" || catalog.DamageScale<=0 || catalog.CooldownScale<=0 || catalog.CooldownFloor<=0)
+        if(catalog.SourceSha256.Length != 64 || !ClassCatalogs.ClassIds.Contains(catalog.ClassId) || catalog.DamageScale<=0 || catalog.CooldownScale<=0 || catalog.CooldownFloor<=0)
             throw new InvalidDataException("Missing original source hash, class or verified balance scales");
         if(catalog.Spells.Select(s=>s.Id).Distinct().Count()!=catalog.Spells.Count)
             throw new InvalidDataException("Duplicate spell IDs");
         foreach(var spell in catalog.Spells)
         {
-            if(spell.Id.Length==0 || spell.BaseDamage<0 || (spell.BaseDamage==0 && spell.Kind!="barrier") || spell.BaseCooldown<=0 || spell.SourceOffset.Length==0)
+            if(spell.Id.Length==0 || spell.BaseDamage<0 || (spell.BaseDamage==0 && spell.Kind is not ("barrier" or "selfBuff")) || spell.BaseCooldown<=0 || spell.SourceOffset.Length==0)
                 throw new InvalidDataException($"Missing original values for {spell.Id}");
-            if(spell.Kind is not ("projectile" or "instant" or "selfAoe" or "missiles" or "groundAoe" or "cone" or "barrier" or "passive"))
+            if(spell.Kind is not ("projectile" or "instant" or "selfAoe" or "missiles" or "groundAoe" or "cone" or "barrier" or "passive" or "chain" or "melee" or "damageOverTime" or "finisher" or "selfBuff" or "totem"))
                 throw new InvalidDataException($"Unsupported spell runtime kind: {spell.Id}/{spell.Kind}");
-            if(spell.Kind is "projectile" or "missiles" && spell.ProjectileSpeed<=0)
-                throw new InvalidDataException($"Missing projectile speed for {spell.Id}");
-            if(spell.Kind is "selfAoe" or "groundAoe" or "passive" ? spell.Radius<=0 : spell.Kind!="barrier" && spell.Range<=0)
+            if(spell.ProjectileSpeed<0)throw new InvalidDataException($"Invalid source projectile speed for {spell.Id}");
+            if(spell.Kind is "selfAoe" or "groundAoe" ? spell.Radius<=0 : spell.Kind is not ("barrier" or "selfBuff" or "passive" or "totem") && spell.Range<=0)
                 throw new InvalidDataException($"Missing original range/radius for {spell.Id}");
             if(spell.Kind=="groundAoe" && (spell.Duration<=0 || spell.Ticks<=0))
                 throw new InvalidDataException($"Missing source area duration/ticks for {spell.Id}");
@@ -48,6 +50,12 @@ public sealed class SpellCatalog
 
 public sealed class SpellDefinition
 {
+    public int SourceSpellId {get;set;}
+    public int SourceKind {get;set;}
+    public int SourceSchoolDiscriminant {get;set;}
+    public int SourceCastDiscriminant {get;set;}
+    public string SourceTargetingWord {get;set;}="";
+    public SourcePassiveDefinition SourcePassive {get;set;}
     public string Id { get; set; }="";
     public string Name { get; set; }="";
     public string Icon { get; set; }="";
@@ -142,3 +150,26 @@ public sealed class OriginalUpgradeRules
     }
 }
 
+
+public sealed class SourcePassiveDefinition
+{
+    public string Kind {get;set;}="";
+    public string DescriptionTemplate {get;set;}="";
+    public float CooldownFloorBeforeHaste {get;set;}
+}
+public sealed class SourceClassDefinition
+{
+    public string Name {get;set;}="";
+    public string Icon {get;set;}="";
+    public string Id {get;set;}="";
+    public float SourceBaseHealth {get;set;}
+    public float SourceBaseDamageReduction {get;set;}
+    public SourceAutoWeapon SourceAutoWeapon {get;set;}=new();
+}
+public sealed class SourceAutoWeapon
+{
+    public bool Enabled {get;set;}
+    public float Damage {get;set;}
+    public float Cooldown {get;set;}
+    public float Range {get;set;}
+}

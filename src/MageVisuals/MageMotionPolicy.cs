@@ -40,7 +40,8 @@ internal static class MageMotionPolicy
         Check(Select(false,2,4)=="jump","airborne outranks stale slide state");
         foreach(string forbidden in new[]{"cast","cast_omni","ready_spell","ready_omni","channel"})
             Check(!model.Clips.ContainsKey(forbidden),"cast pose absent from runtime pack: "+forbidden);
-        foreach(var entry in new[]{("idle",0),("run",5),("jump",38),("slide",115),("crouch",120)})
+        bool form=HeroAppearance.CurrentFormSpellId!=0;
+        foreach(var entry in new[]{("idle",0),("run",5),("jump",38),("slide",form?5:115),("crouch",form?0:120)})
         {
             Check(model.Clips.TryGetValue(entry.Item1,out var clip) && clip.AnimationId==entry.Item2,"original clip source id "+entry.Item1);
             Check(clip.Hands!=null && clip.Hands.Length==clip.Count*2,"source VFX hand attachments "+entry.Item1);

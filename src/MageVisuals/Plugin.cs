@@ -13,7 +13,7 @@ using Object=UnityEngine.Object;
 
 namespace AzerothMegabonk.MageVisuals;
 
-[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.7")]
+[BepInPlugin(Id,"Azeroth Megabonk - Hero Visuals","0.2.1")]
 public sealed class Plugin:BasePlugin
 {
  public const string Id="local.azerothmegabonk.magevisuals";
@@ -21,17 +21,17 @@ public sealed class Plugin:BasePlugin
  internal static Model Model;
  private Harmony harmony;
  internal static bool Unloading;
- public override void Load(){Unloading=false;Logger=Log;harmony=new Harmony(Id);harmony.PatchAll(typeof(Plugin).Assembly);ClassInjector.RegisterTypeInIl2Cpp<MageWeaponVisibility>();AddComponent<MageWeaponVisibility>();ClassInjector.RegisterTypeInIl2Cpp<MageVisual>();AddComponent<MageVisual>();AddComponent<MagePortrait>();CreatureVisualBridge.Initialize();Log.LogInfo("Original human Mage visual ready; native Megabonk movement and collisions retained.");}
- public override bool Unload(){Unloading=true;harmony?.UnpatchSelf();NativeWeaponVisuals.Restore();SourceMageWeapon.Shutdown();CreatureVisualBridge.Shutdown();foreach(var v in Object.FindObjectsOfType<MageVisual>(true))v.RestoreNative();Model?.Release();Model=null;return true;}
+ public override void Load(){Unloading=false;Logger=Log;harmony=new Harmony(Id);harmony.PatchAll(typeof(Plugin).Assembly);ClassInjector.RegisterTypeInIl2Cpp<MageWeaponVisibility>();AddComponent<MageWeaponVisibility>();ClassInjector.RegisterTypeInIl2Cpp<MageVisual>();AddComponent<MageVisual>();AddComponent<MagePortrait>();CreatureVisualBridge.Initialize();AddComponent<MenuHeroPreview>();Log.LogInfo("Nine original source hero packs ready; native Megabonk movement and collisions retained.");}
+ public override bool Unload(){Unloading=true;harmony?.UnpatchSelf();NativeWeaponVisuals.Restore();foreach(var v in Object.FindObjectsOfType<MageVisual>(true))v.RestoreNative();SourceMageWeapon.Shutdown();CreatureVisualBridge.Shutdown();MenuHeroPreview.Shutdown();HeroAppearance.Shutdown();return true;}
 }
 
 public static partial class MageVisualBridge
 {
  public static int ModelLoadCount {get;internal set;}
  public static int RecoveryAttempts {get;internal set;}
- public static bool AllCachedAssetsValid=>Plugin.Model!=null && Plugin.Model.IsUsable() && CreatureVisualBridge.AllCachedAssetsValid && SourceMageWeapon.AssetsValid;
+ public static bool AllCachedAssetsValid=>Plugin.Model!=null && Plugin.Model.IsUsable() && HeroAppearance.AllCachedAssetsValid && CreatureVisualBridge.AllCachedAssetsValid && SourceMageWeapon.AssetsValid;
  public static string WeaponDiagnostics()=>SourceMageWeapon.Describe();
- public static string AssetDiagnostics()=>JsonSerializer.Serialize(new{allValid=AllCachedAssetsValid,sourceCount=Plugin.Model?.VertexCount??0,attached=IsAttached,modelLoads=ModelLoadCount,recoveryAttempts=RecoveryAttempts,mage=Plugin.Model?.Inspect(),companions=CreatureVisualBridge.AssetHealth(),weapon=SourceMageWeapon.AssetHealth(),portrait=MagePortrait.AssetHealth()});
+ public static string AssetDiagnostics()=>JsonSerializer.Serialize(new{allValid=AllCachedAssetsValid,sourceCount=Plugin.Model?.VertexCount??0,attached=IsAttached,modelLoads=ModelLoadCount,recoveryAttempts=RecoveryAttempts,mage=Plugin.Model?.Inspect(),heroes=HeroAppearance.Diagnostics(),companions=CreatureVisualBridge.AssetHealth(),weapon=SourceMageWeapon.AssetHealth(),portrait=MagePortrait.AssetHealth()});
  public static Texture PortraitTexture {get;internal set;}
  public static bool IsAttached {get;internal set;}
  public static bool SourceHeadClosed {get;internal set;}
@@ -46,6 +46,8 @@ public static partial class MageVisualBridge
  public static string CurrentClip {get;internal set;}="";
  public static Vector3[] HandWorldPositions {get;internal set;}=Array.Empty<Vector3>();
  public static Vector3 BoundsCenter {get;internal set;}
+ public static Vector3 PortraitWorldCenter {get;internal set;}
+ public static float PortraitWorldRadius {get;internal set;}
 }
 
 public sealed class MageVisual:MonoBehaviour
@@ -71,11 +73,11 @@ public sealed class MageVisual:MonoBehaviour
   try
   {
    if(bridge==null && Time.unscaledTime>=nextSearch){nextSearch=Time.unscaledTime+1;bridge=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothAbilities.HudBridge")).FirstOrDefault(t=>t!=null);}
-   bool mage=bridge!=null && (bool)(bridge.GetProperty("Active")?.GetValue(null)??false);
+   bool mage=HeroAppearance.HasActiveSourceClass || (bridge!=null && (bool)(bridge.GetProperty("Active")?.GetValue(null)??false));
    var player=MyPlayer.Instance;
    var current=PlayerMovement.Instance;
    if(!mage || player==null || !player.hasStarted || current==null){if(visual!=null)RestoreNative();return;}
-   if(visual==null || movement!=current || filter==null || renderer==null)Bind(current);
+   if(visual==null || movement!=current || filter==null || renderer==null || HeroAppearance.CurrentVisualKey!=HeroAppearance.ResolveVisualKey())Bind(current);
    if(visual==null)return;
    if(Time.unscaledTime-lastHideScan>1)
    {
@@ -108,6 +110,10 @@ public sealed class MageVisual:MonoBehaviour
     MageVisualBridge.HandWorldPositions=new[]{visual.transform.TransformPoint(clip.Hands[frame*2]),visual.transform.TransformPoint(clip.Hands[frame*2+1])};
    }
    MageVisualBridge.BoundsCenter=renderer.bounds.center;
+   if(clip.Portraits!=null)
+   {
+    var head=clip.Portraits[frame];MageVisualBridge.PortraitWorldCenter=visual.transform.TransformPoint(new Vector3(head.x,head.y,head.z));MageVisualBridge.PortraitWorldRadius=head.w*Math.Abs(visual.transform.lossyScale.y);
+   }
   }
   catch(Exception ex)
   {
@@ -122,22 +128,18 @@ public sealed class MageVisual:MonoBehaviour
   RestoreNative();movement=target;body=target.GetComponent<Rigidbody>();
   foreach(var r in Resources.FindObjectsOfTypeAll<PlayerRenderer>())if(r!=null && r.playerMovement==target){native=r;break;}
   if(native==null || native.renderer==null)return;
-  if(Plugin.Model==null || !Plugin.Model.IsUsable())
-  {
-   Plugin.Model?.Release();Plugin.Model=Model.Load(Path.Combine(Paths.GameRootPath,"AzerothMageAssets","human-male"));MageVisualBridge.ModelLoadCount++;
-  }
-  data=Plugin.Model;visual=new GameObject("AzerothMage_HumanMale");visual.layer=native.renderer.gameObject.layer;visual.transform.SetParent(target.transform,false);
+  data=HeroAppearance.SelectCurrent();visual=new GameObject("AzerothHero_"+HeroAppearance.CurrentClassId);HeroAppearance.ActiveVisual=visual;visual.layer=native.renderer.gameObject.layer;visual.transform.SetParent(target.transform,false);
   var collider=target.GetComponent<CapsuleCollider>();var bounds=native.renderer.bounds;
   if(collider!=null){float h=(collider.direction==1?collider.height:collider.radius*2)*Math.Abs(collider.transform.lossyScale.y);bounds=new Bounds(collider.transform.TransformPoint(collider.center),new Vector3(collider.radius*2,h,collider.radius*2));}
-  float parent=Math.Max(.0001f,Math.Abs(target.transform.lossyScale.y));float scale=Math.Max(.1f,bounds.size.y)/parent/Math.Max(.01f,data.Template.bounds.size.y);
+  float parent=Math.Max(.0001f,Math.Abs(target.transform.lossyScale.y));float scale=Math.Max(.1f,bounds.size.y)/parent/Math.Max(.01f,HeroAppearance.SourceHeightForNativeFit)*HeroAppearance.FormDisplayScale;
   visual.transform.localScale=Vector3.one*scale;
   var feet=bounds.center-Vector3.up*bounds.size.y*.5f;
   var sb=data.Template.bounds;visual.transform.localPosition=target.transform.InverseTransformPoint(feet)-new Vector3(sb.center.x*scale,sb.min.y*scale,sb.center.z*scale);
   var forward=target.orientation!=null?target.orientation.forward:target.transform.forward;forward.y=0;visual.transform.rotation=forward.sqrMagnitude>.001f?Quaternion.LookRotation(forward):Quaternion.identity;
   filter=visual.AddComponent<MeshFilter>();filter.sharedMesh=data.Template;renderer=visual.AddComponent<MeshRenderer>();renderer.sharedMaterial=data.Material;
-  SourceMageWeapon.Bind(visual);
+  if(HeroAppearance.CurrentFormSpellId==0)SourceMageWeapon.Bind(visual);
   NativeMapMarkers.Refresh(MyPlayer.Instance,target.transform);HideTree(target.transform);NativeMapMarkers.Describe(0);lastHideScan=Time.unscaledTime;lastFrame=-1;clipName="";nextFrame=0;
-  MageVisualBridge.IsAttached=true;MageVisualBridge.SourceHeadClosed=data.HeadClosed;MageVisualBridge.SourceVertexCount=data.VertexCount;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Mage visual attached: original HumanMale M2, robe item 56/display 12647, {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched. Source head closed={data.HeadClosed}, vertices={data.VertexCount}.");
+  MageVisualBridge.IsAttached=true;MageVisualBridge.SourceHeadClosed=data.HeadClosed;MageVisualBridge.SourceVertexCount=data.VertexCount;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Original {HeroAppearance.CurrentClassId} visual attached: {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched. Source head closed={data.HeadClosed}, vertices={data.VertexCount}.");
  }
  [HideFromIl2Cpp]
  private void HideTree(Transform node)
@@ -153,9 +155,10 @@ public sealed class MageVisual:MonoBehaviour
  {
   foreach(var saved in hidden)if(saved.renderer!=null)saved.renderer.enabled=saved.enabled;hidden.Clear();
   SourceMageWeapon.ClearInstance();
+  if(HeroAppearance.ActiveVisual==visual)HeroAppearance.ActiveVisual=null;
   if(visual!=null){visual.SetActive(false);Object.Destroy(visual);}visual=null;filter=null;renderer=null;movement=null;native=null;body=null;data=null;
   NativeMapMarkers.Clear();MageVisualBridge.MapRenderersProtected=0;MageVisualBridge.MapRenderersEnabled=0;MageVisualBridge.MapRenderersHiddenByMage=0;MageVisualBridge.PlayerMapArrowVisible=false;MageVisualBridge.PlayerMapArrowPath="";MageVisualBridge.MapMarkersJson="{}";
-  MageVisualBridge.IsAttached=false;MageVisualBridge.HandWorldPositions=Array.Empty<Vector3>();MageVisualBridge.CurrentClip="";
+  MageVisualBridge.IsAttached=false;MageVisualBridge.HandWorldPositions=Array.Empty<Vector3>();MageVisualBridge.CurrentClip="";MageVisualBridge.PortraitWorldCenter=Vector3.zero;MageVisualBridge.PortraitWorldRadius=0;
   if(!Plugin.Unloading && NativeWeaponVisuals.Active){NativeWeaponVisuals.Scan();NativeWeaponVisuals.Tick();}
  }
  void OnDestroy(){RestoreNative();}
@@ -163,7 +166,7 @@ public sealed class MageVisual:MonoBehaviour
 
 internal sealed class Clip
 {
- public string Name="";public int AnimationId;public float Duration;public int Count;public bool Loop;public Mesh[] Meshes;public Vector3[] Hands;
+ public string Name="";public int AnimationId;public float Duration;public int Count;public bool Loop;public Mesh[] Meshes;public Vector3[] Hands;public Vector4[] Portraits;
 }
 
 internal sealed partial class Model
@@ -179,19 +182,26 @@ internal sealed partial class Model
    var p=Floats("positions");var n=Floats("normals");var uv=Floats("uv");int count=j.GetProperty("vertexCount").GetInt32();var verts=new Vector3[count];var norms=new Vector3[count];var uvs=new Vector2[count];
    for(int i=0;i<count;i++){verts[i]=new(p[i*3],p[i*3+1],p[i*3+2]);norms[i]=new(n[i*3],n[i*3+1],n[i*3+2]);uvs[i]=new(uv[i*2],uv[i*2+1]);}
    model.VertexCount=count;
-   if(j.TryGetProperty("source",out var source) && source.TryGetProperty("selectedGeosetIds",out var gs)){var ids=gs.EnumerateArray().Select(x=>x.GetInt32()).ToHashSet();model.HeadClosed=ids.Contains(1)&&ids.Contains(702)&&ids.Contains(1501);}
+   if(j.TryGetProperty("source",out var source))
+   {
+    if(source.TryGetProperty("headClosed",out var hc))model.HeadClosed=hc.GetBoolean();
+    else if(source.TryGetProperty("selectedGeosetIds",out var gs)){var ids=gs.EnumerateArray().Select(x=>x.GetInt32()).ToHashSet();model.HeadClosed=ids.Contains(1)&&ids.Contains(702)&&ids.Contains(1501);}
+   }
    model.Template=Retain(new Mesh{name="AzerothMage_OriginalHumanMale"});model.Template.vertices=verts;model.Template.normals=norms;model.Template.uv=uvs;model.Template.triangles=j.GetProperty("triangles").EnumerateArray().Select(x=>x.GetInt32()).ToArray();model.Template.RecalculateBounds();
    using var tm=JsonDocument.Parse(File.ReadAllText(Path.Combine(folder,"texture.rgba.json")));int w=tm.RootElement.GetProperty("width").GetInt32(),h=tm.RootElement.GetProperty("height").GetInt32();var raw=File.ReadAllBytes(Path.Combine(folder,"texture.rgba"));if(raw.Length!=w*h*4)throw new InvalidDataException("RGBA size mismatch");
    model.Texture=Retain(new Texture2D(w,h,TextureFormat.RGBA32,false));var pin=GCHandle.Alloc(raw,GCHandleType.Pinned);try{model.Texture.LoadRawTextureData(pin.AddrOfPinnedObject(),raw.Length);model.Texture.Apply(false,true);}finally{pin.Free();}model.Texture.filterMode=FilterMode.Bilinear;
-   var shader=Shader.Find("Unlit/Texture")??Shader.Find("Standard")??Shader.Find("Sprites/Default");if(shader==null)throw new InvalidOperationException("No texture shader");model.Material=Retain(new Material(shader){mainTexture=model.Texture,color=Color.white});
+   bool cutout=j.TryGetProperty("materialMode",out var mode) && mode.GetString()=="cutout";
+   var shader=(cutout?Shader.Find("Unlit/Transparent Cutout"):Shader.Find("Unlit/Texture"))??Shader.Find("Standard")??Shader.Find("Sprites/Default");if(shader==null)throw new InvalidOperationException("No texture shader");model.Material=Retain(new Material(shader){mainTexture=model.Texture,color=Color.white});
+   if(cutout){if(model.Material.HasProperty("_Cutoff"))model.Material.SetFloat("_Cutoff",.5f);if(model.Material.HasProperty("_Mode"))model.Material.SetFloat("_Mode",1);model.Material.EnableKeyword("_ALPHATEST_ON");model.Material.renderQueue=2450;}
    foreach(var c in j.GetProperty("animations").EnumerateArray())
    {
     var clip=new Clip{Name=c.GetProperty("name").GetString(),AnimationId=c.GetProperty("animationId").GetInt32(),Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32(),Loop=c.GetProperty("loop").GetBoolean()};clip.Meshes=new Mesh[clip.Count];model.Clips[clip.Name]=clip;
     var bytes=File.ReadAllBytes(Path.Combine(folder,c.GetProperty("file").GetString()));if(bytes.Length!=clip.Count*count*12)throw new InvalidDataException("Animation frame length mismatch");using var r=new BinaryReader(new MemoryStream(bytes));
     for(int f=0;f<clip.Count;f++){var v=new Vector3[count];for(int i=0;i<count;i++)v[i]=new(r.ReadSingle(),r.ReadSingle(),r.ReadSingle());var mesh=Retain(Object.Instantiate(model.Template));mesh.vertices=v;mesh.RecalculateNormals();mesh.RecalculateBounds();clip.Meshes[f]=mesh;}
     if(c.TryGetProperty("attachmentsFile",out var af)){var ab=File.ReadAllBytes(Path.Combine(folder,af.GetString()));if(ab.Length!=clip.Count*2*12)throw new InvalidDataException("Attachment frame length mismatch");using var ar=new BinaryReader(new MemoryStream(ab));clip.Hands=new Vector3[clip.Count*2];for(int i=0;i<clip.Hands.Length;i++)clip.Hands[i]=new(ar.ReadSingle(),ar.ReadSingle(),ar.ReadSingle());}
+    if(c.TryGetProperty("portraitFile",out var pf)){var pb=File.ReadAllBytes(Path.Combine(folder,pf.GetString()));if(pb.Length!=clip.Count*16)throw new InvalidDataException("Source portrait frame length mismatch");using var pr=new BinaryReader(new MemoryStream(pb));clip.Portraits=new Vector4[clip.Count];for(int i=0;i<clip.Count;i++)clip.Portraits[i]=new(pr.ReadSingle(),pr.ReadSingle(),pr.ReadSingle(),pr.ReadSingle());}
    }
-   Plugin.Logger.LogInfo($"Original Mage pack loaded: vertices={count}, clips={model.Clips.Count}, texture={w}x{h}, shader={shader.name}; source hand attachments 21/22 baked per frame.");return model;
+   Plugin.Logger.LogInfo($"Original source pack loaded: {folder}, vertices={count}, clips={model.Clips.Count}, texture={w}x{h}, shader={shader.name}; source hand attachments and head portrait baked per frame.");return model;
   }
   catch{model.Release();throw;}
  }

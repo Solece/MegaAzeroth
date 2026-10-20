@@ -111,10 +111,10 @@ internal static class OfferGenerationPatch
 [HarmonyPatch(typeof(UpgradeButton),nameof(UpgradeButton.SetUpgrade))]
 internal static class OfferCardPatch
 {
-    private static void Postfix(UpgradeButton __instance,IUpgradable upgradable)
+    private static void Postfix(UpgradeButton __instance,IUpgradable __0)
     {
         AbilityOffers.ResetCard(__instance);
-        if(!AbilityRuntime.Active || upgradable==null || upgradable.TryCast<WeaponData>()==null)return;
+        if(!AbilityRuntime.Active || __0==null || __0.TryCast<WeaponData>()==null)return;
         AbilityOffers.NativeWeaponCards.Add(__instance.Pointer);
         try
         {

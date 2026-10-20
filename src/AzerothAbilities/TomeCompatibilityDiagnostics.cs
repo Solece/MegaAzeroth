@@ -34,12 +34,13 @@ public static class TomeCompatibilityDiagnostics
     public static string SnapshotJson=>JsonSerializer.Serialize(new{
         CanSimulate=CombatSimulation.CanSimulate,PauseReason=CombatSimulation.PauseReason,CombatTime=CombatSimulation.Time,CombatDelta=CombatSimulation.DeltaTime,
         NativeTime=MyTime.time,NativeDelta=MyTime.deltaTime,NativePaused=MyTime.paused,UnityTime=Time.time,UnityTimeScale=Time.timeScale,
-        NativeStats=NativeStats(),
+        ClassId=ClassCombat.ClassId,GenericRuntime=ClassCombat.GenericActive,NativeStats=NativeStats(),
         CreatedProjectiles=created,CreatedProjectileVisuals=visuals,ProjectileHits=hits,ProjectileBounces=bounces,CriticalHits=criticalHits,LastHit=lastHit,
         Casts=AbilityRuntime.CastCount,Hits=AbilityRuntime.HitCount,Damage=AbilityRuntime.DamageDealt,SuppressAutomaticCasting,
         Slots=InventoryUtility.GetNumAvailableTomeSlots(),
-        Spells=AbilityRuntime.Spells.Select(s=>new{Id=s.Definition.Id,s.Rank,Damage=AbilityRuntime.Damage(s),Cooldown=AbilityRuntime.Cooldown(s),CooldownRemaining=Mathf.Max(0,s.NextCast-CombatSimulation.Time),QuantityAffected=s.Definition.Kind is "projectile" or "missiles" or "instant",Quantity=s.Definition.Kind is "projectile" or "missiles" or "instant"?TomeCompatibility.Quantity(s):1,Radius=s.Definition.Radius*s.RadiusFactor*MageSpellBehaviors.RadiusScale(s)*TomeCompatibility.Size,Duration=TomeCompatibility.SpellDuration(s)}).ToArray(),
-        Projectiles=AbilityRuntime.Projectiles.Select(p=>p.Snapshot()).ToArray(),Behaviors=MageSpellBehaviors.Snapshot(),
+        Spells=AbilityRuntime.Spells.Select(s=>new{Id=s.Definition.Id,s.Definition.SourceSpellId,s.Definition.SourceKind,s.Definition.Kind,s.Definition.StatusKind,s.Rank,Damage=AbilityRuntime.Damage(s),Cooldown=AbilityRuntime.Cooldown(s),CooldownRemaining=Mathf.Max(0,s.NextCast-CombatSimulation.Time),QuantityAffected=s.Definition.Targets>0,Quantity=s.Definition.Targets>0?TomeCompatibility.Quantity(s):1,Radius=s.Definition.Radius*s.RadiusFactor*MageSpellBehaviors.RadiusScale(s)*TomeCompatibility.Size,Duration=TomeCompatibility.SpellDuration(s)}).ToArray(),
+        Projectiles=AbilityRuntime.Projectiles.Select(p=>p.Snapshot()).ToArray(),Behaviors=ClassCombat.GenericActive?ClassSpellBehaviors.Snapshot():MageSpellBehaviors.Snapshot(),
+        SourceCombat=ClassCombat.GenericActive?(object)JsonSerializer.Deserialize<JsonElement>(ClassCombat.SnapshotJson):null,
         Vfx=JsonSerializer.Deserialize<JsonElement>(SpellVfx.ResourceSnapshot())});
     private static Dictionary<string,float> NativeStats()
     {

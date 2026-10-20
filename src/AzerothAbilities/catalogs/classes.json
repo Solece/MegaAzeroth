@@ -1,0 +1,1056 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "classes": [
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "startingSpell": "cleave",
+      "color": "#C79C6E",
+      "icon": "INV_Sword_27",
+      "description": "Unstoppable in the thick of it. Huge health, cleaving swings, and every kill feeds the fury.",
+      "sourceOffset": "0x6b867c0",
+      "sourceWowClassId": 1,
+      "spellIds": [
+        "cleave",
+        "whirlwind",
+        "thunder_clap",
+        "mortal_strike",
+        "execute",
+        "demo_shout",
+        "battle_shout",
+        "bloodthirst",
+        "rend",
+        "shield_slam",
+        "bloodrage"
+      ],
+      "talentTrees": [
+        {
+          "id": "WarriorArms",
+          "name": "Arms",
+          "icon": "Ability_Rogue_Eviscerate",
+          "sourceOffset": "0x717d018",
+          "sourceNodesOffset": "0x7166898",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "WarriorFury",
+          "name": "Fury",
+          "icon": "Ability_Warrior_InnerRage",
+          "sourceOffset": "0x717d058",
+          "sourceNodesOffset": "0x7167740",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "WarriorProtection",
+          "name": "Protection",
+          "icon": "INV_Shield_06",
+          "sourceOffset": "0x717d098",
+          "sourceNodesOffset": "0x7168968",
+          "sourceNodeCount": 14
+        }
+      ],
+      "sourceBaseHealth": 230.0,
+      "sourceBaseDamageReduction": 0.2199999988079071,
+      "sourceParameter88": 0.014999999664723873,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": true,
+        "damage": 27.5,
+        "cooldown": 1.600000023841858,
+        "range": 6.0,
+        "provenance": {
+          "rawOffset": "0x6b867b0",
+          "rva": "0x6b879b0",
+          "va": "0x146b879b0",
+          "byteLength": 16,
+          "sha256": "bb4ef798060aac398e771bcf370297531a5dc53c2b4f7c889e177dd89994e1b0",
+          "bytesHex": "010000000000dc41cdcccc3f0000c040"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "paladin",
+      "name": "Paladin",
+      "startingSpell": "consecration",
+      "color": "#F58CBA",
+      "icon": "Spell_Holy_HolyBolt",
+      "description": "Holy ground and righteous hammers. Heals himself, shrugs off death once in a while.",
+      "sourceOffset": "0x6b86850",
+      "sourceWowClassId": 2,
+      "spellIds": [
+        "consecration",
+        "exorcism",
+        "hammer_of_wrath",
+        "holy_shock",
+        "holy_wrath",
+        "judgement",
+        "hammer_of_justice",
+        "holy_light",
+        "divine_shield",
+        "holy_shield",
+        "redemption"
+      ],
+      "talentTrees": [
+        {
+          "id": "PaladinHoly",
+          "name": "Holy",
+          "icon": "Spell_Holy_HolyBolt",
+          "sourceOffset": "0x717d0e0",
+          "sourceNodesOffset": "0x7169718",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "PaladinProtection",
+          "name": "Protection",
+          "icon": "Spell_Holy_DevotionAura",
+          "sourceOffset": "0x717d120",
+          "sourceNodesOffset": "0x716a9d0",
+          "sourceNodeCount": 14
+        },
+        {
+          "id": "PaladinCombat",
+          "name": "Retribution",
+          "icon": "Spell_Holy_AuraOfLight",
+          "sourceOffset": "0x717d160",
+          "sourceNodesOffset": "0x716b7e0",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 245.0,
+      "sourceBaseDamageReduction": 0.20000000298023224,
+      "sourceParameter88": 0.006000000052154064,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": true,
+        "damage": 27.0,
+        "cooldown": 1.7999999523162842,
+        "range": 6.0,
+        "provenance": {
+          "rawOffset": "0x6b86840",
+          "rva": "0x6b87a40",
+          "va": "0x146b87a40",
+          "byteLength": 16,
+          "sha256": "6f3c728cf8ac0516c9bbf7c7f0c079e5b91c2196c7295ad751d2fc5a7543be57",
+          "bytesHex": "010000000000d8416666e63f0000c040"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "hunter",
+      "name": "Hunter",
+      "startingSpell": "auto_shot",
+      "color": "#ABD473",
+      "icon": "INV_Weapon_Bow_07",
+      "description": "Death from range. Arrows, traps and volleys, as long as you keep your distance.",
+      "sourceOffset": "0x6b868e0",
+      "sourceWowClassId": 3,
+      "spellIds": [
+        "auto_shot",
+        "arcane_shot",
+        "multi_shot",
+        "serpent_sting",
+        "volley",
+        "explosive_trap",
+        "concussive_shot",
+        "aimed_shot",
+        "immolation_trap",
+        "frost_trap",
+        "hunters_mark"
+      ],
+      "talentTrees": [
+        {
+          "id": "HunterBeastMastery",
+          "name": "Beast Mastery",
+          "icon": "Ability_Hunter_BeastTaming",
+          "sourceOffset": "0x717d1a8",
+          "sourceNodesOffset": "0x716c3d0",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "HunterMarksmanship",
+          "name": "Marksmanship",
+          "icon": "Ability_Marksmanship",
+          "sourceOffset": "0x717d1e8",
+          "sourceNodesOffset": "0x716d188",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "HunterSurvival",
+          "name": "Survival",
+          "icon": "Ability_Hunter_SwiftStrike",
+          "sourceOffset": "0x717d228",
+          "sourceNodesOffset": "0x716dea8",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 240.0,
+      "sourceBaseDamageReduction": 0.1599999964237213,
+      "sourceParameter88": 0.004999999888241291,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": false,
+        "damage": 0,
+        "cooldown": 0,
+        "range": 0,
+        "provenance": {
+          "rawOffset": "0x6b868d0",
+          "rva": "0x6b87ad0",
+          "va": "0x146b87ad0",
+          "byteLength": 16,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+          "bytesHex": "00000000000000000000000000000000"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "rogue",
+      "name": "Rogue",
+      "startingSpell": "sinister_strike",
+      "color": "#FFF569",
+      "icon": "INV_ThrowingKnife_04",
+      "description": "Fast, fragile and lethal. The quickest hero, with crits that delete elites.",
+      "sourceOffset": "0x6b86970",
+      "sourceWowClassId": 4,
+      "spellIds": [
+        "sinister_strike",
+        "eviscerate",
+        "blade_flurry",
+        "rupture",
+        "kidney_shot",
+        "gouge",
+        "ghostly_strike",
+        "adrenaline_rush",
+        "backstab",
+        "slice_and_dice",
+        "seal_fate"
+      ],
+      "talentTrees": [
+        {
+          "id": "RogueAssassination",
+          "name": "Assassination",
+          "icon": "Ability_Rogue_Eviscerate",
+          "sourceOffset": "0x717d270",
+          "sourceNodesOffset": "0x716eaf8",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "RogueCombat",
+          "name": "Combat",
+          "icon": "Ability_BackStab",
+          "sourceOffset": "0x717d2b0",
+          "sourceNodesOffset": "0x716f748",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "RogueSubtlety",
+          "name": "Subtlety",
+          "icon": "Ability_Stealth",
+          "sourceOffset": "0x717d2f0",
+          "sourceNodesOffset": "0x71703c0",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 190.0,
+      "sourceBaseDamageReduction": 0.18000000715255737,
+      "sourceParameter88": 0.029999999329447746,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": true,
+        "damage": 14.0,
+        "cooldown": 1.2000000476837158,
+        "range": 6.0,
+        "provenance": {
+          "rawOffset": "0x6b86960",
+          "rva": "0x6b87b60",
+          "va": "0x146b87b60",
+          "byteLength": 16,
+          "sha256": "52286fcd005e9ce540c2c707706849473150a920e9ba52301063faf7ffcaf1e7",
+          "bytesHex": "01000000000060419a99993f0000c040"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "priest",
+      "name": "Priest",
+      "startingSpell": "smite",
+      "color": "#FFFFFF",
+      "icon": "INV_Staff_30",
+      "description": "Light and Shadow. Shields and heals keep you alive while pain spreads through the horde.",
+      "sourceOffset": "0x6b86a00",
+      "sourceWowClassId": 5,
+      "spellIds": [
+        "smite",
+        "sw_pain",
+        "mind_blast",
+        "holy_nova",
+        "pw_shield",
+        "renew",
+        "holy_fire",
+        "mind_flay",
+        "psychic_scream",
+        "devouring_plague",
+        "lightwell"
+      ],
+      "talentTrees": [
+        {
+          "id": "PriestDiscipline",
+          "name": "Discipline",
+          "icon": "Spell_Holy_WordFortitude",
+          "sourceOffset": "0x717d338",
+          "sourceNodesOffset": "0x7171010",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "PriestHoly",
+          "name": "Holy",
+          "icon": "Spell_Holy_HolyBolt",
+          "sourceOffset": "0x717d378",
+          "sourceNodesOffset": "0x7171c68",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "PriestShadow",
+          "name": "Shadow",
+          "icon": "Spell_Shadow_ShadowWordPain",
+          "sourceOffset": "0x717d3b8",
+          "sourceNodesOffset": "0x7172af0",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 170.0,
+      "sourceBaseDamageReduction": 0.07999999821186066,
+      "sourceParameter88": 0.014000000432133675,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": false,
+        "damage": 0,
+        "cooldown": 0,
+        "range": 0,
+        "provenance": {
+          "rawOffset": "0x6b869f0",
+          "rva": "0x6b87bf0",
+          "va": "0x146b87bf0",
+          "byteLength": 16,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+          "bytesHex": "00000000000000000000000000000000"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "shaman",
+      "name": "Shaman",
+      "startingSpell": "lightning_bolt",
+      "color": "#0070DE",
+      "icon": "Spell_Nature_BloodLust",
+      "description": "Storms that jump from foe to foe, and totems that fight beside you.",
+      "sourceOffset": "0x6b86a90",
+      "sourceWowClassId": 7,
+      "spellIds": [
+        "lightning_bolt",
+        "chain_lightning",
+        "earth_shock",
+        "flame_shock",
+        "frost_shock",
+        "lightning_shield",
+        "magma_totem",
+        "searing_totem",
+        "fire_nova",
+        "healing_wave",
+        "call_of_flame"
+      ],
+      "talentTrees": [
+        {
+          "id": "ShamanElementalCombat",
+          "name": "Elemental",
+          "icon": "Spell_Nature_Lightning",
+          "sourceOffset": "0x717d400",
+          "sourceNodesOffset": "0x7173948",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "ShamanEnhancement",
+          "name": "Enhancement",
+          "icon": "Spell_Nature_LightningShield",
+          "sourceOffset": "0x717d440",
+          "sourceNodesOffset": "0x7174598",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "ShamanRestoration",
+          "name": "Restoration",
+          "icon": "Spell_Nature_MagicImmunity",
+          "sourceOffset": "0x717d480",
+          "sourceNodesOffset": "0x71751d8",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 195.0,
+      "sourceBaseDamageReduction": 0.17000000178813934,
+      "sourceParameter88": 0.0,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": false,
+        "damage": 0,
+        "cooldown": 0,
+        "range": 0,
+        "provenance": {
+          "rawOffset": "0x6b86a80",
+          "rva": "0x6b87c80",
+          "va": "0x146b87c80",
+          "byteLength": 16,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+          "bytesHex": "00000000000000000000000000000000"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "startingSpell": "fireball",
+      "color": "#69CCF0",
+      "icon": "INV_Staff_13",
+      "description": "The glass cannon. The biggest area damage in Azeroth, and nothing to hide behind.",
+      "sourceOffset": "0x6b86b20",
+      "sourceWowClassId": 8,
+      "spellIds": [
+        "fireball",
+        "frostbolt",
+        "arcane_missiles",
+        "frost_nova",
+        "arcane_explosion",
+        "blizzard",
+        "flamestrike",
+        "fire_blast",
+        "cone_of_cold",
+        "blast_wave",
+        "pyroblast",
+        "ice_barrier",
+        "polymorph"
+      ],
+      "talentTrees": [
+        {
+          "id": "MageArcane",
+          "name": "Arcane",
+          "icon": "Spell_Holy_MagicalSentry",
+          "sourceOffset": "0x717d4c8",
+          "sourceNodesOffset": "0x7175f50",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "MageFire",
+          "name": "Fire",
+          "icon": "Spell_Fire_FireBolt02",
+          "sourceOffset": "0x717d508",
+          "sourceNodesOffset": "0x7176c68",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "MageFrost",
+          "name": "Frost",
+          "icon": "Spell_Frost_FrostBolt02",
+          "sourceOffset": "0x717d548",
+          "sourceNodesOffset": "0x7177940",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 215.0,
+      "sourceBaseDamageReduction": 0.07999999821186066,
+      "sourceParameter88": 0.0,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": false,
+        "damage": 0,
+        "cooldown": 0,
+        "range": 0,
+        "provenance": {
+          "rawOffset": "0x6b86b10",
+          "rva": "0x6b87d10",
+          "va": "0x146b87d10",
+          "byteLength": 16,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+          "bytesHex": "00000000000000000000000000000000"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "warlock",
+      "name": "Warlock",
+      "startingSpell": "shadow_bolt",
+      "color": "#9482C9",
+      "icon": "Spell_Nature_FaerieFire",
+      "description": "Curses and fire. Damage over time stacks up on everything that chases you.",
+      "sourceOffset": "0x6b86bb0",
+      "sourceWowClassId": 9,
+      "spellIds": [
+        "shadow_bolt",
+        "corruption",
+        "immolate",
+        "curse_of_agony",
+        "rain_of_fire",
+        "hellfire",
+        "death_coil",
+        "searing_pain",
+        "drain_life",
+        "fear",
+        "soul_fire"
+      ],
+      "talentTrees": [
+        {
+          "id": "WarlockCurses",
+          "name": "Affliction",
+          "icon": "Spell_Shadow_DeathCoil",
+          "sourceOffset": "0x717d590",
+          "sourceNodesOffset": "0x7178810",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "WarlockSummoning",
+          "name": "Demonology",
+          "icon": "Spell_Shadow_Metamorphosis",
+          "sourceOffset": "0x717d5d0",
+          "sourceNodesOffset": "0x7179340",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "WarlockDestruction",
+          "name": "Destruction",
+          "icon": "Spell_Shadow_RainOfFire",
+          "sourceOffset": "0x717d610",
+          "sourceNodesOffset": "0x717a018",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 165.0,
+      "sourceBaseDamageReduction": 0.05999999865889549,
+      "sourceParameter88": 0.009999999776482582,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": false,
+        "damage": 0,
+        "cooldown": 0,
+        "range": 0,
+        "provenance": {
+          "rawOffset": "0x6b86ba0",
+          "rva": "0x6b87da0",
+          "va": "0x146b87da0",
+          "byteLength": 16,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+          "bytesHex": "00000000000000000000000000000000"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    },
+    {
+      "id": "druid",
+      "name": "Druid",
+      "startingSpell": "wrath",
+      "color": "#FF7D0A",
+      "icon": "Ability_Druid_Maul",
+      "description": "Moon, storm and growth. Roots, hurricanes and the steadiest self-healing.",
+      "sourceOffset": "0x6b86c40",
+      "sourceWowClassId": 11,
+      "spellIds": [
+        "wrath",
+        "moonfire",
+        "starfire",
+        "hurricane",
+        "insect_swarm",
+        "entangling_roots",
+        "rejuvenation",
+        "regrowth",
+        "thorns",
+        "swipe",
+        "faerie_fire",
+        "shred"
+      ],
+      "talentTrees": [
+        {
+          "id": "DruidBalance",
+          "name": "Balance",
+          "icon": "Spell_Nature_StarFall",
+          "sourceOffset": "0x717d658",
+          "sourceNodesOffset": "0x717acb8",
+          "sourceNodeCount": 13
+        },
+        {
+          "id": "DruidFeralCombat",
+          "name": "Feral Combat",
+          "icon": "Ability_Racial_BearForm",
+          "sourceOffset": "0x717d698",
+          "sourceNodesOffset": "0x717be88",
+          "sourceNodeCount": 14
+        },
+        {
+          "id": "DruidRestoration",
+          "name": "Restoration",
+          "icon": "Spell_Nature_HealingTouch",
+          "sourceOffset": "0x717d6d8",
+          "sourceNodesOffset": "0x717cad0",
+          "sourceNodeCount": 13
+        }
+      ],
+      "sourceBaseHealth": 205.0,
+      "sourceBaseDamageReduction": 0.11999999731779099,
+      "sourceParameter88": 0.0,
+      "sourceBaseStatsEvidence": "Native stats rebuild VA14590AAC5 loads class native+0x84 = base damage reduction, and14590ACB9 loads native+0x80 = baseHP; native+0x88 retained as unresolved raw parameter, not claimed as regeneration.",
+      "sourceAutoWeapon": {
+        "enabled": false,
+        "damage": 0,
+        "cooldown": 0,
+        "range": 0,
+        "provenance": {
+          "rawOffset": "0x6b86c30",
+          "rva": "0x6b87e30",
+          "va": "0x146b87e30",
+          "byteLength": 16,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+          "bytesHex": "00000000000000000000000000000000"
+        },
+        "sourceEvidence": "Original class native pointer = visible row -0x10; original auto-weapon optional struct is the16-byte PREFIX at visible-0x10. Separate source auto-attack consumer VA145913D20..145913E75 applies SourceStat16 only to this struct; present for Warrior,Paladin,Rogue. Hunter AutoShot is an ordinary spell, not this optional melee weapon."
+      }
+    }
+  ],
+  "races": [
+    {
+      "name": "Human",
+      "modelPrefix": "HUMAN",
+      "racialSpell": "perception",
+      "sourceRaceId": 1,
+      "sourceOffset": "0x6b85640",
+      "provenance": {
+        "rawOffset": "0x6b85640",
+        "rva": "0x6b86840",
+        "va": "0x146b86840",
+        "byteLength": 88,
+        "sha256": "3755b89f9895bf43969ab55d2f2f86b637265b8f324f341bbfd130832462ac07",
+        "bytesHex": "c061b846010000000500000000000000c561b846010000000500000000000000cc61b846010000000200000000000000dc61b846010000000a000000000000005862b8460100000003000000000000000100000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 8,
+          "name": "experience",
+          "value": 0.10000000149011612,
+          "provenance": {
+            "rawOffset": "0x6b84fcc",
+            "rva": "0x6b861cc",
+            "va": "0x146b861cc",
+            "byteLength": 8,
+            "sha256": "d9e5718f4f441fabe0c982478077627ddb47be03bad3b0c9fc708a80d7850a2e",
+            "bytesHex": "08000000cdcccc3d"
+          }
+        },
+        {
+          "kind": 9,
+          "name": "gold",
+          "value": 0.20000000298023224,
+          "provenance": {
+            "rawOffset": "0x6b84fd4",
+            "rva": "0x6b861d4",
+            "va": "0x146b861d4",
+            "byteLength": 8,
+            "sha256": "67f6d5dfa8b3647278df9611dee8027019d227cb94d7eaa00963184787985ef8",
+            "bytesHex": "09000000cdcc4c3e"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Perception: every 30 sec, +15% damage for 10 sec",
+        "- The Human Spirit: +10% experience",
+        "- Diplomacy: +20% gold"
+      ]
+    },
+    {
+      "name": "Orc",
+      "modelPrefix": "ORC",
+      "racialSpell": "blood_fury",
+      "sourceRaceId": 2,
+      "sourceOffset": "0x6b85698",
+      "provenance": {
+        "rawOffset": "0x6b85698",
+        "rva": "0x6b86898",
+        "va": "0x146b86898",
+        "byteLength": 88,
+        "sha256": "30800525d4d6eacabe5b4cbfd64e7f7421acd6f4ccb0b349e865172a25de47c2",
+        "bytesHex": "8862b8460100000003000000000000008b62b8460100000003000000000000009062b8460100000001000000000000009862b846010000000a00000000000000f062b8460100000002000000000000000200000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 0,
+          "name": "maximumHealth",
+          "value": 0.10000000149011612,
+          "provenance": {
+            "rawOffset": "0x6b85090",
+            "rva": "0x6b86290",
+            "va": "0x146b86290",
+            "byteLength": 8,
+            "sha256": "5a1dfa10657e0a21707cf91228b779a860426ba61f928eebffa3038bda0dbd68",
+            "bytesHex": "00000000cdcccc3d"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Blood Fury: every 40 sec, +35% damage for 12 sec",
+        "- Hardiness: +10% max health"
+      ]
+    },
+    {
+      "name": "Dwarf",
+      "modelPrefix": "DWARF",
+      "racialSpell": "stoneform",
+      "sourceRaceId": 3,
+      "sourceOffset": "0x6b856f0",
+      "provenance": {
+        "rawOffset": "0x6b856f0",
+        "rva": "0x6b868f0",
+        "va": "0x146b868f0",
+        "byteLength": 88,
+        "sha256": "10743f5485fbd7e005c8ae2683f2f5c0bcdad8f6386b01b7aa01d7c98858ab19",
+        "bytesHex": "1063b8460100000005000000000000001563b8460100000005000000000000001c63b8460100000002000000000000002c63b846010000000900000000000000c063b8460100000003000000000000000300000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 1,
+          "name": "allDamage",
+          "value": 0.05999999865889549,
+          "provenance": {
+            "rawOffset": "0x6b8511c",
+            "rva": "0x6b8631c",
+            "va": "0x146b8631c",
+            "byteLength": 8,
+            "sha256": "7a38a2d36f8ce19a35daeb86c3eb261e06913f892b5bc4372b49e928ad2a9832",
+            "bytesHex": "010000008fc2753d"
+          }
+        },
+        {
+          "kind": 7,
+          "name": "pickupRange",
+          "value": 0.30000001192092896,
+          "provenance": {
+            "rawOffset": "0x6b85124",
+            "rva": "0x6b86324",
+            "va": "0x146b86324",
+            "byteLength": 8,
+            "sha256": "e7c2112ee3c957beb1a76eb71075cf69969d8899f6cd7bfc1538282ab7323450",
+            "bytesHex": "070000009a99993e"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Stoneform: every 45 sec, a shield absorbing 30% of max health",
+        "- Gun Specialization: +6% damage",
+        "- Treasure Finding: +30% pickup range"
+      ]
+    },
+    {
+      "name": "Night Elf",
+      "modelPrefix": "NIGHTELF",
+      "racialSpell": "shadowmeld",
+      "sourceRaceId": 4,
+      "sourceOffset": "0x6b85748",
+      "provenance": {
+        "rawOffset": "0x6b85748",
+        "rva": "0x6b86948",
+        "va": "0x146b86948",
+        "byteLength": 88,
+        "sha256": "7ce22fadbd71fe92f869b73b741ced7c72875eacea71bb709a4b8001d4ef6560",
+        "bytesHex": "f063b846010000000900000000000000f963b8460100000008000000000000000464b8460100000002000000000000001464b846010000000a00000000000000a864b8460100000003000000000000000400000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 3,
+          "name": "movementSpeed",
+          "value": 0.07999999821186066,
+          "provenance": {
+            "rawOffset": "0x6b85204",
+            "rva": "0x6b86404",
+            "va": "0x146b86404",
+            "byteLength": 8,
+            "sha256": "73ddbec2a6d3d5915694208d675293ae78a9c18890cad3e51ef8082ab654a10c",
+            "bytesHex": "030000000ad7a33d"
+          }
+        },
+        {
+          "kind": 5,
+          "name": "damageReduction",
+          "value": 0.05000000074505806,
+          "provenance": {
+            "rawOffset": "0x6b8520c",
+            "rva": "0x6b8640c",
+            "va": "0x146b8640c",
+            "byteLength": 8,
+            "sha256": "51e6e4767a7e1fb074b093a7f54364123221c190db631833f63880b0fad5b8dc",
+            "bytesHex": "05000000cdcc4c3d"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Shadowmeld: near death, 3 sec of immunity (75 sec cooldown)",
+        "- Quickness: +8% movement speed",
+        "- Nature Resistance: +5% damage reduction"
+      ]
+    },
+    {
+      "name": "Undead",
+      "modelPrefix": "SCOURGE",
+      "racialSpell": "will_of_the_forsaken",
+      "sourceRaceId": 5,
+      "sourceOffset": "0x6b857a0",
+      "provenance": {
+        "rawOffset": "0x6b857a0",
+        "rva": "0x6b869a0",
+        "va": "0x146b869a0",
+        "byteLength": 88,
+        "sha256": "7ead6a1e84479c09bace0663dfe45e774aa1de5400792ccb815ea46074b5448e",
+        "bytesHex": "d864b846010000000600000000000000de64b846010000000700000000000000e864b846010000000200000000000000f864b846010000001400000000000000a865b8460100000003000000000000000500000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 11,
+          "name": "healthPerKill",
+          "value": 1.0,
+          "provenance": {
+            "rawOffset": "0x6b852e8",
+            "rva": "0x6b864e8",
+            "va": "0x146b864e8",
+            "byteLength": 8,
+            "sha256": "a7f61cd525687491b29f6c59d86f17bcdc974ff43471962b206935cf79aa5482",
+            "bytesHex": "0b0000000000803f"
+          }
+        },
+        {
+          "kind": 5,
+          "name": "damageReduction",
+          "value": 0.03999999910593033,
+          "provenance": {
+            "rawOffset": "0x6b852f0",
+            "rva": "0x6b864f0",
+            "va": "0x146b864f0",
+            "byteLength": 8,
+            "sha256": "89b917a46e4a2076ecd3d2e88fd14bcf42a6394b355fb4114cbef2b5d9deac9f",
+            "bytesHex": "050000000ad7233d"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Will of the Forsaken: near death, 4 sec of immunity (60 sec cooldown)",
+        "- Cannibalize: every kill heals 1 health",
+        "- Shadow Resistance: +4% damage reduction"
+      ]
+    },
+    {
+      "name": "Tauren",
+      "modelPrefix": "TAUREN",
+      "racialSpell": "war_stomp",
+      "sourceRaceId": 6,
+      "sourceOffset": "0x6b857f8",
+      "provenance": {
+        "rawOffset": "0x6b857f8",
+        "rva": "0x6b869f8",
+        "va": "0x146b869f8",
+        "byteLength": 88,
+        "sha256": "88c7930bde5ee81918cd6980186c52b0913b28c8fe64baf451431734995261cc",
+        "bytesHex": "d865b846010000000600000000000000de65b846010000000600000000000000e465b846010000000100000000000000ec65b8460100000009000000000000005066b8460100000002000000000000000600000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 0,
+          "name": "maximumHealth",
+          "value": 0.15000000596046448,
+          "provenance": {
+            "rawOffset": "0x6b853e4",
+            "rva": "0x6b865e4",
+            "va": "0x146b865e4",
+            "byteLength": 8,
+            "sha256": "36298ae79037b14baa26550c38b605e7cf8c5a28f3d54f109b18707749fd08dc",
+            "bytesHex": "000000009a99193e"
+          }
+        }
+      ],
+      "descriptions": [
+        "- War Stomp: every 15 sec, stuns nearby enemies for 2 sec",
+        "- Endurance: +15% max health"
+      ]
+    },
+    {
+      "name": "Gnome",
+      "modelPrefix": "GNOME",
+      "racialSpell": "escape_artist",
+      "sourceRaceId": 7,
+      "sourceOffset": "0x6b85850",
+      "provenance": {
+        "rawOffset": "0x6b85850",
+        "rva": "0x6b86a50",
+        "va": "0x146b86a50",
+        "byteLength": 88,
+        "sha256": "f0411094d6dc6bf90bbfbff036a22874332384b04edad0fffa89541d4f7e34ba",
+        "bytesHex": "7066b8460100000005000000000000007566b8460100000005000000000000007c66b8460100000002000000000000008c66b846010000000d000000000000002067b8460100000003000000000000000700000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 2,
+          "name": "cooldownReduction",
+          "value": 0.07999999821186066,
+          "provenance": {
+            "rawOffset": "0x6b8547c",
+            "rva": "0x6b8667c",
+            "va": "0x146b8667c",
+            "byteLength": 8,
+            "sha256": "1b66a97cc3a5bf5a63e56770d4fd9f8d5bd80359beab121512c9fb2bcaac9597",
+            "bytesHex": "020000000ad7a33d"
+          }
+        },
+        {
+          "kind": 10,
+          "name": "luck",
+          "value": 0.20000000298023224,
+          "provenance": {
+            "rawOffset": "0x6b85484",
+            "rva": "0x6b86684",
+            "va": "0x146b86684",
+            "byteLength": 8,
+            "sha256": "9df9c839555e59af93815c1d88054af8bfe2d76f4e8e32fa657ed27c6ce90e0a",
+            "bytesHex": "0a000000cdcc4c3e"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Escape Artist: every 20 sec, roots nearby enemies for 2 sec",
+        "- Expansive Mind: -8% cooldowns",
+        "- Engineering Specialization: +20% luck"
+      ]
+    },
+    {
+      "name": "Troll",
+      "modelPrefix": "TROLL",
+      "racialSpell": "berserking",
+      "sourceRaceId": 8,
+      "sourceOffset": "0x6b858a8",
+      "provenance": {
+        "rawOffset": "0x6b858a8",
+        "rva": "0x6b86aa8",
+        "va": "0x146b86aa8",
+        "byteLength": 88,
+        "sha256": "0e526e070498e63a53b5f07807fbad29b936e5854a8efe0c03212ced3ff36ee9",
+        "bytesHex": "5067b8460100000005000000000000005567b8460100000005000000000000005c67b8460100000002000000000000006c67b846010000000a000000000000001068b8460100000003000000000000000800000000000000"
+      },
+      "bonuses": [
+        {
+          "kind": 6,
+          "name": "healthPerSecond",
+          "value": 1.5,
+          "provenance": {
+            "rawOffset": "0x6b8555c",
+            "rva": "0x6b8675c",
+            "va": "0x146b8675c",
+            "byteLength": 8,
+            "sha256": "ed49708dc222b4bc3362cb8ff52496bb3c03896acbe6ac42ae61fc92bf243986",
+            "bytesHex": "060000000000c03f"
+          }
+        },
+        {
+          "kind": 4,
+          "name": "criticalChance",
+          "value": 0.029999999329447746,
+          "provenance": {
+            "rawOffset": "0x6b85564",
+            "rva": "0x6b86764",
+            "va": "0x146b86764",
+            "byteLength": 8,
+            "sha256": "7237241daf8fdb444ec9606cd8033d5a361ab99a8f4d2b9407ef545e993443c6",
+            "bytesHex": "040000008fc2f53c"
+          }
+        }
+      ],
+      "descriptions": [
+        "- Berserking: every 35 sec, cooldowns recover 30% faster for 10 sec",
+        "- Regeneration: +1.5 health per second",
+        "- Throwing Specialization: +3% critical strike"
+      ]
+    }
+  ],
+  "classCount": 9,
+  "classSpellCount": 102,
+  "abilityTableCount": 112,
+  "talentCount": 354,
+  "treeCount": 27,
+  "auxiliarySpellIds": [
+    "arcane_power",
+    "berserking",
+    "blood_fury",
+    "escape_artist",
+    "penance",
+    "perception",
+    "shadowmeld",
+    "stoneform",
+    "war_stomp",
+    "will_of_the_forsaken"
+  ],
+  "castKindDiscriminants": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "statusKindDiscriminants": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "talentEffectDiscriminants": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    14,
+    15,
+    17,
+    18,
+    19,
+    20,
+    21,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "note": "Classes and race choices are separate original registries; no invented named hero roster or assumption that every race/class combination is valid"
+}

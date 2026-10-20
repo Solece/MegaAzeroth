@@ -12,9 +12,11 @@ namespace AzerothMegabonk.AdventureFlow;
 // Batch-only regression for native asset collection during actual stage travel.
 internal static class VisualTransitionProbe
 {
-    internal static bool Enabled=>Application.isBatchMode && Environment.GetCommandLineArgs().Contains("-azeroth-visual-smoke");
-    static readonly string[] ids={"fireball","frostbolt","arcane_missiles","frost_nova","arcane_explosion","blizzard","flamestrike","fire_blast","cone_of_cold","blast_wave","pyroblast","ice_barrier","polymorph"};
+    internal static bool Enabled=>Application.isBatchMode && Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")=="1" && Environment.GetCommandLineArgs().Contains("-azeroth-visual-smoke");
+    internal static SpellCatalog ActiveCatalog=>JsonSerializer.Deserialize<SpellCatalog>(ClassAbilityDiagnostics.ActiveSourceCatalogJson,new JsonSerializerOptions{PropertyNameCaseInsensitive=true})??throw new InvalidDataException("Public active source catalog is absent");
+    static string[] Ids=>ActiveCatalog.Spells.Select(s=>s.Id).ToArray();
     static readonly HashSet<string> stages=new(),bosses=new();
+    static string seededClass;
     static string key="",bossKey="";static int phase,bossPhase;static float wait,deadline,bossWait;
     static AsyncOperation unloading;
     static Enemy scorpion;
@@ -38,16 +40,24 @@ internal static class VisualTransitionProbe
             // Stage generation can finish in Update before the source skin's
             // first LateUpdate rebinds to the new native player. Wait for the
             // active source instance, with the existing stage deadline intact.
-            using(var ready=JsonDocument.Parse((string)Call("AzerothMegabonk.MageVisuals.MageVisualBridge","WeaponDiagnostics")))
-                if(!ready.RootElement.GetProperty("attached").GetBoolean() || !ready.RootElement.GetProperty("active").GetBoolean())return false;
-            foreach(var id in ids)if(!HudBridge.LearnSpellForProbe(id))throw new InvalidOperationException("Cannot exercise source spell "+id);
+            if(!EquipmentReady() || !PetsReady(false))return false;
+            if(seededClass==null)
+            {
+                if(!ClassAbilityDiagnostics.LearnAllForProbe())throw new InvalidOperationException("Cannot exercise original source class catalog: "+HudBridge.ClassId);
+                seededClass=HudBridge.ClassId;
+            }
+            else if(seededClass!=HudBridge.ClassId)throw new InvalidOperationException("Original source class changed during one adventure run");
+            foreach(var id in Ids)if(!HudBridge.SpellIds.Contains(id))throw new InvalidOperationException("Original class spell not learned: "+id);
             // Reserve the effect budget during this batch-only cleanup probe.
             // Existing projectiles and their lifetimes continue ticking normally.
-            foreach(var spell in AbilityRuntime.Spells)spell.NextCast=Time.time+15;
+            if(!TomeCompatibilityDiagnostics.SetAutomaticCastingForProbe(false))throw new InvalidOperationException("Cannot reserve source visual probe budget");
             if(!SpellVfxDiagnostics.PrimeAllAssetsForProbe() || !(bool)Call("AzerothMegabonk.EnemyVisuals.EnemyVisualBridge","PrimeAllModelsForProbe"))throw new InvalidOperationException("Cannot prime original model caches");
-            var sheep=(GameObject)Call("AzerothMegabonk.MageVisuals.CreatureVisualBridge","Create","sheep",player.transform.position+Vector3.right*8,.8f);
-            Call("AzerothMegabonk.MageVisuals.CreatureVisualBridge","Destroy",sheep);
-            if(!NativeWeaponDiagnostics.AttemptBlockedGrantForProbe())throw new InvalidOperationException("Native weapon grant bypassed Mage policy");
+            if(HudBridge.ClassId=="mage")
+            {
+                var sheep=(GameObject)Call("AzerothMegabonk.MageVisuals.CreatureVisualBridge","Create","sheep",player.transform.position+Vector3.right*8,.8f);
+                Call("AzerothMegabonk.MageVisuals.CreatureVisualBridge","Destroy",sheep);
+            }
+            if(!NativeWeaponDiagnostics.AttemptBlockedGrantForProbe())throw new InvalidOperationException("Native weapon grant bypassed source-class policy");
             Validate("before explicit cleanup");wait=Time.realtimeSinceStartup+1;phase=1;return false;
         }
         if(Time.realtimeSinceStartup<wait)return false;
@@ -57,13 +67,21 @@ internal static class VisualTransitionProbe
             if(!unloading.isDone)return false;
             Validate("immediately after cleanup");
             int spawned=HudBridge.SourceVfxSpawned;
-            foreach(var id in new[]{"fireball","frost_nova","arcane_missiles","blizzard"})
-                SpellVfxDiagnostics.PlayForProbe(id,"cast",player.transform.position+Vector3.up*1.5f,.6f);
+            int demonstrated=0;
+            foreach(var id in Ids)
+            {
+                bool played=false;
+                foreach(string stage in new[]{"cast","impact","missile","areaKit","area","aura"})
+                    if(SpellVfxDiagnostics.PlayForProbe(id,stage,player.transform.position+Vector3.up*1.5f,.6f)){played=true;break;}
+                if(played){Plugin.Note("VISUAL source class effect after cleanup: "+HudBridge.ClassId+"/"+id);if(++demonstrated>=4)break;}
+            }
             if(HudBridge.SourceVfxSpawned<=spawned)throw new InvalidOperationException("No new original spell visuals after cleanup");
             wait=Time.realtimeSinceStartup+.2f;phase=3;return false;
         }
         Validate("rendered after cleanup");
-        Capture("scene-visual-"+Safe(key)+".ppm");foreach(var spell in AbilityRuntime.Spells)spell.NextCast=Time.time;stages.Add(key);Plugin.Note("PASS VISUAL STAGE "+key+"; all13 spells retained; original body/cache/VFX survived native cleanup");return true;
+        Capture("scene-visual-"+Safe(key)+".ppm");
+        if(!TomeCompatibilityDiagnostics.SetAutomaticCastingForProbe(true))throw new InvalidOperationException("Cannot restore automatic class casting after visual probe");
+        stages.Add(key);Plugin.Note("PASS VISUAL STAGE "+key+"; class="+HudBridge.ClassId+"; original catalogSpells="+Ids.Length+"; learned="+HudBridge.SpellIds.Length+"; body/gear/permanentPets/cache/VFX survived native cleanup");return true;
     }
     internal static bool BossReady(Enemy boss)
     {
@@ -148,13 +166,77 @@ internal static class VisualTransitionProbe
         Plugin.Note("VISUAL "+label+" body="+body);Plugin.Note("VISUAL "+label+" enemies="+enemy);Plugin.Note("VISUAL "+label+" spellEffects="+effects);
         Plugin.Note("VISUAL "+label+" nativeWeaponPolicy="+weapons);Plugin.Note("VISUAL "+label+" sourceWeapon="+appearance);
         using var policy=JsonDocument.Parse(weapons);using var a=JsonDocument.Parse(appearance);
-        if(!policy.RootElement.GetProperty("NativeAttacksSuppressed").GetBoolean() || policy.RootElement.GetProperty("EnginePlaceholderCount").GetInt32()!=1 || policy.RootElement.GetProperty("TicksBlocked").GetInt32()==0 || policy.RootElement.GetProperty("VisibleNativeWeaponCards").GetInt32()!=0)throw new InvalidOperationException("Native weapon is available to the Mage: "+weapons);
-        if(a.RootElement.GetProperty("sourceItemId").GetInt32()!=35 || a.RootElement.GetProperty("sourceDisplayId").GetInt32()!=472 || !a.RootElement.GetProperty("attached").GetBoolean() || !a.RootElement.GetProperty("active").GetBoolean() || !a.RootElement.GetProperty("sourceAssetsValid").GetBoolean() || a.RootElement.GetProperty("visibleNativeWeaponRenderers").GetInt32()!=0)throw new InvalidOperationException("Mage weapon appearance is incorrect: "+appearance);
+        if(!policy.RootElement.GetProperty("NativeAttacksSuppressed").GetBoolean() || policy.RootElement.GetProperty("EnginePlaceholderCount").GetInt32()!=1 || policy.RootElement.GetProperty("TicksBlocked").GetInt32()==0 || policy.RootElement.GetProperty("VisibleNativeWeaponCards").GetInt32()!=0)throw new InvalidOperationException("Native weapon is available to source class: "+weapons);
+        if(!EquipmentReady())throw new InvalidOperationException("Original class equipment/body is not ready: "+appearance);
+        if(HudBridge.ClassId=="mage" && (a.RootElement.GetProperty("sourceItemId").GetInt32()!=35 || a.RootElement.GetProperty("sourceDisplayId").GetInt32()!=472))throw new InvalidOperationException("Original Mage staff identity changed: "+appearance);
+        if(!PetsReady(true))throw new InvalidOperationException("Original permanent class pets lost visual/runtime ownership after stage cleanup");
         using var b=JsonDocument.Parse(body);using var e=JsonDocument.Parse(enemy);using var v=JsonDocument.Parse(effects);
-        if(!b.RootElement.GetProperty("allValid").GetBoolean())throw new InvalidOperationException("Mage cache lost original model/texture/frames");
+        if(!b.RootElement.GetProperty("allValid").GetBoolean())throw new InvalidOperationException("Original class cache lost model/texture/frames");
         if(!e.RootElement.GetProperty("allValid").GetBoolean())throw new InvalidOperationException("Enemy cache lost original model/texture/frames");
         foreach(var n in new[]{"InvalidMeshes","InvalidTextures","InvalidMaterials","FailedEffects"})if(v.RootElement.GetProperty(n).GetInt32()!=0)throw new InvalidOperationException("Source VFX lost native resources: "+n);
         if(v.RootElement.GetProperty("PinnedMeshes").GetInt32()!=v.RootElement.GetProperty("CachedMeshes").GetInt32() || v.RootElement.GetProperty("PinnedTextures").GetInt32()!=v.RootElement.GetProperty("CachedTextures").GetInt32())throw new InvalidOperationException("Source VFX caches are not protected from native cleanup");
+    }
+    static bool EquipmentReady()
+    {
+        using var document=JsonDocument.Parse((string)Call("AzerothHeroes.HeroVisualBridge","AppearanceDiagnostics"));var root=document.RootElement;
+        int form=root.GetProperty("activeFormSpellId").GetInt32();
+        if(root.GetProperty("activeClassId").GetString()!=HudBridge.ClassId || !root.GetProperty("attached").GetBoolean() || root.GetProperty("sourceVertexCount").GetInt32()<=0)return false;
+        if(form is not (9634 or 768) && !root.GetProperty("sourceHeadClosed").GetBoolean())return false;
+        var equipment=root.GetProperty("equipment");
+        if(!equipment.GetProperty("sourceAssetsValid").GetBoolean() || equipment.GetProperty("visibleNativeWeaponRenderers").GetInt32()!=0)return false;
+        int count=equipment.GetProperty("equipment").GetArrayLength();
+        if(form is 9634 or 768)return count==0;
+        return count==0 || equipment.GetProperty("attached").GetBoolean() && equipment.GetProperty("active").GetBoolean();
+    }
+    static Dictionary<int,int> ExpectedPermanentPets()
+    {
+        var expected=new Dictionary<int,int>();if(!ClassAbilityDiagnostics.UsesGenericRuntime)return expected;
+        var type=TypeNamed("MageTalents.TalentBridge");
+        using var catalog=JsonDocument.Parse((string)type.GetProperty("CatalogJson").GetValue(null));
+        using var state=JsonDocument.Parse((string)type.GetProperty("StateJson").GetValue(null));var ranks=state.RootElement.GetProperty("Ranks");
+        foreach(var node in catalog.RootElement.GetProperty("Talents").EnumerateArray())
+        {
+            if(!ranks.TryGetProperty(node.GetProperty("Id").GetString(),out var rank)||rank.GetInt32()<1)continue;
+            foreach(var effect in node.GetProperty("Effects").EnumerateArray())
+                if(effect.GetProperty("Tag").GetInt32()==29)
+                {int id=effect.GetProperty("PetDisplayId").GetInt32();expected.TryGetValue(id,out var count);expected[id]=count+1;}
+        }
+        return expected;
+    }
+    static bool PetsReady(bool log)
+    {
+        var expected=ExpectedPermanentPets();if(expected.Count==0)return true;
+        using var source=JsonDocument.Parse(ClassAbilityDiagnostics.SnapshotJson);var pets=source.RootElement.GetProperty("Pets");
+        using var catalog=JsonDocument.Parse((string)Call("AzerothMegabonk.MageVisuals.CreatureVisualBridge","CatalogDiagnostics"));
+        var names=new Dictionary<int,string>();
+        foreach(var display in catalog.RootElement.GetProperty("sourceDisplays").EnumerateArray())names[display.GetProperty("displayId").GetInt32()]="AzerothCompanion_"+display.GetProperty("key").GetString();
+        var renderers=new Dictionary<string,HashSet<int>>();
+        foreach(var renderer in Object.FindObjectsOfType<MeshRenderer>())
+        {
+            if(renderer==null||!renderer.enabled||!renderer.gameObject.activeInHierarchy)continue;
+            var parent=renderer.transform;
+            while(parent!=null&&!parent.name.StartsWith("AzerothCompanion_",StringComparison.Ordinal))parent=parent.parent;
+            if(parent==null)continue;
+            var mesh=renderer.GetComponent<MeshFilter>()?.sharedMesh;
+            if(mesh==null||mesh.vertexCount<=0||renderer.sharedMaterial==null||renderer.sharedMaterial.mainTexture==null)continue;
+            if(!renderers.TryGetValue(parent.name,out var roots))renderers[parent.name]=roots=new();roots.Add(parent.gameObject.GetInstanceID());
+        }
+        bool ready=true;
+        foreach(var row in expected)
+        {
+            int native=0;foreach(var pet in pets.EnumerateArray())
+                if(pet.GetProperty("DisplayId").GetInt32()==row.Key&&pet.GetProperty("Remaining").GetSingle()<0&&pet.GetProperty("HasSourceVisual").GetBoolean())native++;
+            int visible=names.TryGetValue(row.Key,out var name)&&renderers.TryGetValue(name,out var roots)?roots.Count:0;
+            if(native<row.Value||visible<row.Value)ready=false;
+            if(log)Plugin.Note("VISUAL permanent pet display="+row.Key+"; expected="+row.Value+"; runtimeAlive="+native+"; realVisibleBodies="+visible);
+        }
+        if(log)
+        {
+            Plugin.Note("VISUAL source pets="+pets.GetRawText());
+            Plugin.Note("VISUAL companion animation="+(string)Call("AzerothHeroes.HeroVisualBridge","AnimationDiagnostics"));
+            var talent=TypeNamed("MageTalents.TalentRuntime");Plugin.Note("VISUAL permanent-pet rebind counters="+(string)talent.GetProperty("DiagnosticsJson").GetValue(null));
+        }
+        return ready;
     }
     static string Safe(string value)=>value.Replace(':','-').Replace('/','-');
     static void Capture(string name)

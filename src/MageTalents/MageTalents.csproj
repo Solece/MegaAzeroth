@@ -10,6 +10,7 @@
   <Reference Include="$(BepInExRoot)/interop/Assembly-CSharp.dll"><Private>false</Private></Reference>
   <Reference Include="$(BepInExRoot)/interop/Il2Cppmscorlib.dll"><Private>false</Private></Reference>
   <Reference Include="$(BepInExRoot)/interop/Il2CppSystem.Core.dll"><Private>false</Private></Reference>
+  <None Update="catalogs/*.json"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></None>
   <None Update="mage-talents.json"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></None>
  </ItemGroup>
 </Project>

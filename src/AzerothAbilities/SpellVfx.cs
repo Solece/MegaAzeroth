@@ -69,7 +69,8 @@ internal static class SpellVfx
     }
     internal static void Initialize()
     {
-        root=Path.Combine(Paths.PluginPath,"AzerothAbilities","vfx");
+        var allHeroes=Path.Combine(Paths.GameRootPath,"AzerothHeroAssets","vfx","assets");
+        root=File.Exists(Path.Combine(allHeroes,"manifest.json"))?allHeroes:Path.Combine(Paths.PluginPath,"AzerothAbilities","vfx");
         using var json=JsonDocument.Parse(File.ReadAllText(Path.Combine(root,"manifest.json")));
         foreach(var t in json.RootElement.GetProperty("textures").EnumerateArray())sizes[t.GetProperty("key").GetString()]=(t.GetProperty("width").GetInt32(),t.GetProperty("height").GetInt32());
         foreach(var spell in json.RootElement.GetProperty("spells").EnumerateArray())
@@ -84,8 +85,9 @@ internal static class SpellVfx
             map[spell.GetProperty("id").GetString()]=stages;
         }
         ClassInjector.RegisterTypeInIl2Cpp<SourceSpellEffect>();
-        if(map.TryGetValue("frostbolt",out var frost))map["water_elemental"]=frost;
-        Plugin.Current.Log.LogInfo($"Source Mage VFX ready: {map.Count} spell mappings, {sizes.Count} original textures; native M2 geometry/particle parameters adapted to Unity.");
+        if(map.TryGetValue("frostbolt",out var frost)){map["water_elemental"]=frost;map["pet_water_elemental"]=frost;}
+        if(map.TryGetValue("fireball",out var fire))map["pet_imp"]=fire;
+        Plugin.Current.Log.LogInfo($"Source class VFX ready: {map.Count} spell mappings, {sizes.Count} original textures; native M2 geometry/particle parameters adapted to Unity.");
     }
     internal static Texture2D Texture(string key)
     {

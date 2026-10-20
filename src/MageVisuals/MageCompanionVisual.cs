@@ -13,6 +13,7 @@ namespace AzerothMegabonk.MageVisuals;
 // change native transforms, or replace native combat/AI ownership.
 public static class CreatureVisualBridge
 {
+ private static readonly Dictionary<int,string> Displays=new(){{165,"wolf"},{1959,"raptor"},{4449,"imp"},{5047,"felguard"},{776,"spirit_wolf"},{2078,"treant"},{110,"water_elemental"},{2281,"bear"},{892,"cat"},{856,"sheep"}};
  private static readonly Dictionary<string,Model> Models=new();
  public static string AnimationDiagnostics()=>System.Text.Json.JsonSerializer.Serialize(new{clock=MageAnimationClock.Snapshot(),creatures=Object.FindObjectsOfType<MageCompanionVisual>(true).Select(v=>v.AnimationState()).ToArray()});
  private static bool registered;
@@ -28,10 +29,13 @@ public static class CreatureVisualBridge
  internal static object AssetHealth()=>Models.Select(x=>new{key=x.Key,health=x.Value.Inspect()}).ToArray();
  internal static Model GetModel(string key)
  {
+  key=CanonicalKey(key);
   if(!Models.TryGetValue(key,out var model) || !model.IsUsable())
   {
-   model?.Release();model=Model.Load(Path.Combine(Paths.GameRootPath,"AzerothMageAssets",key));
-   if(key=="waterelemental")
+   string folder=Path.Combine(Paths.GameRootPath,"AzerothHeroAssets","creatures",key);
+   if(!File.Exists(Path.Combine(folder,"model.json")))folder=Path.Combine(Paths.GameRootPath,"AzerothMageAssets",key=="water_elemental"?"waterelemental":key);
+   model?.Release();model=Model.Load(folder);
+   if(key=="water_elemental")
    {
     // The source creature contains translucent water surfaces. Keep its source
     // RGBA alpha; do not turn transparent water strips into opaque polygons.
@@ -44,11 +48,23 @@ public static class CreatureVisualBridge
  }
  public static GameObject Create(string key,Vector3 position,float height=1.6f)
  {
-  Initialize();key=key.ToLowerInvariant();if(key!="sheep" && key!="waterelemental")throw new ArgumentException("Unknown original Mage creature pack",nameof(key));
+  Initialize();key=CanonicalKey(key);if(!Displays.Values.Contains(key))throw new ArgumentException("Unknown original source creature pack",nameof(key));
   var model=GetModel(key);
   var go=new GameObject("AzerothCompanion_"+key);go.transform.position=position;
   var visual=go.AddComponent<MageCompanionVisual>();visual.Bind(model,height);Created++;
-  Plugin.Logger.LogInfo($"Original Mage creature visual created: {key}; height={height}; source model and animation pack; no collider/AI created.");return go;
+  Plugin.Logger.LogInfo($"Original source creature visual created: {key}; height={height}; source model and animation pack; no collider/AI created.");return go;
+ }
+ private static string CanonicalKey(string key)=>key.ToLowerInvariant()=="waterelemental"?"water_elemental":key.ToLowerInvariant();
+ public static GameObject CreateByDisplayId(int displayId,Vector3 position,float height=1.6f)
+ {
+  if(!Displays.TryGetValue(displayId,out var key))throw new ArgumentException("Unknown verified source creature display ID",nameof(displayId));
+  return Create(key,position,height);
+ }
+ public static string CatalogDiagnostics()=>System.Text.Json.JsonSerializer.Serialize(new{sourceDisplays=Displays.Select(x=>new{displayId=x.Key,key=x.Value}).ToArray(),cached=AssetHealth(),created=Created});
+ public static float SourceHeight(int displayId)
+ {
+  if(!Displays.TryGetValue(displayId,out var key))throw new ArgumentException("Unknown verified source creature display ID",nameof(displayId));
+  return GetModel(key).Template.bounds.size.y;
  }
  public static void SetPosition(GameObject go,Vector3 position){if(go!=null)go.transform.position=position;}
  public static void SetFacing(GameObject go,Vector3 direction){if(go==null)return;direction.y=0;if(direction.sqrMagnitude>.001f)go.transform.rotation=Quaternion.LookRotation(direction);}

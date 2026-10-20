@@ -1,0 +1,2278 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "imp_eviscerate",
+      "name": "Improved Eviscerate",
+      "icon": "Ability_Rogue_Eviscerate",
+      "description": "Eviscerate deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716eaf8",
+      "effects": [
+        {
+          "sourceOffset": "0x716e440",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716f630",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x3da3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 0,
+          "spells": [
+            "eviscerate"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Eviscerate deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "malice",
+      "name": "Malice",
+      "icon": "Ability_Racial_BloodRage",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716eb60",
+      "effects": [
+        {
+          "sourceOffset": "0x7166e18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ruthlessness",
+      "name": "Ruthlessness",
+      "icon": "Ability_Druid_Disembowel",
+      "description": "You deal {v}% more damage to enemies below 30% health.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716ebc8",
+      "effects": [
+        {
+          "sourceOffset": "0x71666b8",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3dcccccd",
+            "0x14",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 20,
+          "value": 0.10000000149011612,
+          "statName": "damageVsBelowThirtyPercentHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "You deal {v}% more damage to enemies below 30% health.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "murder",
+      "name": "Murder",
+      "icon": "Spell_Shadow_DeathScream",
+      "description": "You deal {v}% more damage to elites and bosses.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716ec30",
+      "effects": [
+        {
+          "sourceOffset": "0x716e508",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d23d70a",
+            "0x13",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 19,
+          "value": 0.03999999910593033,
+          "statName": "damageVsElitesAndBosses",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "You deal {v}% more damage to elites and bosses.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "deadly_poison",
+      "name": "Deadly Poison",
+      "icon": "Ability_Rogue_DualWeild",
+      "description": "Milestone. Your strikes poison: every swing and every strike adds Deadly Poison, {v}% of the hit over 6 sec.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716ec98",
+      "effects": [
+        {
+          "sourceOffset": "0x716e580",
+          "tag": 9,
+          "rawPackedTag": 9,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x9",
+            "0xb02",
+            "0x3ecccccd",
+            "0x40c00000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "critDot",
+          "spellId": 2818,
+          "value": 0.4000000059604645,
+          "duration": 6.0,
+          "triggerEvent": 0,
+          "ticks": 6,
+          "interval": 1.0,
+          "sourceDotEvidence": "VA1459301CD event matcher consumes raw+16;145931CF0 roundf(duration) max1;145932A94 adds remaining same-effect damage;145884032..049 stores totalDamage/N and duration/N",
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your strikes poison: every swing and every strike adds Deadly Poison, {v}% of the hit over 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "lethality",
+      "name": "Lethality",
+      "icon": "Ability_CriticalStrike",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716ed00",
+      "effects": [
+        {
+          "sourceOffset": "0x716e658",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_poisons",
+      "name": "Improved Poisons",
+      "icon": "Ability_Poisons",
+      "description": "Rupture deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716ed68",
+      "effects": [
+        {
+          "sourceOffset": "0x716e6d0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716f8c2",
+            "0x1",
+            "0x7",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "spells": [
+            "rupture"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Rupture deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "vile_poisons",
+      "name": "Vile Poisons",
+      "icon": "Ability_Rogue_FeignDeath",
+      "description": "Your damage-over-time effects deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716edd0",
+      "effects": [
+        {
+          "sourceOffset": "0x716e760",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your damage-over-time effects deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "mutilate",
+      "name": "Mutilate",
+      "icon": "INV_Weapon_ShortBlade_05",
+      "description": "Milestone. Sinister Strike and Backstab strike with both blades: everything they hit is struck again at once for 50% of the blow.",
+      "prerequisite": "deadly_poison",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716ee38",
+      "effects": [
+        {
+          "sourceOffset": "0x716e838",
+          "tag": 7,
+          "rawPackedTag": 7,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x7",
+            "0x3f800000",
+            "0x1",
+            "0x3f000000",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x4716fa18",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "repeatedHit",
+          "chance": 1.0,
+          "count": 1,
+          "damageFactor": 0.5,
+          "spells": [
+            "sinister_strike",
+            "backstab"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Sinister Strike and Backstab strike with both blades: everything they hit is struck again at once for 50% of the blow.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "seal_fate",
+      "name": "Seal Fate",
+      "icon": "Spell_Shadow_ChillTouch",
+      "description": "{v}% chance for any spell to strike twice.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716eea0",
+      "effects": [
+        {
+          "sourceOffset": "0x716e928",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0xd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 13,
+          "value": 0.029999999329447746,
+          "statName": "echoChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "{v}% chance for any spell to strike twice.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "vigor",
+      "name": "Vigor",
+      "icon": "Spell_Nature_EarthBindTotem",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716ef08",
+      "effects": [
+        {
+          "sourceOffset": "0x7166260",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3f19999a",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.6000000238418579,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "remorseless",
+      "name": "Remorseless Attacks",
+      "icon": "Ability_FiegnDead",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716ef70",
+      "effects": [
+        {
+          "sourceOffset": "0x716e9c0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d23d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.03999999910593033,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "toxic_bloom",
+      "name": "Toxic Bloom",
+      "icon": "Spell_Nature_NullifyPoison",
+      "description": "Capstone. Enemies that die poisoned or bleeding burst in a toxic cloud for {v}% of their maximum health on everything within 7 yd.",
+      "prerequisite": "mutilate",
+      "tree": "Assassination",
+      "treeId": "RogueAssassination",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x716efd8",
+      "effects": [
+        {
+          "sourceOffset": "0x716ea30",
+          "tag": 11,
+          "rawPackedTag": 267,
+          "packedFlags": 1,
+          "rawWords": [
+            "0x10b",
+            "0x3e19999a",
+            "0x40e00000",
+            "0x524e",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killExplosion",
+          "value": 0.15000000596046448,
+          "radius": 7.0,
+          "spellId": 21070,
+          "maxPerSecond": 0,
+          "triggerOnAfflictedDeath": true,
+          "deathCondition": 1,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Enemies that die poisoned or bleeding burst in a toxic cloud for {v}% of their maximum health on everything within 7 yd.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "precision_rogue",
+      "name": "Precision",
+      "icon": "Ability_Marksmanship",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716f748",
+      "effects": [
+        {
+          "sourceOffset": "0x7166e18",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "lightning_reflexes_rogue",
+      "name": "Lightning Reflexes",
+      "icon": "Spell_Nature_Invisibilty",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x716f7b0",
+      "effects": [
+        {
+          "sourceOffset": "0x7165fd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.009999999776482582,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_sinister",
+      "name": "Improved Sinister Strike",
+      "icon": "Spell_Shadow_RitualOfSacrifice",
+      "description": "Sinister Strike deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716f818",
+      "effects": [
+        {
+          "sourceOffset": "0x716f0c8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716f9fc",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x3dcccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 0,
+          "spells": [
+            "sinister_strike"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Sinister Strike deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "endurance_rogue",
+      "name": "Endurance",
+      "icon": "Spell_Shadow_ShadowWard",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x716f880",
+      "effects": [
+        {
+          "sourceOffset": "0x716b060",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.014999999664723873,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "blade_flurry_talent",
+      "name": "Blade Flurry",
+      "icon": "Ability_Warrior_PunishingBlow",
+      "description": "Milestone. Sinister Strike and Eviscerate fly on: each hit also strikes 2 more enemies near its target for {v}% of it.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716f8e8",
+      "effects": [
+        {
+          "sourceOffset": "0x716f1c0",
+          "tag": 6,
+          "rawPackedTag": 6,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x6",
+            "0x2",
+            "0x3e800000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471703a0",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chain",
+          "targets": 2,
+          "damageFactor": 0.25,
+          "radius": 10.0,
+          "sourceRadiusEvidence": "VA14592FC05 loads raw5d4b760 f32=10; VA145931AB3 passes radius to target selection145964310",
+          "spells": [
+            "sinister_strike",
+            "eviscerate"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Sinister Strike and Eviscerate fly on: each hit also strikes 2 more enemies near its target for {v}% of it.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "damageFactor"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "dual_wield_rogue",
+      "name": "Dual Wield Specialization",
+      "icon": "Ability_DualWield",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x716f950",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "sword_spec_rogue",
+      "name": "Sword Specialization",
+      "icon": "INV_Sword_27",
+      "description": "{v}% chance for any spell to strike twice.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716f9b8",
+      "effects": [
+        {
+          "sourceOffset": "0x716f298",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0xd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 13,
+          "value": 0.012000000104308128,
+          "statName": "echoChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "{v}% chance for any spell to strike twice.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "weapon_expertise",
+      "name": "Weapon Expertise",
+      "icon": "Spell_Holy_BlessingOfStrength",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x716fa20",
+      "effects": [
+        {
+          "sourceOffset": "0x716c260",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.029999999329447746,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "adrenaline",
+      "name": "Adrenaline Rush",
+      "icon": "Spell_Shadow_ShadowWordDominate",
+      "description": "Milestone. Every {v}th kill floods you with adrenaline: a free Adrenaline Rush, your cooldowns 60% faster for 11 sec.",
+      "prerequisite": "blade_flurry_talent",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716fa88",
+      "effects": [
+        {
+          "sourceOffset": "0x716f360",
+          "tag": 1,
+          "rawPackedTag": 1,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1",
+            "0x14",
+            "0x0",
+            "0x0",
+            "0x4717054d",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "criticalCounterCast",
+          "count": 20,
+          "maxPerSecond": 0,
+          "spell": "adrenaline_rush",
+          "triggerEvent": 6,
+          "triggerEventName": "kill",
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Every {v}th kill floods you with adrenaline: a free Adrenaline Rush, your cooldowns 60% faster for 11 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "aggression",
+      "name": "Aggression",
+      "icon": "Ability_Racial_Avatar",
+      "description": "Sinister Strike and Eviscerate deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x716faf0",
+      "effects": [
+        {
+          "sourceOffset": "0x716f430",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471703a0",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d23d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 0,
+          "spells": [
+            "sinister_strike",
+            "eviscerate"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Sinister Strike and Eviscerate deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_slice_dice",
+      "name": "Improved Slice and Dice",
+      "icon": "Ability_Rogue_SliceDice",
+      "description": "Slice and Dice and Adrenaline Rush last {v}% longer.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716fb58",
+      "effects": [
+        {
+          "sourceOffset": "0x716f4f8",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471706d8",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3e19999a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.15000000596046448,
+          "modifier": 4,
+          "spells": [
+            "slice_and_dice",
+            "adrenaline_rush"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Slice and Dice and Adrenaline Rush last {v}% longer.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "riposte",
+      "name": "Riposte",
+      "icon": "Ability_Warrior_Challange",
+      "description": "When an enemy strikes you in melee, {v}% chance to answer with a free Ghostly Strike.",
+      "prerequisite": "",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x716fbc0",
+      "effects": [
+        {
+          "sourceOffset": "0x716f588",
+          "tag": 0,
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x0",
+            "0x3df5c28f",
+            "0x3f800000",
+            "0x0",
+            "0x4717077a",
+            "0x1",
+            "0xe",
+            "0x0",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.11999999731779099,
+          "internalCooldown": 1.0,
+          "spell": "ghostly_strike",
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 8,
+          "triggerEventName": "meleeDamageTaken",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "When an enemy strikes you in melee, {v}% chance to answer with a free Ghostly Strike.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "killing_spree",
+      "name": "Killing Spree",
+      "icon": "Ability_Rogue_Sprint",
+      "description": "Capstone. Sinister Strike strikes {v} more enemy, and you strike on your own: a free Sinister Strike every 3 sec.",
+      "prerequisite": "adrenaline",
+      "tree": "Combat",
+      "treeId": "RogueCombat",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x716fc28",
+      "effects": [
+        {
+          "sourceOffset": "0x716f650",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716f9fc",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x3f800000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 1.0,
+          "modifier": 2,
+          "spells": [
+            "sinister_strike"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Sinister Strike strikes {v} more enemy, and you strike on your own: a free Sinister Strike every 3 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x716f690",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40400000",
+            "0x4716f9fc",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 3.0,
+          "spell": "sinister_strike",
+          "periodicBaseCooldown": 1.0,
+          "periodicSpellSchool": "Physical",
+          "periodicSpellSourceOffset": "0x6b88a28",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. Sinister Strike strikes {v} more enemy, and you strike on your own: a free Sinister Strike every 3 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "master_deception",
+      "name": "Master of Deception",
+      "icon": "Spell_Shadow_Charm",
+      "description": "Increases your movement speed by {v}%.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x71703c0",
+      "effects": [
+        {
+          "sourceOffset": "0x716fcf0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 7,
+          "value": 0.014999999664723873,
+          "statName": "movementSpeed",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your movement speed by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "opportunity",
+      "name": "Opportunity",
+      "icon": "Ability_Warrior_WarCry",
+      "description": "Backstab deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7170428",
+      "effects": [
+        {
+          "sourceOffset": "0x716fd48",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4716fa0b",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x3d4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 0,
+          "spells": [
+            "backstab"
+          ],
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Backstab deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "elusiveness",
+      "name": "Elusiveness",
+      "icon": "Spell_Magic_LesserInvisibilty",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7170490",
+      "effects": [
+        {
+          "sourceOffset": "0x71692e0",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3c449ba6",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.012000000104308128,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "initiative",
+      "name": "Initiative",
+      "icon": "Spell_Shadow_Fumble",
+      "description": "Increases your luck by {v}%.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x71704f8",
+      "effects": [
+        {
+          "sourceOffset": "0x716fe08",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3d75c28f",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 12,
+          "value": 0.05999999865889549,
+          "statName": "luck",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your luck by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "cheat_death",
+      "name": "Cheat Death",
+      "icon": "Ability_Rogue_FeignDeath",
+      "description": "Milestone. A blow that would kill you leaves you at 25% health instead, and you fade into the shadows: nothing can touch you for 3 sec. Once every 2.5 min.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7170560",
+      "effects": [
+        {
+          "sourceOffset": "0x716fe80",
+          "tag": 19,
+          "rawPackedTag": 19,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x13",
+            "0x43160000",
+            "0x3e800000",
+            "0x40400000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "cheatDeath",
+          "interval": 150.0,
+          "value": 0.25,
+          "duration": 3.0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. A blow that would kill you leaves you at 25% health instead, and you fade into the shadows: nothing can touch you for 3 sec. Once every 2.5 min.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_ambush",
+      "name": "Improved Ambush",
+      "icon": "Ability_Rogue_Ambush",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71705c8",
+      "effects": [
+        {
+          "sourceOffset": "0x716e658",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "serrated_blades",
+      "name": "Serrated Blades",
+      "icon": "INV_Sword_17",
+      "description": "Your damage-over-time effects deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7170630",
+      "effects": [
+        {
+          "sourceOffset": "0x716ffa0",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x604",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 0,
+          "school": "sourceCastKind",
+          "filterDiscriminant": 4,
+          "filterPackedFlags": 6,
+          "filterCastKind": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter4 VA14593445D compares spell+0x75 against filter+1, lookup excludes sourceKind2(pet) at14593432E..338. Direct match also1458ECC19..29",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your damage-over-time effects deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "setup",
+      "name": "Setup",
+      "icon": "Spell_Nature_MirrorImage",
+      "description": "Kidney Shot and Gouge cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7170698",
+      "effects": [
+        {
+          "sourceOffset": "0x7170020",
+          "tag": 31,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47171200",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 1,
+          "spells": [
+            "kidney_shot",
+            "gouge"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Kidney Shot and Gouge cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "preparation",
+      "name": "Preparation",
+      "icon": "Spell_Shadow_AntiShadow",
+      "description": "Milestone. A free Gouge stuns the enemies around you every 6 sec.",
+      "prerequisite": "cheat_death",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7170700",
+      "effects": [
+        {
+          "sourceOffset": "0x71700c0",
+          "tag": 26,
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1a",
+            "0x40c00000",
+            "0x471711f5",
+            "0x1",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 6.0,
+          "spell": "gouge",
+          "periodicBaseCooldown": 5.0,
+          "periodicSpellSchool": "Physical",
+          "periodicSpellSourceOffset": "0x6b88c80",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. A free Gouge stuns the enemies around you every 6 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "dirty_deeds",
+      "name": "Dirty Deeds",
+      "icon": "Spell_Shadow_SummonSuccubus",
+      "description": "You deal {v}% more damage to stunned, rooted, slowed or fleeing enemies.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7170768",
+      "effects": [
+        {
+          "sourceOffset": "0x7170178",
+          "tag": 30,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x12",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 18,
+          "value": 0.07999999821186066,
+          "statName": "damageVsControlled",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "You deal {v}% more damage to stunned, rooted, slowed or fleeing enemies.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "deadliness",
+      "name": "Deadliness",
+      "icon": "INV_Weapon_Crossbow_07",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71707d0",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "heightened_senses",
+      "name": "Heightened Senses",
+      "icon": "Ability_Ambush",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7170838",
+      "effects": [
+        {
+          "sourceOffset": "0x7169cb8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3d23d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.03999999910593033,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shadow_dance",
+      "name": "Shadow Dance",
+      "icon": "Spell_Shadow_LifeDrain",
+      "description": "Capstone. You start every run with Backstab, and Backstab and Eviscerate splash {v}% of their damage onto every enemy within 5 yd of their target.",
+      "prerequisite": "preparation",
+      "tree": "Subtlety",
+      "treeId": "RogueSubtlety",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x71708a0",
+      "effects": [
+        {
+          "sourceOffset": "0x71702a8",
+          "tag": 27,
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x4716fa0b",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "backstab",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Backstab, and Backstab and Eviscerate splash {v}% of their damage onto every enemy within 5 yd of their target.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x71702e8",
+          "tag": 4,
+          "rawPackedTag": 4,
+          "packedFlags": 0,
+          "rawWords": [
+            "0x4",
+            "0x3e4ccccd",
+            "0x40a00000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47171488",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "impactSplash",
+          "value": 0.20000000298023224,
+          "radius": 5.0,
+          "spells": [
+            "backstab",
+            "eviscerate"
+          ],
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Backstab, and Backstab and Eviscerate splash {v}% of their damage onto every enemy within 5 yd of their target.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "rogue",
+  "trees": [
+    {
+      "id": "RogueAssassination",
+      "name": "Assassination",
+      "icon": "Ability_Rogue_Eviscerate",
+      "sourceOffset": "0x717d270",
+      "sourceNodesOffset": "0x716eaf8",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "RogueCombat",
+      "name": "Combat",
+      "icon": "Ability_BackStab",
+      "sourceOffset": "0x717d2b0",
+      "sourceNodesOffset": "0x716f748",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "RogueSubtlety",
+      "name": "Subtlety",
+      "icon": "Ability_Stealth",
+      "sourceOffset": "0x717d2f0",
+      "sourceNodesOffset": "0x71703c0",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b86970",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}

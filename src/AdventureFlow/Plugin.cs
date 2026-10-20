@@ -32,7 +32,7 @@ public sealed class Plugin:BasePlugin
     {
         Current=this;
         var args=Environment.GetCommandLineArgs();TestBattle=args.Contains("-azeroth-test-battle");
-        Smoke=args.Contains("-azeroth-adventure-smoke") && Application.isBatchMode;
+        Smoke=args.Contains("-azeroth-adventure-smoke") && Application.isBatchMode && Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")=="1";
         Report=Path.GetFullPath(Path.Combine(Paths.GameRootPath,"../reports",Smoke?"adventure-smoke.log":"adventure-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".log"));
         Directory.CreateDirectory(Path.GetDirectoryName(Report));
         File.WriteAllText(Report,DateTimeOffset.Now+" Native adventure enabled; map/tier visibility is temporary; no fake completion records.\n");
@@ -132,7 +132,7 @@ public static class AdventureBridge
     public static string Describe()
     {
         var map=MapController.currentMap;var p=MyPlayer.Instance;
-        return JsonSerializer.Serialize(new{scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,map=map?.name,stage=MapController.currentStage?.name,stageIndex=MapController.GetStageIndex(),tierIndex=MapController.runConfig?.mapTierIndex,stages=map?.stages?.Length,finalArena=MapController.IsFinalBossStage(),inventory=p?.inventory?.Pointer.ToInt64(),mage=HudBridge.Active,spells=HudBridge.SpellIds,ranks=HudBridge.SpellRanks,books=InventoryUtility.GetNumAvailableTomeSlots(),portals=Object.FindObjectsOfType<InteractablePortal>().Count(x=>x.gameObject.activeInHierarchy),finalGates=Object.FindObjectsOfType<InteractableBossSpawnerFinal>().Count(x=>x.gameObject.activeInHierarchy),finalBosses=Object.FindObjectsOfType<Enemy>().Count(x=>x.IsFinalBoss() && !x.IsDeadOrDyingNextFrame())});
+        return JsonSerializer.Serialize(new{scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,map=map?.name,stage=MapController.currentStage?.name,stageIndex=MapController.GetStageIndex(),tierIndex=MapController.runConfig?.mapTierIndex,stages=map?.stages?.Length,finalArena=MapController.IsFinalBossStage(),inventory=p?.inventory?.Pointer.ToInt64(),mage=HudBridge.Active,classId=HudBridge.ClassId,spells=HudBridge.SpellIds,ranks=HudBridge.SpellRanks,books=InventoryUtility.GetNumAvailableTomeSlots(),portals=Object.FindObjectsOfType<InteractablePortal>().Count(x=>x.gameObject.activeInHierarchy),finalGates=Object.FindObjectsOfType<InteractableBossSpawnerFinal>().Count(x=>x.gameObject.activeInHierarchy),finalBosses=Object.FindObjectsOfType<Enemy>().Count(x=>x.IsFinalBoss() && !x.IsDeadOrDyingNextFrame())});
     }
     public static string DescribeMaps()
     {
@@ -169,7 +169,7 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
 {
     public AdventureSmokeRunner(IntPtr pointer):base(pointer){}
     float began,next,deadline;int state,fromStage=-1,stagesVerified,bossesKilled,errors,upgradeProbeAttempts;bool seeded;
-    string[] expectedIds;int[] expectedRanks;long expectedInventory;
+    string[] expectedIds;int[] expectedRanks;long expectedInventory;string sourceClassId;int expectedTalentSpent;
     void Start(){began=Time.realtimeSinceStartup;next=began+1;Application.runInBackground=true;Application.targetFrameRate=30;QualitySettings.vSyncCount=0;}
     void Update()
     {
@@ -197,8 +197,16 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
             {
                 if(!seeded)
                 {
-                    if(!HudBridge.LearnSpellForProbe("fireball") || !HudBridge.LearnSpellForProbe("arcane_missiles") || !HudBridge.ApplyUpgradeForProbe("arcane_missiles",0,2))throw new InvalidOperationException("Cannot seed learned-rank transition probe");
+                    sourceClassId=HudBridge.ClassId;
+                    if(!ClassAbilityDiagnostics.LearnAllForProbe())throw new InvalidOperationException("Cannot learn original current-class catalog for transition probe");
+                    var sourceCatalog=VisualTransitionProbe.ActiveCatalog;
+                    var seed=sourceCatalog.Spells.FirstOrDefault(s=>s.AllowedUpgrades.Contains(0))??sourceCatalog.Spells.FirstOrDefault(s=>s.AllowedUpgrades.Length>0);
+                    if(seed==null || !HudBridge.ApplyUpgradeForProbe(seed.Id,seed.AllowedUpgrades.Contains(0)?0:seed.AllowedUpgrades[0],2))throw new InvalidOperationException("Cannot seed original current-class learned-rank transition probe");
                     expectedIds=HudBridge.SpellIds;expectedRanks=HudBridge.SpellRanks;expectedInventory=player.inventory.Pointer.ToInt64();seeded=true;
+                    var talentType=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("MageTalents.TalentBridge",false)).FirstOrDefault(x=>x!=null);
+                    if(talentType==null)throw new InvalidOperationException("Original class talent bridge absent");
+                    expectedTalentSpent=(int)talentType.GetProperty("SpentPoints").GetValue(null);
+                    Plugin.Note("Probe source class="+sourceClassId+"; catalogSpells="+sourceCatalog.Spells.Count+"; learned="+expectedIds.Length+"; upgraded="+seed.Id+"; talentSpent="+expectedTalentSpent);
                     Plugin.Note("Probe map availability: "+AdventureBridge.DescribeMaps());
                 }
                 if(VisualTransitionProbe.Enabled)
@@ -217,7 +225,7 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
                 Verify();var final=Object.FindObjectsOfType<Enemy>().FirstOrDefault(e=>e.IsFinalBoss() && !e.IsDeadOrDyingNextFrame());
                 if(final==null){if(deadline==0)deadline=Time.realtimeSinceStartup+45;if(Time.realtimeSinceStartup>deadline)throw new InvalidOperationException("Final arena loaded but no native final boss spawned");return;}
                 if(!VisualTransitionProbe.BossReady(final))return;
-                Plugin.Note($"PASS: native stages verified={stagesVerified}; stage bosses killed={bossesKilled}; FinalBossMap loaded, live final boss={final.enemyData?.name} hp={final.hp}/{final.maxHp}; Mage spell ranks/talents/books retained; no OS input.");
+                Plugin.Note($"PASS: native stages verified={stagesVerified}; stage bosses killed={bossesKilled}; FinalBossMap loaded, live final boss={final.enemyData?.name} hp={final.hp}/{final.maxHp}; {sourceClassId} learned={expectedIds.Length} spell ranks/talents/books retained; no OS input.");
                 state=9;Application.Quit();return;
             }
             if(state==1)
@@ -256,12 +264,13 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
     [HideFromIl2Cpp]
     void Verify()
     {
-        if(!HudBridge.Active || InventoryUtility.GetNumAvailableTomeSlots()!=4)throw new InvalidOperationException("Mage/four tome slots lost across native stage");
+        if(!HudBridge.Active || HudBridge.ClassId!=sourceClassId || InventoryUtility.GetNumAvailableTomeSlots()!=4)throw new InvalidOperationException("Original source class/four tome slots lost across native stage");
+        if(HudBridge.SpellIds.Length<expectedIds.Length)throw new InvalidOperationException("Original class learned-spell count decreased across native stage");
         for(int i=0;i<expectedIds.Length;i++)
         {int j=Array.IndexOf(HudBridge.SpellIds,expectedIds[i]);if(j<0 || HudBridge.SpellRanks[j]<expectedRanks[i])throw new InvalidOperationException("Learned spell/rank lost: "+expectedIds[i]);}
         var talent=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("MageTalents.TalentBridge",false)).FirstOrDefault(x=>x!=null);
         int spent=talent==null?0:(int)talent.GetProperty("SpentPoints").GetValue(null);
-        if(Environment.GetCommandLineArgs().Contains("-azeroth-talents-max") && spent!=121)throw new InvalidOperationException("Maxed talent allocation lost across stage");
+        if(Environment.GetCommandLineArgs().Contains("-azeroth-talents-max") && spent!=expectedTalentSpent)throw new InvalidOperationException("Maxed original class talent allocation lost across stage: "+spent+" vs "+expectedTalentSpent);
         stagesVerified++;Plugin.Note("PASS native stage ready: "+AdventureBridge.Describe()+$"; originalInventory={expectedInventory}; talentSpent={spent}");
     }
 }

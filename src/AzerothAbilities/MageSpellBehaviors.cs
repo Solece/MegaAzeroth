@@ -59,7 +59,7 @@ public static class MageSpellBehaviors
             Controls[enemy.Pointer]=c=new Control{Enemy=enemy,Id=enemy.id};
         return c;
     }
-    public static bool IsSheep(Enemy enemy)=>enemy!=null && Controls.TryGetValue(enemy.Pointer,out var c)
+    public static bool IsSheep(Enemy enemy)=>ClassCombat.GenericActive?ClassPassives.IsSheep(enemy):enemy!=null && Controls.TryGetValue(enemy.Pointer,out var c)
         && c.Id==enemy.id && c.SheepUntil>CombatSimulation.Time;
     public static bool IsControlled(Enemy enemy)
     {
@@ -204,6 +204,7 @@ public static class MageSpellBehaviors
     }
     internal static bool Wander(EnemyMovementRb movement)
     {
+        if(ClassCombat.GenericActive)return false;
         var enemy=movement.enemy;if(!AbilityRuntime.Active || !IsSheep(enemy))return false;
         var c=Get(enemy);
         if(CombatSimulation.Time>=c.ChangeDirection)
@@ -232,7 +233,7 @@ internal static class AzerothSheepMovementPatch
 [HarmonyPatch(typeof(PlayerHealth),nameof(PlayerHealth.DamagePlayer))]
 internal static class AzerothSheepContactPatch
 {
-    private static bool Prefix(Enemy enemy)=>!AbilityRuntime.Active || !MageSpellBehaviors.IsSheep(enemy);
+    private static bool Prefix(Enemy __0)=>!AbilityRuntime.Active || !MageSpellBehaviors.IsSheep(__0);
 }
 [HarmonyPatch(typeof(SpecialAttackController),"UseSpecialAttack")]
 internal static class AzerothSheepSpecialAttackPatch
@@ -242,5 +243,5 @@ internal static class AzerothSheepSpecialAttackPatch
 [HarmonyPatch(typeof(PlayerHealth),"Damage")]
 internal static class AzerothBarrierPatch
 {
-    private static void Prefix(DamageContainer dc)=>MageSpellBehaviors.Absorb(dc);
+    private static void Prefix(DamageContainer __0)=>MageSpellBehaviors.Absorb(__0);
 }

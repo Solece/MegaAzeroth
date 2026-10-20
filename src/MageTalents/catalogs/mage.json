@@ -1,0 +1,2502 @@
+{
+  "sourceSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "v0.102.3 (f78e6fab)",
+  "source": "D:/Games/Saitan/AzerothSurvivorsWindowsNew/AzerothSurvivors/AzerothSurvivors.exe",
+  "nodeStride": 104,
+  "effectStride": 64,
+  "maxPoints": 51,
+  "pointXpFirst": 80,
+  "pointXpStep": 15,
+  "progressEvidence": [
+    "native145887D50..145887EE1",
+    "native145887F80..145888000",
+    "native14587D0F0..14587D482",
+    "native1402A4EB0..1402A4F3F"
+  ],
+  "baselineReward": {
+    "secondsCoefficient": 0.2,
+    "normalizedKillsCoefficient": 0.1,
+    "bossesCoefficient": 40,
+    "winBonus": 200,
+    "zoneIndex": 0,
+    "runOptionsMultiplier": 1,
+    "accountPerkMultiplier": 1
+  },
+  "talents": [
+    {
+      "id": "arcane_focus",
+      "name": "Arcane Focus",
+      "icon": "Spell_Holy_Devotion",
+      "description": "Arcane spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7175f50",
+      "effects": [
+        {
+          "sourceOffset": "0x7175760",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x603",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 0,
+          "school": "Arcane",
+          "rawFilter": 1539,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 6,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Arcane spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_subtlety",
+      "name": "Arcane Subtlety",
+      "icon": "Spell_Holy_DispelMagic",
+      "description": "Increases your luck by {v}%.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7175fb8",
+      "effects": [
+        {
+          "sourceOffset": "0x7170e68",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0xc",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 12,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "luck",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your luck by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_arcane_explosion",
+      "name": "Improved Arcane Explosion",
+      "icon": "Spell_Nature_WispSplode",
+      "description": "Arcane Explosion reaches {v}% farther.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7176020",
+      "effects": [
+        {
+          "sourceOffset": "0x7175838",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47176a25",
+            "0x1",
+            "0x10",
+            "0x0",
+            "0x3df5c28f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.11999999731779099,
+          "modifier": 3,
+          "spells": [
+            "arcane_explosion"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Arcane Explosion reaches {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "magic_absorption",
+      "name": "Magic Absorption",
+      "icon": "Spell_Nature_AstralRecalGroup",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7176088",
+      "effects": [
+        {
+          "sourceOffset": "0x7169cb8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3d23d70a",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.03999999910593033,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_concentration",
+      "name": "Arcane Concentration",
+      "icon": "Spell_Shadow_ManaBurn",
+      "description": "Milestone. Clearcasting: every spell you cast has a {v}% chance to set off a free Arcane Explosion.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x71760f0",
+      "effects": [
+        {
+          "sourceOffset": "0x7175918",
+          "tag": 0,
+          "rawWords": [
+            "0x0",
+            "0x3e99999a",
+            "0x0",
+            "0x0",
+            "0x47176a25",
+            "0x1",
+            "0x10",
+            "0x0",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "castProc",
+          "chance": 0.30000001192092896,
+          "spell": "arcane_explosion",
+          "rawPackedTag": 0,
+          "packedFlags": 0,
+          "internalCooldown": 0.0,
+          "repeatTriggeringSpell": false,
+          "triggerEvent": 7,
+          "triggerEventName": "cast",
+          "eventValue": 0.0,
+          "school": "all",
+          "filterDiscriminant": 0,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Clearcasting: every spell you cast has a {v}% chance to set off a free Arcane Explosion.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_meditation",
+      "name": "Arcane Meditation",
+      "icon": "Spell_Shadow_SiphonMana",
+      "description": "Regenerate {v} more health per second.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7176158",
+      "effects": [
+        {
+          "sourceOffset": "0x7166260",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3f19999a",
+            "0x6",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 6,
+          "value": 0.6000000238418579,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "healthPerSecond",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Regenerate {v} more health per second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_mind",
+      "name": "Arcane Mind",
+      "icon": "Spell_Shadow_Charm",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x71761c0",
+      "effects": [
+        {
+          "sourceOffset": "0x7175a10",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.02500000037252903,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_blink",
+      "name": "Improved Blink",
+      "icon": "Spell_Arcane_Blink",
+      "description": "Increases your movement speed by {v}%.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7176228",
+      "effects": [
+        {
+          "sourceOffset": "0x716dac8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x7",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 7,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "movementSpeed",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your movement speed by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "presence_of_mind",
+      "name": "Presence of Mind",
+      "icon": "Spell_Nature_EnchantArmor",
+      "description": "Milestone. Arcane Missiles fires {v} more missiles, and each missile leaps on to another enemy for its full damage.",
+      "prerequisite": "arcane_concentration",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7176290",
+      "effects": [
+        {
+          "sourceOffset": "0x7175aa8",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47176c99",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x40000000",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 2.0,
+          "modifier": 2,
+          "spells": [
+            "arcane_missiles"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Arcane Missiles fires {v} more missiles, and each missile leaps on to another enemy for its full damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7175ae8",
+          "tag": 6,
+          "rawWords": [
+            "0x6",
+            "0x1",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47176c99",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "chain",
+          "targets": 1,
+          "damageFactor": 1.0,
+          "spells": [
+            "arcane_missiles"
+          ],
+          "rawPackedTag": 6,
+          "packedFlags": 0,
+          "radius": 10.0,
+          "sourceRadiusEvidence": "VA14592FC05 loads raw5d4b760 f32=10; VA145931AB3 passes radius to target selection145964310",
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Arcane Missiles fires {v} more missiles, and each missile leaps on to another enemy for its full damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "damageFactor"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_instability",
+      "name": "Arcane Instability",
+      "icon": "Spell_Shadow_Teleport",
+      "description": "Increases all damage and your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x71762f8",
+      "effects": [
+        {
+          "sourceOffset": "0x7175bd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage and your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7175c18",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.009999999776482582,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage and your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_fortitude",
+      "name": "Arcane Fortitude",
+      "icon": "Spell_Arcane_ArcaneResilience",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7176360",
+      "effects": [
+        {
+          "sourceOffset": "0x7175cd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.02500000037252903,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_reach",
+      "name": "Arcane Reach",
+      "icon": "Spell_Arcane_StarFire",
+      "description": "{v}% chance for any spell to strike twice.",
+      "prerequisite": "",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71763c8",
+      "effects": [
+        {
+          "sourceOffset": "0x7175d48",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0xd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 13,
+          "value": 0.02500000037252903,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "echoChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "{v}% chance for any spell to strike twice.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arcane_power",
+      "name": "Arcane Power",
+      "icon": "Spell_Nature_Lightning",
+      "description": "Capstone. You start every run with Arcane Missiles instead of Fireball, and your spells strike twice {v}% more often. Your echoes cascade: a spell that strikes twice by chance rolls again to strike once more, up to 3 more times in a row.",
+      "prerequisite": "presence_of_mind",
+      "tree": "Arcane",
+      "treeId": "MageArcane",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7176430",
+      "effects": [
+        {
+          "sourceOffset": "0x7175da0",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3e4ccccd",
+            "0xd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 13,
+          "value": 0.20000000298023224,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "echoChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Arcane Missiles instead of Fireball, and your spells strike twice {v}% more often. Your echoes cascade: a spell that strikes twice by chance rolls again to strike once more, up to 3 more times in a row.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7175de0",
+          "tag": 24,
+          "rawWords": [
+            "0x18",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "cascade",
+          "maxAdditional": 3,
+          "rawPackedTag": 24,
+          "packedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Arcane Missiles instead of Fireball, and your spells strike twice {v}% more often. Your echoes cascade: a spell that strikes twice by chance rolls again to strike once more, up to 3 more times in a row.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7175e20",
+          "tag": 28,
+          "rawWords": [
+            "0x1c",
+            "0x0",
+            "0x47176c99",
+            "0x1",
+            "0xf",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "arcane_missiles",
+          "rawPackedTag": 28,
+          "packedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Arcane Missiles instead of Fireball, and your spells strike twice {v}% more often. Your echoes cascade: a spell that strikes twice by chance rolls again to strike once more, up to 3 more times in a row.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_fireball",
+      "name": "Improved Fireball",
+      "icon": "Spell_Fire_FlameBolt",
+      "description": "Fireball's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7176c68",
+      "effects": [
+        {
+          "sourceOffset": "0x71764f8",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x471776ea",
+            "0x1",
+            "0x8",
+            "0x0",
+            "0x3d23d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 1,
+          "spells": [
+            "fireball"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fireball's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "impact",
+      "name": "Impact",
+      "icon": "Spell_Fire_MeteorStorm",
+      "description": "Your Fire spells have a {v}% chance to stun what they hit for 1 sec.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7176cd0",
+      "effects": [
+        {
+          "sourceOffset": "0x7176580",
+          "tag": 8,
+          "rawWords": [
+            "0x8",
+            "0x3ca3d70a",
+            "0x3",
+            "0x3f800000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 0.019999999552965164,
+          "status": 3,
+          "duration": 1.0,
+          "school": "Fire",
+          "rawFilter": 515,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "statusValue": 1.0,
+          "statusDuration": 0.0,
+          "triggerEvent": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your Fire spells have a {v}% chance to stun what they hit for 1 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "flame_throwing",
+      "name": "Flame Throwing",
+      "icon": "Spell_Fire_Flare",
+      "description": "Fire spells cover {v}% more ground.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 2,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7176d38",
+      "effects": [
+        {
+          "sourceOffset": "0x7176630",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d75c28f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 3,
+          "school": "Fire",
+          "rawFilter": 515,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fire spells cover {v}% more ground.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_flamestrike",
+      "name": "Improved Flamestrike",
+      "icon": "Spell_Fire_SoulBurn",
+      "description": "Flamestrike and Blast Wave deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7176da0",
+      "effects": [
+        {
+          "sourceOffset": "0x7176700",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x471778e0",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3d75c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05999999865889549,
+          "modifier": 0,
+          "spells": [
+            "flamestrike",
+            "blast_wave"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Flamestrike and Blast Wave deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ignite",
+      "name": "Ignite",
+      "icon": "Spell_Fire_Incinerate",
+      "description": "Milestone. Your Fire critical strikes ignite the target for {v}% of the hit over 4 sec.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7176e08",
+      "effects": [
+        {
+          "sourceOffset": "0x7176798",
+          "tag": 9,
+          "rawWords": [
+            "0x9",
+            "0x316e",
+            "0x3f4ccccd",
+            "0x40800000",
+            "0x2",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "critDot",
+          "spellId": 12654,
+          "value": 0.800000011920929,
+          "duration": 4.0,
+          "ticks": 4,
+          "school": "Fire",
+          "rawFilter": 515,
+          "rawPackedTag": 9,
+          "packedFlags": 0,
+          "triggerEvent": 2,
+          "interval": 1.0,
+          "sourceDotEvidence": "VA1459301CD event matcher consumes raw+16;145931CF0 roundf(duration) max1;145932A94 adds remaining same-effect damage;145884032..049 stores totalDamage/N and duration/N",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your Fire critical strikes ignite the target for {v}% of the hit over 4 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "incinerate",
+      "name": "Incinerate",
+      "icon": "Spell_Fire_FlameShock",
+      "description": "Fire Blast deals {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7176e70",
+      "effects": [
+        {
+          "sourceOffset": "0x7176868",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x47177a58",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x3df5c28f",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.11999999731779099,
+          "modifier": 0,
+          "spells": [
+            "fire_blast"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fire Blast deals {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "master_elements",
+      "name": "Master of Elements",
+      "icon": "Spell_Fire_MasterOfElements",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7176ed8",
+      "effects": [
+        {
+          "sourceOffset": "0x716e658",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3da3d70a",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.07999999821186066,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "critical_mass",
+      "name": "Critical Mass",
+      "icon": "Spell_Nature_WispHeal",
+      "description": "Increases your critical strike chance by {v}%.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7176f40",
+      "effects": [
+        {
+          "sourceOffset": "0x716b340",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c75c28f",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 3,
+          "value": 0.014999999664723873,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalChance",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike chance by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "hot_streak",
+      "name": "Hot Streak",
+      "icon": "Spell_Fire_Fireball",
+      "description": "Milestone. Every fourth Fire critical strike casts a free Pyroblast, at most twice a second.",
+      "prerequisite": "ignite",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7176fa8",
+      "effects": [
+        {
+          "sourceOffset": "0x7176940",
+          "tag": 1,
+          "rawWords": [
+            "0x1",
+            "0x4",
+            "0x2",
+            "0x0",
+            "0x47177b34",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "criticalCounterCast",
+          "count": 4,
+          "maxPerSecond": 2,
+          "spell": "pyroblast",
+          "school": "Fire",
+          "rawFilter": 515,
+          "rawPackedTag": 1,
+          "packedFlags": 0,
+          "triggerEvent": 2,
+          "triggerEventName": "criticalHit",
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Every fourth Fire critical strike casts a free Pyroblast, at most twice a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "fire_power",
+      "name": "Fire Power",
+      "icon": "Spell_Fire_Immolation",
+      "description": "Fire spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7177010",
+      "effects": [
+        {
+          "sourceOffset": "0x71769f0",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d23d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 0,
+          "school": "Fire",
+          "rawFilter": 515,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Fire spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "burning_soul",
+      "name": "Burning Soul",
+      "icon": "Spell_Fire_Fire",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7177078",
+      "effects": [
+        {
+          "sourceOffset": "0x7167d40",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_blast_wave",
+      "name": "Improved Blast Wave",
+      "icon": "Spell_Holy_Excorcism_02",
+      "description": "Blast Wave and Pyroblast cooldowns are {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x71770e0",
+      "effects": [
+        {
+          "sourceOffset": "0x7176a98",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47177c78",
+            "0x1",
+            "0x2",
+            "0x0",
+            "0x3da3d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.07999999821186066,
+          "modifier": 1,
+          "spells": [
+            "blast_wave",
+            "pyroblast"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Blast Wave and Pyroblast cooldowns are {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "pyroclasm",
+      "name": "Pyroclasm",
+      "icon": "Spell_Fire_Fireball02",
+      "description": "Capstone. You start every run with Pyroblast, and enemies killed by your Fire spells explode for {v}% of their maximum health on everything within 6 yd, at most 3 a second.",
+      "prerequisite": "hot_streak",
+      "tree": "Fire",
+      "treeId": "MageFire",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7177148",
+      "effects": [
+        {
+          "sourceOffset": "0x7176b38",
+          "tag": 11,
+          "rawWords": [
+            "0xb",
+            "0x3e800000",
+            "0x40c00000",
+            "0x2b69",
+            "0x3",
+            "0x0",
+            "0x203",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "killExplosion",
+          "value": 0.25,
+          "radius": 6.0,
+          "spellId": 11113,
+          "maxPerSecond": 3,
+          "school": "Fire",
+          "rawFilter": 515,
+          "rawPackedTag": 11,
+          "packedFlags": 0,
+          "triggerOnAfflictedDeath": false,
+          "deathCondition": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 2,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Pyroblast, and enemies killed by your Fire spells explode for {v}% of their maximum health on everything within 6 yd, at most 3 a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7176b78",
+          "tag": 27,
+          "rawWords": [
+            "0x1b",
+            "0x0",
+            "0x47177b34",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "pyroblast",
+          "rawPackedTag": 27,
+          "packedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Pyroblast, and enemies killed by your Fire spells explode for {v}% of their maximum health on everything within 6 yd, at most 3 a second.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "frost_warding",
+      "name": "Frost Warding",
+      "icon": "Spell_Frost_FrostWard",
+      "description": "Reduces all damage taken by {v}%.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 0,
+      "column": 1,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x7177940",
+      "effects": [
+        {
+          "sourceOffset": "0x7165fd8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3c23d70a",
+            "0x5",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 5,
+          "value": 0.009999999776482582,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageReduction",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Reduces all damage taken by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_frostbolt",
+      "name": "Improved Frostbolt",
+      "icon": "Spell_Frost_FrostBolt02",
+      "description": "Frostbolt's cooldown is {v}% shorter.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 0,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 0,
+      "sourceOffset": "0x71779a8",
+      "effects": [
+        {
+          "sourceOffset": "0x7177218",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717840e",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x3d23d70a",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.03999999910593033,
+          "modifier": 1,
+          "spells": [
+            "frostbolt"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Frostbolt's cooldown is {v}% shorter.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "elemental_precision",
+      "name": "Elemental Precision",
+      "icon": "Spell_Ice_MagicDamage",
+      "description": "Increases all damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 1,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7177a10",
+      "effects": [
+        {
+          "sourceOffset": "0x7167228",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ca3d70a",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 0,
+          "value": 0.019999999552965164,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "allDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases all damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "ice_shards",
+      "name": "Ice Shards",
+      "icon": "Spell_Frost_IceShard",
+      "description": "Increases your critical strike damage by {v}%.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "requiredTreePoints": 5,
+      "sourceOffset": "0x7177a78",
+      "effects": [
+        {
+          "sourceOffset": "0x716cbe8",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3d75c28f",
+            "0x4",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 4,
+          "value": 0.05999999865889549,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "criticalDamage",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your critical strike damage by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "frostbite",
+      "name": "Frostbite",
+      "icon": "Spell_Frost_FrostArmor",
+      "description": "Milestone. Your Frost spells have a {v}% chance to freeze what they hit in place for 1.5 sec.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 2,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7177ae0",
+      "effects": [
+        {
+          "sourceOffset": "0x7177308",
+          "tag": 8,
+          "rawWords": [
+            "0x8",
+            "0x3ecccccd",
+            "0x2",
+            "0x3fc00000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x403",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "hitStatus",
+          "chance": 0.4000000059604645,
+          "status": 2,
+          "duration": 1.5,
+          "school": "Frost",
+          "rawFilter": 1027,
+          "rawPackedTag": 8,
+          "packedFlags": 0,
+          "statusValue": 1.5,
+          "statusDuration": 0.0,
+          "triggerEvent": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 4,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Your Frost spells have a {v}% chance to freeze what they hit in place for 1.5 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "chance"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "piercing_ice",
+      "name": "Piercing Ice",
+      "icon": "Spell_Frost_Frostbolt",
+      "description": "Frost spells deal {v}% more damage.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 10,
+      "sourceOffset": "0x7177b48",
+      "effects": [
+        {
+          "sourceOffset": "0x71773d8",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x403",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x3d4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.05000000074505806,
+          "modifier": 0,
+          "school": "Frost",
+          "rawFilter": 1027,
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 3,
+          "filterPackedFlags": 4,
+          "excludePets": true,
+          "filterSemanticEvidence": "Native filter predicate VA145934311..14593431F compares school byte1 and rejects sourceKind2(pet)",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Frost spells deal {v}% more damage.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "shatter",
+      "name": "Shatter",
+      "icon": "Spell_Frost_FrostShock",
+      "description": "You deal {v}% more damage to frozen, stunned, slowed or fleeing enemies.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 3,
+      "column": 0,
+      "maxRank": 5,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7177bb0",
+      "effects": [
+        {
+          "sourceOffset": "0x7177460",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3d4ccccd",
+            "0x12",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 18,
+          "value": 0.05000000074505806,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "damageVsControlled",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "You deal {v}% more damage to frozen, stunned, slowed or fleeing enemies.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "arctic_reach",
+      "name": "Arctic Reach",
+      "icon": "Spell_Shadow_DarkRitual",
+      "description": "Frost Nova, Cone of Cold and Blizzard reach {v}% farther.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "requiredTreePoints": 15,
+      "sourceOffset": "0x7177c18",
+      "effects": [
+        {
+          "sourceOffset": "0x7177568",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x2",
+            "0x0",
+            "0x47178738",
+            "0x1",
+            "0x3",
+            "0x0",
+            "0x3dcccccd",
+            "0x3",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.10000000149011612,
+          "modifier": 3,
+          "spells": [
+            "frost_nova",
+            "cone_of_cold",
+            "blizzard"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 2,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Frost Nova, Cone of Cold and Blizzard reach {v}% farther.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "splitting_ice",
+      "name": "Splitting Ice",
+      "icon": "Spell_Frost_WizardMark",
+      "description": "Milestone. Frostbolt splinters on impact: {v}% of its damage to every enemy within 5 yd of its target.",
+      "prerequisite": "frostbite",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 4,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7177c80",
+      "effects": [
+        {
+          "sourceOffset": "0x7177600",
+          "tag": 4,
+          "rawWords": [
+            "0x4",
+            "0x3f800000",
+            "0x40a00000",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717840e",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "impactSplash",
+          "value": 1.0,
+          "radius": 5.0,
+          "spells": [
+            "frostbolt"
+          ],
+          "rawPackedTag": 4,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Milestone. Frostbolt splinters on impact: {v}% of its damage to every enemy within 5 yd of its target.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "frost_channeling",
+      "name": "Frost Channeling",
+      "icon": "Spell_Frost_Stun",
+      "description": "Your cooldowns recover {v}% faster.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 20,
+      "sourceOffset": "0x7177ce8",
+      "effects": [
+        {
+          "sourceOffset": "0x7175a10",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3ccccccd",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 1,
+          "value": 0.02500000037252903,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "haste",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Your cooldowns recover {v}% faster.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "permafrost",
+      "name": "Permafrost",
+      "icon": "Spell_Frost_Wisp",
+      "description": "Increases your maximum health by {v}%.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 5,
+      "column": 0,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7177d50",
+      "effects": [
+        {
+          "sourceOffset": "0x7167d40",
+          "tag": 30,
+          "rawWords": [
+            "0x1e",
+            "0x3cf5c28f",
+            "0x2",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "stat",
+          "stat": 2,
+          "value": 0.029999999329447746,
+          "rawPackedTag": 30,
+          "packedFlags": 0,
+          "statName": "maximumHealth",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Increases your maximum health by {v}%.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "imp_ice_barrier",
+      "name": "Improved Ice Barrier",
+      "icon": "Spell_Ice_Lament",
+      "description": "Ice Barrier absorbs {v}% more.",
+      "prerequisite": "",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "requiredTreePoints": 25,
+      "sourceOffset": "0x7177db8",
+      "effects": [
+        {
+          "sourceOffset": "0x7177728",
+          "tag": 31,
+          "rawWords": [
+            "0x1f",
+            "0x0",
+            "0x1",
+            "0x0",
+            "0x4717891d",
+            "0x1",
+            "0xb",
+            "0x0",
+            "0x3e4ccccd",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "spellModifier",
+          "value": 0.20000000298023224,
+          "modifier": 0,
+          "spells": [
+            "ice_barrier"
+          ],
+          "rawPackedTag": 31,
+          "packedFlags": 0,
+          "filterDiscriminant": 1,
+          "filterPackedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Ice Barrier absorbs {v}% more.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [
+            "value"
+          ],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    },
+    {
+      "id": "water_elemental",
+      "name": "Summon Water Elemental",
+      "icon": "Spell_Frost_SummonWaterElemental",
+      "description": "Capstone. You start every run with Frostbolt instead of Fireball. A Water Elemental fights at your side, hurling Frostbolts, and a free Frost Nova bursts from you every 8 sec.",
+      "prerequisite": "splitting_ice",
+      "tree": "Frost",
+      "treeId": "MageFrost",
+      "tier": 6,
+      "column": 1,
+      "maxRank": 1,
+      "requiredTreePoints": 30,
+      "sourceOffset": "0x7177e20",
+      "effects": [
+        {
+          "sourceOffset": "0x71777d0",
+          "tag": 29,
+          "rawWords": [
+            "0x1d",
+            "0x0",
+            "0x4717e930",
+            "0x1",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "summon",
+          "petSourceOffset": "0x717d730",
+          "petName": "Water Elemental",
+          "petCreatureEntry": 9517,
+          "petDisplayId": 110,
+          "petFloat24": 0.550000011920929,
+          "petFloat28": 50.0,
+          "petFloat32": 2.200000047683716,
+          "petSpellId": 116,
+          "petSchool": 4,
+          "rawPackedTag": 29,
+          "packedFlags": 0,
+          "petScale": 0.550000011920929,
+          "petBaseDamage": 50.0,
+          "petCooldown": 2.200000047683716,
+          "petProvenance": {
+            "rawOffset": "0x717d730",
+            "rva": "0x717e930",
+            "va": "0x14717e930",
+            "byteLength": 48,
+            "sha256": "af5ef81b62650514ae2d62f5b13ff971affed922b68b254462aabd2000bd93fd",
+            "bytesHex": "20e91747010000000f000000000000002d2500006e000000cdcc0c3f00004842cdcc0c40740000000400000000000000"
+          },
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Frostbolt instead of Fireball. A Water Elemental fights at your side, hurling Frostbolts, and a free Frost Nova bursts from you every 8 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7177810",
+          "tag": 26,
+          "rawWords": [
+            "0x1a",
+            "0x41000000",
+            "0x47178717",
+            "0x1",
+            "0xa",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "periodicCast",
+          "interval": 8.0,
+          "spell": "frost_nova",
+          "rawPackedTag": 26,
+          "packedFlags": 0,
+          "periodicBaseCooldown": 7.0,
+          "periodicSpellSchool": "Frost",
+          "periodicSpellSourceOffset": "0x6b89b08",
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Frostbolt instead of Fireball. A Water Elemental fights at your side, hurling Frostbolts, and a free Frost Nova bursts from you every 8 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        },
+        {
+          "sourceOffset": "0x7177850",
+          "tag": 28,
+          "rawWords": [
+            "0x1c",
+            "0x0",
+            "0x4717840e",
+            "0x1",
+            "0x9",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "kind": "startingSpell",
+          "spell": "frostbolt",
+          "rawPackedTag": 28,
+          "packedFlags": 0,
+          "sourceSemanticEvidence": {
+            "level": "originalCatalogAndDescription",
+            "description": "Capstone. You start every run with Frostbolt instead of Fireball. A Water Elemental fights at your side, hurling Frostbolts, and a free Frost Nova bursts from you every 8 sec.",
+            "note": "Exact source enum/payload and original description are exported; cross-engine runtime implementation and event timing must be verified separately. packedFlags is preserved legacy raw upper bytes, not a universal bitfield."
+          },
+          "rankScaleFields": [],
+          "rankScaleEvidence": "Native effect scaler VA1458DB210..1458DB576 and raw7181848 jump table: selected amount/chance only; radius/duration/cap/count/event remain fixed. Stat30/modifier31 scaled by outer collector."
+        }
+      ]
+    }
+  ],
+  "classId": "mage",
+  "trees": [
+    {
+      "id": "MageArcane",
+      "name": "Arcane",
+      "icon": "Spell_Holy_MagicalSentry",
+      "sourceOffset": "0x717d4c8",
+      "sourceNodesOffset": "0x7175f50",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "MageFire",
+      "name": "Fire",
+      "icon": "Spell_Fire_FireBolt02",
+      "sourceOffset": "0x717d508",
+      "sourceNodesOffset": "0x7176c68",
+      "sourceNodeCount": 13
+    },
+    {
+      "id": "MageFrost",
+      "name": "Frost",
+      "icon": "Spell_Frost_FrostBolt02",
+      "sourceOffset": "0x717d548",
+      "sourceNodesOffset": "0x7177940",
+      "sourceNodeCount": 13
+    }
+  ],
+  "sourceClassOffset": "0x6b86b20",
+  "unresolvedEffectKinds": [],
+  "runtimeVerificationStatus": "Source export only; no all-class runtime gameplay verification performed by exporter"
+}
