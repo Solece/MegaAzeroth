@@ -1,38 +1,40 @@
 # Procedural Azeroth biomes
 
-Design checkpoint: 2026-10-20. This is a verified integration proposal, not an implemented map replacement.
+Implementation: 2026-10-21, Elwynn biome v1. The `-azeroth-elwynn` flag replaces the first native Desert stage's environment with locally extracted original Elwynn assets. Later stages keep their original environments. Other native maps are unchanged.
 
-## First playable target
+## Native gameplay retained
 
-Keep Megabonk's native level shape, height changes, movement, ground collision, enemy spawning, boss gates and stage transitions. Apply the original Azeroth Elwynn ground textures and populate the generated level with original trees, shrubs, rocks, fences, barrels and campfires.
+The first stage uses private clones of the native `MapData` and `StageData`. Its original `mapParameters`, `stageTimeline` and `stageTilePrefabs` references are retained explicitly. The existing native procedural mesh generator, ground colliders, movement controller, combat AI, enemy spawning, interactables, boss gates and portal progression continue to run.
 
-Each native map seed should produce a different layout while retaining a coherent forest appearance. Use open combat clearings between forest clusters. Reserve clear space around the player spawn, interactables, boss arena and portals. Larger source buildings become deliberate landmarks after their collision and entrances have been checked.
+The original `RandomObjectSpawner` places eight groups of Elwynn decoration. Each group derives a seed from the native map seed and biome palette version; its prefix/finalizer saves and restores `UnityEngine.Random.state`. Native ground landmarks remain in the palette with their own geometry, collision and original placement parameters. The run clone's map-wide palette override is restored before advancing to the next stage.
 
-## Verified source assets
+## Original local assets
 
-The installed Azeroth archives contain eight inspected Elwynn ADT tiles under `World/Maps/Azeroth/`, six decoded 256x256 Elwynn ground textures, fifteen inspected environment M2 models with their textures, and five WMO structures with all 22 referenced groups and textures: farm, Goldshire inn, blacksmith, mage tower and bridge.
+`scripts/elwynn-biome/build_elwynn.py` reads the installed Azeroth MPQ archives and exports the ignored `private-assets/elwynn-biome` pack. `validate_elwynn.py` independently compares hashes, geometry, UVs, normals, material passes, alpha pixels and texture orientation to those archives.
 
-The ADT texture references omit the `_s` suffix; the verified archive files use `_s.blp`. Environment model references use `.mdx`, while the verified files use `.m2`. Resolve these source aliases explicitly.
+The pack contains six original ground textures and fifteen original static M2 props: canopy trees, a medium tree, pines, shrubs, rocks, fences, campfire stones/logs and barrels. Source aliases are resolved explicitly: ADT references omit the `_s.blp` suffix and environment references can use `.mdx` where the actual archive entry is `.m2`.
 
-These are real source meshes and textures. They are not yet ready Unity environment prefabs. M2 prop import must preserve material/alpha behavior; WMO group import and collision selection need a separate adapter.
+The native triplanar shader retains its noise, normal maps and render state. Its top/dirt/side albedos use original Elwynn grass, dirt and rock. Ground textures have generated mipmaps, trilinear filtering and anisotropy4. Private shader scales are `0.15` for the ground and `0.12` for sides. Generated world-edge sand materials are audited and rebound after native initialization. Shared native materials are never edited.
 
-## Native integration
+Foliage preserves original AlphaKey passes and two-sided cards. Runtime source meshes, materials, textures and prototype libraries survive `Resources.UnloadUnusedAssets` and are released when the plugin unloads.
 
-- Clone the selected `MapData`/`StageData` for the biome. Inspect the actual shader properties before binding ground textures to `flatMaterials` or `triplanarMaterial`.
-- Supply M2 props through `StageData.randomMapObjects`, also handling `MapData.randomObjectsOverride`. `RandomMapObject` provides prefab choices, placement radius, scale limits, slope limit and ground offset.
-- Add tested landmarks through `StageTilePrefabs`, preserving the native boss-spawner and portal objects and their triggers.
-- Share each imported mesh/material across instances and protect cached native resources from `Resources.UnloadUnusedAssets`, as with the repaired character/effect adapters.
-- Keep decorative randomness reproducible without changing combat randomness. Record the native map seed, biome version and prop seed; isolate additional RNG calls.
+## Passage protection
 
-## Acceptance criteria
+After generation, the adapter reserves the actual player spawn, native interactables, boss gates, portals and rails. It disables only new decoration that intersects those zones. A conservative surface graph uses the actual native floor layer, native player capsule dimensions and real physics queries to find a walking corridor to the boss gate and remove new obstacles from it.
 
-1. Native movement and enemy spawning work on the generated ground. Trees and large rocks have suitable trunk/body collision; foliage does not block the whole canopy footprint.
-2. Player spawn, gates and interactables remain reachable. Check several fixed seeds, actual capsule clearance and continuous routes, then remove blocking props.
-3. Props follow the real floor and slope. No floating objects, buried landmarks or duplicated invisible native scenery.
-4. Defeat a native boss and enter its real portal through every stage to the final arena. Mage, original weapons, spells, books and map markers survive travel and forced unused-resource cleanup.
+If that native baseline cannot be proved within the loading-time budget, the adapter disables only added solid decoration colliders. Visible trees and rocks remain. This preserves the native map's own traversability without claiming that an unproved route passed. The report exposes the reason, masks, capsule dimensions, removed objects, preserved interactable counts, route result and fallback count.
 
-Full ADT terrain reconstruction can follow separately. It needs height seams, texture alpha layers, holes/water, fresh colliders, map/fog integration and valid spawn positions. It is not required for the first procedural Elwynn biome.
+## Launch and local preparation
 
-## Evidence
+1. Export and validate the private pack with the two Python scripts.
+2. Build `src/ElwynnBiome/ElwynnBiome.csproj` against the installed BepInEx IL2CPP interop assemblies.
+3. Copy the pack contents to `Megabonk-Lab/AzerothElwynnAssets` and the compiled DLL to `Megabonk-Lab/BepInEx/plugins/ElwynnBiome`.
+4. Run `Start-Elwynn-Mage.cmd` for the prepared Mage battle, with all four book slots and the existing maximum talent allocation. The normal quick launchers select this biome too.
 
-Read-only source investigation: `environment-procedural-recon.md`, `environment-procedural-recon.json` and `environment-selected-dependencies.json` in the coordinating task's local work directory. Native integration fields were checked against the installed IL2CPP metadata and binary. Private source assets and game binaries remain excluded from Git.
+Normal launchers do not use the batch-only seed, movement, boss or capture probes. Local logs are written to `reports/elwynn/biome-*.log`. Source game archives, extracted assets, native binaries, probe runtimes and captured frames remain excluded from Git.
+
+## Scope
+
+This first location is Megabonk's generated terrain dressed with original Elwynn art. Original ADT heightmaps, WMO buildings/interiors, source campfire particles and tree wind are not part of v1. Their source files were researched; their existence does not imply they have been integrated. Terrain topology, movement and spawning remain native Megabonk behavior.
+
+Actual build and runtime results are recorded in `ELWYNN_TEST_LOG.md`; earlier failed probes are preserved in local reports and the module logs.
