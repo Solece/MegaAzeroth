@@ -1,0 +1,6 @@
+
+
+Runtime acceptance: Mage-compatible0.1.2 installed after isolated native PID55796 passed22 checks in22.93seconds. All39 nodes/three source trees, rank labels, point budget, source art, locked capstone, actual Button purchase, actual right-click refund, reset, live source simulation pause, close/resume and preserving a pre-existing native pause passed. Original backgrounds/portrait/chrome/buttons/rank and prerequisite art inspected in rendered Arcane/Fire/Frost screenshots. Corrected button atlas UV and source tooltip translucency. Hash/backup report: reports/talent-tree-installed.json. Current game was not stopped. This is a source-art Unity adaptation with exact source node topology; pixel-identical custom Rust-window placement is not claimed.
+
+
+Replaced intermediate tabs with original concurrent layout after native source tracing:1600x860 logical root,3x360x520 trees,46px cells at90x(520/7),310px sidebar,4px prerequisite links and exact source background scale/offset/tint. Native evidence1401E8E50..1401E94C2,1401E6780,1401E5B80. PID68068 passed23 checks in24.58seconds; rendered39 nodes at once with no tree scrolling, real source ranks/purchase/refund/reset/pause retained. Mage-compatible0.1.3 installed with hash/backup. Original rounded corners/absolute outer-row pixel alignment remain an adaptation limit. Full class runtime remains isolated.

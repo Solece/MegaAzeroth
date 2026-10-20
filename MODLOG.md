@@ -219,3 +219,9 @@ Native movement/generation/spawn remain in use. Work scope: source WMO buildings
 ## 2026-10-21 — playable Elwynn v2 installed
 
 Installed route-safe original buildings on all three ordinary stages, single-body golem with native spawn effects, real native tome compatibility, paused source simulation, source XP/inventory/results and movement animation fixes. Full native route PID61008 passed through both portals and the final arena. Latest feature PID51996 passed21 checks with0 failures; unavailable native Bounce tome is explicitly skipped. HUD0.7.6/Talents0.1.1 hotfix restores native gold, removes the complete top XP strip, offsets the player portrait, replaces encounter/result/pause weapon rows with all learned spells without scrolling, and fixes talent damage labels/icons and additive Luck. Backup/hash manifests retained; user game left running. Details and known limits: V2_INTEGRATION_LOG.md.
+
+## 2026-10-21 — original concurrent talent window installed
+
+Replaced the flat list/intermediate tabs with three simultaneous source trees plus sidebar, following recovered original Rust layout/constants. Source backgrounds, icons, rank values and prerequisite links retained. Mage-compatible0.1.3 passed23 native checks and rendered inspection before installation; backup/hash records retained. User game not stopped. Full nine-class gameplay remains isolated pending its own runtime validation.
+
+Background model-check incident: a standalone development utility raised unhandled .NET parsing/assertion failures and displayed a Windows crash dialog. The exact owned ModelChecks process was closed. The utility now uses UseAppHost=false and a top-level exception handler with stderr/nonzero exit; controlled failure returned1 with a log, normal checks returned0, and no ModelChecks/WerFault processes remained. No Windows/WER/global registry settings changed.
