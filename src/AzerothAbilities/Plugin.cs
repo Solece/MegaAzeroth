@@ -17,7 +17,7 @@ using UObject=UnityEngine.Object;
 
 namespace AzerothAbilities;
 
-[BepInPlugin(Id,"Azeroth Mage Abilities","0.1.0")]
+[BepInPlugin(Id,"Azeroth Mage Abilities","0.1.1")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id="local.azerothmegabonk.abilities";
@@ -39,6 +39,7 @@ public sealed class Plugin : BasePlugin
             AbilityRuntime.Initialize(Catalog);
             harmony=new Harmony(Id);harmony.PatchAll(typeof(Plugin).Assembly);
             AddComponent<AbilityBehaviour>();
+            AddComponent<MageSelectionBehaviour>();
         }
         catch(Exception ex){Log.LogError("Azeroth abilities disabled: "+ex);}
     }
@@ -157,7 +158,7 @@ public static class AbilityRuntime
         if(d.Kind=="selfAoe")
         {
             foreach(var target in targets)Hit(spell,target,damage,origin);
-            if(Plugin.Current!.SpellVisuals.Value && !Application.isBatchMode)AbilityBehaviour.Pulse(origin,d.Radius*spell.RadiusFactor,d.School);
+            if(Plugin.Current!.SpellVisuals.Value && AbilityBehaviour.RenderVisuals)AbilityBehaviour.Pulse(origin,d.Radius*spell.RadiusFactor,d.School);
         }
         else
         {
@@ -233,7 +234,7 @@ internal sealed class SpellProjectile
     {
         this.spell=spell;this.target=target;enemyId=target.id;pos=position;this.damage=damage;
         speed=spell.Definition.ProjectileSpeed*Mathf.Max(0.1f,AbilityRuntime.Stat(EStat.ProjectileSpeedMultiplier));range=spell.Definition.Range;
-        if(Plugin.Current!.SpellVisuals.Value && !Application.isBatchMode)visual=AbilityBehaviour.Orb(pos,spell.Definition.School);
+        if(Plugin.Current!.SpellVisuals.Value && AbilityBehaviour.RenderVisuals)visual=AbilityBehaviour.Orb(pos,spell.Definition.School);
     }
     internal bool Tick(float dt)
     {
@@ -250,6 +251,7 @@ internal sealed class SpellProjectile
 public sealed class AbilityBehaviour : MonoBehaviour
 {
     public AbilityBehaviour(IntPtr pointer):base(pointer){}
+    internal static bool RenderVisuals=>!Application.isBatchMode || Environment.GetEnvironmentVariable("AZEROTH_LAB_RENDER_PROBE")=="1";
     private static Material fire,arcane;
     private bool failed;
     private void Update()

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net6.0</TargetFramework><AssemblyName>AzerothMegabonk.TestBattle</AssemblyName><LangVersion>latest</LangVersion><Nullable>disable</Nullable><ImplicitUsings>enable</ImplicitUsings><BepInExRoot>$(MSBuildProjectDirectory)/../../Megabonk-Lab/BepInEx</BepInExRoot><RestorePackagesPath>$(MSBuildProjectDirectory)/../../cache/nuget</RestorePackagesPath></PropertyGroup><ItemGroup>
+<Reference Include="BepInEx.Core"><HintPath>$(BepInExRoot)/core/BepInEx.Core.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="BepInEx.Unity.IL2CPP"><HintPath>$(BepInExRoot)/core/BepInEx.Unity.IL2CPP.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="0Harmony"><HintPath>$(BepInExRoot)/core/0Harmony.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="Il2CppInterop.Runtime"><HintPath>$(BepInExRoot)/core/Il2CppInterop.Runtime.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="Assembly-CSharp"><HintPath>$(BepInExRoot)/interop/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="Il2Cppmscorlib"><HintPath>$(BepInExRoot)/interop/Il2Cppmscorlib.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="UnityEngine.CoreModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="UnityEngine.PhysicsModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+<Reference Include="UnityEngine.UI"><HintPath>$(BepInExRoot)/interop/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference><Reference Include="UnityEngine.UIModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference></ItemGroup></Project>
+

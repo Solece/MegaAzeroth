@@ -21,3 +21,21 @@ Real original HUD screenshot inspected: reports/reference/azeroth-original-hud.p
 Final headless guard fixes: tome cells require HasTome before reading rank; class bridge rejects empty string. Rebuilt 0 warnings/errors, source and staged DLL synchronized. User is working on PC: no launches, no UI/input/foreground actions by this agent. Runtime visual verification remains explicitly pending. Native UI left enabled as fallback until user permits a visual test.
 
 2026-10-20 headless repair requested by root: runtime PNG upload in another plugin exposed ObjectCollectedException via Il2CppSystem.Span constructor. HUD v0.1.1 removes ImageConversion.LoadImage and its assembly reference completely. prepare-raw-ui.py preconverts original PNGs to bottom-up RGBA32 plus ASCII width/height .size sidecars; keeps PNG originals, writes size/hash manifest. HUD validates exact width*height*4 byte count, pins managed pixels using GCHandleType.Pinned, calls Texture2D.LoadRawTextureData(IntPtr,int) then Apply, releases handle in finally. GPU object creation remains deferred inside OnGUI/Tex; Load and Update do not upload image assets. ReadBridge, ReadStatic and drawing helpers have HideFromIl2Cpp; former System.Object local function removed to avoid injection warnings. Build passes net6, 0 warnings/errors. Stage source/DLL/assets updated, no processes or foreground windows touched. Root deploys and verifies headless/native run. Native HUD still preserved.
+
+## 2026-10-20 — native HUD crash repair (0.2.0)
+- Evidence: BepInEx/ErrorLog.log fatal System.AccessViolationException in il2cpp_gchandle_get_target -> Internal_DrawTextureArguments.set_texture -> GUI.DrawTextureWithTexCoords -> HudBehaviour.OnGUI on ordinary graphical launch.
+- Removed OnGUI, all GUI/GUIStyle draw calls, and the IMGUIModule assembly reference. The failing texture-argument path is no longer used.
+- Rebuilt the Azeroth artwork overlay as native Unity uGUI Canvas + RawImage + Text, including HP, actual XP, timer, gold, native tome icons/ranks, original Mage spell icons/ranks/cooldowns. Four tome cells remain visible. RawImage.uvRect preserves source atlas crops/mirrors.
+- Texture data still comes from validated original bottom-up RGBA assets and pinned native uploads; retained native components/textures/font are owned by the HUD instance. The passive overlay has no raycast targets or GraphicRaycaster.
+- Version 0.2.0 built successfully against the actual generated Unity 2023.2.22f1 interop DLLs, 0 compiler errors. NuGet audit warning NU1900 reflects restricted network during the local cached restore, not a compiler or runtime failure.
+- Managed helpers taking custom UiImage/UiText classes, collections or System.Type are marked HideFromIl2Cpp; only Update/OnDestroy are Unity message methods.
+- Runtime render/GC verification is pending integration by the root agent; no desktop input or game window launched by this repair task.
+
+### Native render follow-up — 0.2.1
+- The integrated batch smoke exercised the new Canvas path and found Font.CreateDynamicFontFromOSFont(String,Int32) is stripped in this game's native build (NotSupportedException: Method unstripping failed).
+- Replaced every legacy UI.Text/Font factory with TextMeshProUGUI using a live TMP_FontAsset and shared material obtained from Resources.FindObjectsOfTypeAll<TextMeshProUGUI>(). This is the same lookup already exercised successfully by the class selector.
+- If no TMP template is loaded yet, HUD construction waits for the next update; it creates no partial Canvas. Borrowed font/material are retained and never destroyed by this plugin.
+- Build passes against the generated game DLLs, 0 compiler errors; runtime recheck pending root integration. No game window/input used by this task.
+
+- Runtime verified 20.10.2026: HUD0.2.1 built59 RawImages+33TMP labels; offscreen native camera render showed Azeroth frames/action bar and original Fireball icon. Managed GC exercised, fatal ErrorLog empty,30-tick test clean exit.
+

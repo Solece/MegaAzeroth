@@ -6,12 +6,15 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Attributes;
+using Il2CppInterop.Runtime;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using XpUtility = Inventory__Items__Pickups.XpUtility;
 
 namespace AzerothHud;
 
-[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.1.1")]
+[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.2.1")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
@@ -25,7 +28,7 @@ public sealed class Plugin : BasePlugin
         Scale = Config.Bind("HUD", "Scale", 1f, "HUD scale relative to 1080p.");
         AssetRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "assets");
         AddComponent<HudBehaviour>();
-        Log.LogInfo("Azeroth HUD loaded; native health, XP, tomes; deferred raw RGBA/IntPtr texture upload. Visual fidelity pending verification.");
+        Log.LogInfo("Azeroth HUD 0.2.1 loaded; native uGUI Canvas/RawImage/TMP using an existing game font; no IMGUI texture or stripped Font factory calls.");
     }
 }
 
@@ -34,7 +37,21 @@ public sealed class HudBehaviour : MonoBehaviour
     public HudBehaviour(IntPtr pointer) : base(pointer) { }
     readonly Dictionary<string, Texture2D> textures = new();
     readonly List<TomeView> tomes = new();
-    GUIStyle label, small, title;
+    GameObject canvasObject;
+    RectTransform canvasRect;
+    Canvas canvas;
+    CanvasScaler scaler;
+    TMP_FontAsset font;
+    Material fontMaterial;
+    readonly List<UiImage> images = new();
+    readonly List<UiText> labels = new();
+    UiImage portraitImage, hpFill, xpFill, bottomXpFill;
+    UiText heroLabel, levelLabel, hpLabel, timerLabel, goldLabel;
+    readonly UiImage[] tomeIcons=new UiImage[4], spellIcons=new UiImage[12], cooldownMasks=new UiImage[12];
+    readonly UiText[] tomeRanks=new UiText[4], spellRanks=new UiText[12], cooldownLabels=new UiText[12];
+    bool uiBuilt;
+    sealed class UiImage { public RectTransform Rect; public RawImage Image; public Rect Bounds; public int Anchor; }
+    sealed class UiText { public RectTransform Rect; public TextMeshProUGUI Text; public Rect Bounds; public int Anchor; }
     float nextRead;
     int hp, maxHp, level, xp, gold;
     float shield, xpProgress, timer;
@@ -64,14 +81,14 @@ public sealed class HudBehaviour : MonoBehaviour
     void Update()
     {
         var plugin = Plugin.Current;
-        if (plugin == null || !plugin.Enabled.Value) { active=false; return; }
+        if (plugin == null || !plugin.Enabled.Value) { active=false; SetVisible(false); return; }
         if (Time.unscaledTime < nextRead) return;
         nextRead = Time.unscaledTime + 0.1f;
         try
         {
             var player = MyPlayer.Instance;
             active = player != null && player.inventory != null && player.hasStarted;
-            if (!active) { wasActive=false; return; }
+            if (!active) { wasActive=false; SetVisible(false); return; }
             var inv = player.inventory;
             portrait=inv.characterData.GetIcon(); heroName=inv.characterData.GetName();
             hp=inv.playerHealth.hp; maxHp=inv.playerHealth.maxHp; shield=inv.playerHealth.shield;
@@ -89,6 +106,10 @@ public sealed class HudBehaviour : MonoBehaviour
                     if (rank>0) tomes.Add(new(td.GetIcon(),td.GetName(),rank));
                 }
             ReadBridge();
+            if(!uiBuilt) BuildUi();
+            if(!uiBuilt)return;
+            SetVisible(true);
+            RefreshUi();
             if (!wasActive)
             {
                 plugin.Log.LogInfo($"HUD bound native run: HP {hp}/{maxHp}, level {level}, XP {xp}, tomes {tomes.Count}; available tome slots {InventoryUtility.GetNumAvailableTomeSlots()}");
@@ -98,6 +119,7 @@ public sealed class HudBehaviour : MonoBehaviour
         catch (Exception e)
         {
             active=false;
+            SetVisible(false);
             if (!failed) { plugin.Log.LogWarning("HUD read failed: "+e); failed=true; }
         }
     }
@@ -142,104 +164,156 @@ public sealed class HudBehaviour : MonoBehaviour
         textures[relative]=texture; return texture;
     }
     [HideFromIl2Cpp]
-    static void Solid(Rect r,Color c)
+    void SetVisible(bool visible)
     {
-        var old=GUI.color; GUI.color=c; GUI.DrawTexture(r,Texture2D.whiteTexture); GUI.color=old;
+        if(canvasObject!=null && canvasObject.activeSelf!=visible)canvasObject.SetActive(visible);
     }
     [HideFromIl2Cpp]
-    static void Panel(Rect r)
+    RectTransform RectObject(string name)
     {
-        Solid(r,Gold); Solid(new(r.x+2,r.y+2,r.width-4,r.height-4),new(0.18f,0.15f,0.10f));
-        Solid(new(r.x+4,r.y+4,r.width-8,r.height-8),Back);
+        var go=new GameObject(name,new[]{Il2CppType.Of<RectTransform>()});
+        go.transform.SetParent(canvasRect,false);
+        var rect=go.GetComponent<RectTransform>();
+        rect.localScale=Vector3.one;
+        return rect;
     }
     [HideFromIl2Cpp]
-    void Text(Rect r,string value,GUIStyle style,Color? color=null)
+    UiImage Image(string name,Rect bounds,Texture texture,Color color,int anchor=0,Rect? uv=null)
     {
-        var old=GUI.color; GUI.color=Color.black; GUI.Label(new Rect(r.x+1,r.y+1,r.width,r.height),value,style);
-        GUI.color=color ?? new Color(0.94f,0.88f,0.70f); GUI.Label(r,value,style);GUI.color=old;
+        var rect=RectObject(name);
+        var image=rect.gameObject.AddComponent<RawImage>();
+        image.raycastTarget=false;image.color=color;image.texture=texture;
+        image.uvRect=uv ?? new Rect(0,0,1,1);
+        var node=new UiImage{Rect=rect,Image=image,Bounds=bounds,Anchor=anchor};
+        images.Add(node);Place(rect,bounds,anchor);
+        return node;
     }
     [HideFromIl2Cpp]
-    void Bar(Rect r,float progress,Color color)
+    UiText Label(string name,Rect bounds,int size=17,int anchor=0,TextAlignmentOptions alignment=TextAlignmentOptions.MidlineLeft)
     {
-        Solid(r,new(0.06f,0.05f,0.04f)); var fill=new Rect(r.x+1,r.y+1,(r.width-2)*Mathf.Clamp01(progress),r.height-2);
-        var tex=Tex("Interface/TargetingFrame/UI-StatusBar.png");
-        if (tex != null) { var old=GUI.color;GUI.color=color;GUI.DrawTexture(fill,tex);GUI.color=old; } else Solid(fill,color);
+        var rect=RectObject(name);
+        var text=rect.gameObject.AddComponent<TextMeshProUGUI>();
+        text.raycastTarget=false;text.font=font;text.fontSharedMaterial=fontMaterial;text.fontSize=size;
+        text.alignment=alignment;
+        text.enableAutoSizing=false;text.richText=false;text.color=new Color(.94f,.88f,.70f);text.text="";
+        var node=new UiText{Rect=rect,Text=text,Bounds=bounds,Anchor=anchor};
+        labels.Add(node);Place(rect,bounds,anchor);return node;
     }
-    void OnGUI()
+    [HideFromIl2Cpp]
+    static void Place(RectTransform rect,Rect bounds,int anchor)
     {
-        if (!active || Plugin.Current==null) return;
-        var previous=GUI.matrix; var oldColor=GUI.color; var oldDepth=GUI.depth;
-        try
+        // Bounds use top-left coordinates. Bottom nodes use a bottom origin with negative y.
+        var point=anchor switch {1=>new Vector2(.5f,0),2=>new Vector2(.5f,1),3=>new Vector2(1,1),_=>new Vector2(0,1)};
+        rect.anchorMin=point;rect.anchorMax=point;rect.pivot=new Vector2(0,1);
+        rect.anchoredPosition=new Vector2(bounds.x,-bounds.y);rect.sizeDelta=new Vector2(bounds.width,bounds.height);
+    }
+    [HideFromIl2Cpp]
+    UiImage Bar(string name,Rect bounds,Color color,int anchor=0)
+    {
+        Image(name+"Background",bounds,null,new Color(.06f,.05f,.04f),anchor);
+        var inner=new Rect(bounds.x+1,bounds.y+1,bounds.width-2,bounds.height-2);
+        return Image(name+"Fill",inner,Tex("Interface/TargetingFrame/UI-StatusBar.png"),color,anchor);
+    }
+    [HideFromIl2Cpp]
+    static void Fill(UiImage node,float value)
+    {
+        var r=node.Bounds;r.width*=Mathf.Clamp01(value);Place(node.Rect,r,node.Anchor);
+    }
+    [HideFromIl2Cpp]
+    void BuildUi()
+    {
+        // The legacy Font factory is stripped in this build. Borrow the game's loaded TMP font.
+        foreach(var candidate in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>())
         {
-            label ??=new GUIStyle(GUI.skin.label){fontSize=17,alignment=TextAnchor.MiddleLeft};
-            small ??=new GUIStyle(label){fontSize=12};
-            title ??=new GUIStyle(label){fontSize=20,alignment=TextAnchor.MiddleCenter};
-            var scale=Mathf.Clamp(Screen.height/1080f*Plugin.Current.Scale.Value,0.65f,2f);
-            GUI.matrix=Matrix4x4.TRS(Vector3.zero,Quaternion.identity,Vector3.one*scale); GUI.depth=-20;
-            float w=Screen.width/scale,h=Screen.height/scale;
-            // Original PlayerFrame.xml mirrors UI-TargetingFrame (left=1,right=.09375).
-            if(portrait!=null) GUI.DrawTexture(new(35,30,64,64),portrait,ScaleMode.ScaleToFit);
-            Solid(new(105,35,152,50),new(0.025f,0.025f,0.025f,0.95f));
-            Bar(new(109,59,149,12),maxHp>0?(float)hp/maxHp:0,new(0.08f,0.85f,0.12f));
-            // Megabonk has no mana pool: second bar is explicitly XP, never fake mana.
-            Bar(new(109,75,149,10),xpProgress,new(0.55f,0.12f,0.74f));
-            var frame=Tex("Interface/TargetingFrame/UI-TargetingFrame.png");
-            if(frame!=null)GUI.DrawTextureWithTexCoords(new(5,17,278.4f,120),frame,new(1,.21875f,-.90625f,.78125f));
-            Text(new(112,31,142,23),heroName,small,Gold);
-            Text(new(39,82,28,24),level.ToString(),small,Gold);
-            Text(new(113,56,140,17),$"{hp}/{maxHp}"+(shield>0?$" +{shield:0}":""),small,Color.white);
-            if(new Rect(109,75,149,10).Contains(Event.current.mousePosition))Text(new(112,86,200,22),$"XP {xp}",small);
-            var seconds=Math.Max(0,(int)timer);
-            Text(new(w/2-65,6,130,40),$"{seconds/60:00}:{seconds%60:00}",title,Gold);
-            Text(new(w-455,7,230,24),$"Gold {gold}",label,Gold);
-            // Four stock art quadrants in MainMenuBar.xml, enlarged 1.25x like original capture.
-            var menu=Tex("Interface/MainMenuBar/UI-MainMenuBar-Human.png");
-            float barLeft=w/2-640;
-            for(int q=0;q<4;q++)
-                if(menu!=null)GUI.DrawTextureWithTexCoords(new(barLeft+q*320,h-54,320,54),menu,new(0,q*.25f,1,.16796875f));
-            Bar(new(barLeft,h-62,1280,8),xpProgress,new(.58f,0,.55f));
-            var cap=Tex("Interface/MainMenuBar/UI-MainMenuBar-EndCap-Human.png");
-            if(cap!=null)
-            {
-                GUI.DrawTexture(new(barLeft-138,h-160,160,160),cap);
-                GUI.DrawTextureWithTexCoords(new(barLeft+1258,h-160,160,160),cap,new(1,0,-1,1));
-            }
-            // Native tome icons and levels; no synthetic book inventory or rank values.
-            float tx=w/2+414,ty=h-50;
-            for(int i=0;i<4;i++)
-            {
-                var r=new Rect(tx+i*51,ty,47,47);
-                var empty=Tex("Interface/Buttons/UI-EmptySlot.png"); if(empty!=null)GUI.DrawTexture(r,empty);
-                if(i<tomes.Count)
-                {
-                    var t=tomes[i]; if(t.Icon!=null)GUI.DrawTexture(new(r.x+5,r.y+5,44,44),t.Icon);
-                    Text(new(r.x+4,r.y+34,46,20),t.Level.ToString(),small,Color.white);
-                    if(r.Contains(Event.current.mousePosition)) { Panel(new(tx-90,ty-62,335,30));Text(new(tx-82,ty-60,320,24),t.Name,label); }
-                }
-            }
-            int count=Math.Min(12,spellIds.Length);
-            {
-                float sx=barLeft+8,sy=h-50;
-                for(int i=0;i<12;i++)
-                {
-                    var r=new Rect(sx+i*50,sy,46,46);
-                    var empty=Tex("Interface/Buttons/UI-EmptySlot.png");if(empty!=null)GUI.DrawTexture(r,empty);
-                    if(i>=count)continue;
-                    if(Icons.TryGetValue(spellIds[i],out var name)) {var icon=Tex("Interface/Icons/"+name+".png");if(icon!=null)GUI.DrawTexture(new(r.x+3,r.y+3,44,44),icon);}
-                    if(i<remaining.Length&&i<totals.Length&&totals[i]>0&&remaining[i]>0)
-                    {
-                        Solid(new(r.x,r.y,r.width,r.height*Mathf.Clamp01(remaining[i]/totals[i])),new(0,0,0,0.7f));
-                        Text(new(r.x+4,r.y+10,46,26),remaining[i].ToString("0.0"),small,Color.white);
-                    }
-                    if(i<ranks.Length)Text(new(r.x+30,r.y+30,20,18),ranks[i].ToString(),small,Color.white);
-                }
-            }
+            if(candidate==null || candidate.font==null || candidate.fontSharedMaterial==null)continue;
+            font=candidate.font;fontMaterial=candidate.fontSharedMaterial;break;
         }
-        catch(Exception e)
+        if(font==null || fontMaterial==null)return;
+        // uGUI owns native texture references and draws them without Internal_DrawTextureArguments.
+        canvasObject=new GameObject("AzerothHudCanvas",new[]{Il2CppType.Of<RectTransform>()});
+        UnityEngine.Object.DontDestroyOnLoad(canvasObject);
+        canvasRect=canvasObject.GetComponent<RectTransform>();
+        canvas=canvasObject.AddComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder=100;
+        scaler=canvasObject.AddComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution=new Vector2(1920,1080);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight=1;
+        portraitImage=Image("Portrait",new Rect(35,30,64,64),null,Color.white);
+        Image("PortraitBack",new Rect(105,35,152,50),null,new Color(.025f,.025f,.025f,.95f));
+        hpFill=Bar("Health",new Rect(109,59,149,12),new Color(.08f,.85f,.12f));
+        xpFill=Bar("Experience",new Rect(109,75,149,10),new Color(.55f,.12f,.74f));
+        Image("PlayerFrame",new Rect(5,17,278.4f,120),Tex("Interface/TargetingFrame/UI-TargetingFrame.png"),Color.white,0,new Rect(1,.21875f,-.90625f,.78125f));
+        heroLabel=Label("Hero",new Rect(112,31,142,23),12);heroLabel.Text.color=Gold;
+        levelLabel=Label("Level",new Rect(39,82,28,24),12);levelLabel.Text.color=Gold;
+        hpLabel=Label("HealthValue",new Rect(113,56,140,17),12);hpLabel.Text.color=Color.white;
+        timerLabel=Label("RunTime",new Rect(-65,6,130,40),20,2,TextAlignmentOptions.Center);timerLabel.Text.color=Gold;
+        goldLabel=Label("Gold",new Rect(-455,7,230,24),17,3);goldLabel.Text.color=Gold;
+        var menu=Tex("Interface/MainMenuBar/UI-MainMenuBar-Human.png");
+        for(int q=0;q<4;q++)Image("ActionBar"+q,new Rect(-640+q*320,-54,320,54),menu,Color.white,1,new Rect(0,q*.25f,1,.16796875f));
+        bottomXpFill=Bar("BottomExperience",new Rect(-640,-62,1280,8),new Color(.58f,0,.55f),1);
+        var cap=Tex("Interface/MainMenuBar/UI-MainMenuBar-EndCap-Human.png");
+        Image("LeftGryphon",new Rect(-778,-160,160,160),cap,Color.white,1);
+        Image("RightGryphon",new Rect(618,-160,160,160),cap,Color.white,1,new Rect(1,0,-1,1));
+        var empty=Tex("Interface/Buttons/UI-EmptySlot.png");
+        for(int i=0;i<4;i++)
         {
-            if(!failed){Plugin.Current.Log.LogWarning("HUD render failed: "+e);failed=true;}
+            float x=414+i*51;
+            Image("TomeSlot"+i,new Rect(x,-50,47,47),empty,Color.white,1);
+            tomeIcons[i]=Image("TomeIcon"+i,new Rect(x+4,-46,39,39),null,Color.white,1);
+            tomeRanks[i]=Label("TomeRank"+i,new Rect(x+4,-16,46,20),12,1);tomeRanks[i].Text.color=Color.white;
         }
-        finally { GUI.matrix=previous;GUI.color=oldColor;GUI.depth=oldDepth; }
+        for(int i=0;i<12;i++)
+        {
+            float x=-632+i*50;
+            Image("SpellSlot"+i,new Rect(x,-50,46,46),empty,Color.white,1);
+            spellIcons[i]=Image("SpellIcon"+i,new Rect(x+3,-47,40,40),null,Color.white,1);
+            cooldownMasks[i]=Image("SpellCooldownMask"+i,new Rect(x,-50,46,46),null,new Color(0,0,0,.7f),1);
+            cooldownLabels[i]=Label("SpellCooldown"+i,new Rect(x+4,-40,46,26),12,1);cooldownLabels[i].Text.color=Color.white;
+            spellRanks[i]=Label("SpellRank"+i,new Rect(x+30,-20,20,18),12,1);spellRanks[i].Text.color=Color.white;
+        }
+        uiBuilt=true;
+        Plugin.Current.Log.LogInfo($"HUD native Canvas constructed: {images.Count} RawImages, {labels.Count} TMP labels; borrowed existing game TMP font/material; IMGUI disabled.");
+    }
+    [HideFromIl2Cpp]
+    void RefreshUi()
+    {
+        float scale=Mathf.Clamp(Plugin.Current.Scale.Value,.5f,2);
+        scaler.referenceResolution=new Vector2(1920/scale,1080/scale);
+        portraitImage.Image.texture=portrait;portraitImage.Image.enabled=portrait!=null;
+        heroLabel.Text.text=heroName.Equals("Mage",StringComparison.OrdinalIgnoreCase)?"Маг":heroName;
+        levelLabel.Text.text=level.ToString();
+        hpLabel.Text.text=$"{hp}/{maxHp}"+(shield>0?$" +{shield:0}":"");
+        var seconds=Math.Max(0,(int)timer);timerLabel.Text.text=$"{seconds/60:00}:{seconds%60:00}";
+        goldLabel.Text.text=$"Золото {gold}";
+        Fill(hpFill,maxHp>0?(float)hp/maxHp:0);Fill(xpFill,xpProgress);Fill(bottomXpFill,xpProgress);
+        for(int i=0;i<4;i++)
+        {
+            bool present=i<tomes.Count;
+            tomeIcons[i].Image.enabled=present;
+            tomeIcons[i].Image.texture=present?tomes[i].Icon:null;
+            tomeRanks[i].Text.text=present?tomes[i].Level.ToString():"";
+        }
+        for(int i=0;i<12;i++)
+        {
+            bool present=i<spellIds.Length;
+            Texture2D icon=null;
+            if(present && Icons.TryGetValue(spellIds[i],out var name))icon=Tex("Interface/Icons/"+name+".png");
+            spellIcons[i].Image.texture=icon;spellIcons[i].Image.enabled=icon!=null;
+            bool cooling=present&&i<remaining.Length&&i<totals.Length&&totals[i]>0&&remaining[i]>0;
+            cooldownMasks[i].Image.enabled=cooling;
+            var bounds=cooldownMasks[i].Bounds;
+            bounds.height*=cooling?Mathf.Clamp01(remaining[i]/totals[i]):0;
+            Place(cooldownMasks[i].Rect,bounds,1);
+            cooldownLabels[i].Text.text=cooling?remaining[i].ToString("0.0"):"";
+            spellRanks[i].Text.text=present&&i<ranks.Length?ranks[i].ToString():"";
+        }
+    }
+    void OnDestroy()
+    {
+        if(canvasObject!=null)UnityEngine.Object.Destroy(canvasObject);
+        foreach(var texture in textures.Values)if(texture!=null)UnityEngine.Object.Destroy(texture);
+        // Font and shared material belong to the game; never destroy the borrowed assets.
+        font=null;fontMaterial=null;
+        textures.Clear();images.Clear();labels.Clear();
     }
 }
-

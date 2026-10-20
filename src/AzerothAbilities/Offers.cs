@@ -6,7 +6,7 @@ using Assets.Scripts.Inventory.Stats;
 using Assets.Scripts.Menu.Shop;
 using HarmonyLib;
 using UnityEngine;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using System.Runtime.InteropServices;
 using NativeList=Il2CppSystem.Collections.Generic.List<Assets.Scripts._Data.IUpgradable>;
 
 namespace AzerothAbilities;
@@ -26,13 +26,36 @@ internal static class AbilityOffers
     internal static Texture2D Icon(SpellDefinition spell)
     {
         if(Icons.TryGetValue(spell.Id,out var cached))return cached;
-        var root=BepInEx.Paths.PluginPath;
-        var path=Directory.GetFiles(root,spell.Icon+".png",SearchOption.AllDirectories).FirstOrDefault();
-        if(path==null){Icons[spell.Id]=null;return null;}
-        var texture=new Texture2D(2,2,TextureFormat.RGBA32,false);
-        var bytes=new Il2CppStructArray<byte>(File.ReadAllBytes(path));
-        var loaded=ImageConversion.LoadImage(texture,bytes);GC.KeepAlive(bytes);
-        if(!loaded){UnityEngine.Object.Destroy(texture);texture=null;}
+        Texture2D texture=null;
+        try
+        {
+            var directory=Path.Combine(BepInEx.Paths.PluginPath,"AzerothHud","assets","Interface","Icons");
+            var rawPath=Path.Combine(directory,spell.Icon+".rgba");
+            var sizePath=Path.ChangeExtension(rawPath,".size");
+            if(!File.Exists(rawPath) || !File.Exists(sizePath))
+                throw new FileNotFoundException("Prepared spell icon is missing",rawPath);
+            var size=File.ReadAllText(sizePath).Split((char[])null,StringSplitOptions.RemoveEmptyEntries);
+            if(size.Length!=2 || !int.TryParse(size[0],out var width) || !int.TryParse(size[1],out var height)
+                || width<=0 || height<=0 || width>4096 || height>4096)
+                throw new InvalidDataException("Invalid spell icon dimensions: "+sizePath);
+            var pixels=File.ReadAllBytes(rawPath);
+            if(pixels.Length!=checked(width*height*4))
+                throw new InvalidDataException("Invalid spell icon RGBA length: "+rawPath);
+
+            // The generated LoadImage(byte[]) wrapper reaches unsupported IL2CPP Span constructors.
+            // These offline RGBA assets have the bottom row first; pin only during the native upload.
+            texture=new Texture2D(width,height,TextureFormat.RGBA32,false);
+            var pinned=GCHandle.Alloc(pixels,GCHandleType.Pinned);
+            try { texture.LoadRawTextureData(pinned.AddrOfPinnedObject(),pixels.Length);texture.Apply(false,true); }
+            finally { pinned.Free(); }
+        }
+        catch(Exception ex)
+        {
+            if(texture!=null)UnityEngine.Object.Destroy(texture);
+            texture=null;
+            Plugin.Current?.Log.LogError($"Spell icon {spell.Id} could not be loaded: {ex.Message}");
+        }
+        // RawImage consumes this texture directly. Retain it for the plugin lifetime and reuse it on cards.
         Icons[spell.Id]=texture;return texture;
     }
     internal static void ReplaceWeaponsWithBooks(NativeList offers)

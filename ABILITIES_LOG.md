@@ -42,3 +42,12 @@ Root started a no-input batch-mode native Megabonk laboratory run. I read its ac
 Added public HudBridge.ApplyUpgradeForProbe(spellId,kind,rarity) for root's game-thread headless check. Kind0damage/1cd/2targets/3radius; original rarity0common..4legendary. Validates active class, learned spell and original allowed kinds, then invokes the same runtime Apply path as card selection. Added SourceDamages/SourceCooldowns arrays without native book multipliers for before/after assertions. Root will test Fireball common damage rank1→2:70.7→86.76304 and unchangednative tomes/slots.
 
 Correct count:22 PASS in the standalone source-validation report. Current build0warnings/errors. Full ability raw extraction now names the fourth slice allowedUpgradeKinds and spans exactly112 source catalog rows, matching native lookup loop0x3480/0x78.
+
+## 2026-10-20: Upgrade-card icon crash fix
+
+- Replaced the remaining `ImageConversion.LoadImage` call in `AbilityOffers.Icon` with a pinned `LoadRawTextureData(IntPtr, length)` upload from the staged bottom-up `.rgba` and `.size` assets.
+- Validates dimensions and byte length before allocating a native texture. Always frees the pin; destroys partially created textures if loading fails and logs the specific missing/invalid asset once per spell.
+- Upgrade cards use Unity `RawImage.texture`, so there is no temporary Sprite to collect. The plugin cache keeps each uploaded Texture2D for reuse across card generations.
+- All five Mage spell icons already have prepared 64 x 64 RGBA assets; no image decoding or game-asset conversion is performed in the live upgrade-card path.
+- Source fix only at this checkpoint. Root process will build, deploy and exercise it in the background with the other crash fixes.
+- Validation after selector integration: Release build succeeded with 0 warnings and 0 errors. All five prepared Mage icon buffers have the expected 16384 bytes (64 x 64 x 4). Runtime validation remains delegated to the root background test.

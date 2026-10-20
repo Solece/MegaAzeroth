@@ -127,3 +127,24 @@ HUD is a separate module. Book-slot override is a separate runtime-only module.
 - Normal launcher Start-AzerothMegabonk.cmd is ready but has NOT been opened; user asked not to occupy PC.
 - Universal Modder installed globally in Codex; CLI+project+all logs live under D:/Games/Saitan/AzerothMegabonkLab. Source and logs have local Git snapshots; no remote/publishing.
 - Remaining: complete classes/spells/talents/racials/original VFX, full interactive HUD fidelity, boss appearance integration, long gameplay performance/pooling checks. This checkpoint is a first playable Mage prototype, not the full requested Azeroth port.
+
+## Crash investigation and test battle auto-start
+- User reported crash and unclear Mage selection. Preserved logs in D:\Games\Saitan\AzerothMegabonkLab\reports\crash-20261020-202103.
+- Fatal stack points to AzerothHud.HudBehaviour.OnGUI / GUI.DrawTextureWithTexCoords native texture argument; migrating HUD drawing away from IMGUI.
+- Preparing a separate native battle auto-start launcher with Mage, four tome slots, and test save protection. No desktop input or foreground launch.
+
+
+- Deployed Mage selector/ability icon fix, HUD 0.2.0 native Canvas, and TestBattle auto-start. Started batch graphics smoke with spell visuals enabled; PID 57512. Test save guard enabled; no desktop input. Results pending.
+
+
+- Smoke attempt1 found selector generic GetComponentInChildren interop verification error, now replaced by native Resources lookup. Attempt2 verified Mage selection, 5 raw icon uploads, native Desert Stage1 auto-start, 11 spell hits, 4 tome slots and clean exit; also found stripped legacy Font API in new HUD. HUD is being converted to existing native TMP font. Strengthened final smoke to require full Azeroth HUD nodes/render, not only native gameplay. Earlier attempt logs retained.
+
+
+### Verified checkpoint: Mage battle auto-start and crash fix
+- Default Start-AzerothMegabonk.cmd and new Start-Mage-Battle.cmd now auto-select Mage and launch native MapDesert / StageDesert1, tierIndex0, then start combat automatically. Separate Start-AzerothMegabonk-Menu.cmd preserves access to native menus and visible Mage selector.
+- HUD fatal GUI.DrawTextureWithTexCoords path removed. HUD0.2.1 uses native Canvas/RawImage/TextMeshPro; live borrowed font/material, prepared RGBA uploads; 59 image nodes and 33 label nodes verified.
+- Original five Mage upgrade-card icons use pinned RGBA uploads; unsafe ImageConversion.LoadImage removed. Selector's unsupported generic child lookup replaced by native Resources lookup.
+- Final batch graphics smoke PASSED: native auto-start, active Mage/fireball damage, 4 tome slots, active complete Azeroth HUD92nodes, 5 icons uploaded, managed GC and native Canvas camera render. Process59084 had no desktop window (handle0), no input, self-exited after30 combat ticks. Runtime ErrorLog empty.
+- Evidence: reports/mage-battle-smoke.log, reports/mage-battle-smoke-player-attempt3.log and reports/mage-battle-canvas.ppm. Earlier failed attempts and user's fatal logs retained separately.
+- Test-session save writes are suppressed. Mage currently changes abilities; hero appearance remains the native Megabonk character. This was a short offscreen runtime check; a long interactive play session is still unverified.
+

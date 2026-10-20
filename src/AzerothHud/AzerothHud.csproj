@@ -14,8 +14,9 @@
     <Reference Include="$(GameRoot)/BepInEx/interop/Assembly-CSharp.dll" Private="false" />
     <Reference Include="$(GameRoot)/BepInEx/interop/Il2Cppmscorlib.dll" Private="false" />
     <Reference Include="$(GameRoot)/BepInEx/interop/UnityEngine.CoreModule.dll" Private="false" />
-    <Reference Include="$(GameRoot)/BepInEx/interop/UnityEngine.IMGUIModule.dll" Private="false" />
-    <Reference Include="$(GameRoot)/BepInEx/interop/UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="$(GameRoot)/BepInEx/interop/UnityEngine.UI.dll" Private="false" />
+    <Reference Include="$(GameRoot)/BepInEx/interop/UnityEngine.UIModule.dll" Private="false" />
+    <Reference Include="$(GameRoot)/BepInEx/interop/Unity.TextMeshPro.dll" Private="false" />
   </ItemGroup>
 </Project>
 
