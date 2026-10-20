@@ -25,3 +25,11 @@
 - Global UpgradePicker.SelectUpgrade(IUpgradable,List<StatModifier>,UpgradeButton,ERarity), ShuffleUpgrades(EEncounter).
 - Assets.Scripts.Inventory__Items__Pickups.Weapons.WeaponBase.Disable()/Use() for native attack opt-out in the root ability integration.
 - Global InventoryHud.Refresh() and tomeParent provide tome HUD integration. Per-type API extracts stored under reports/megabonk-research/*.txt.
+
+## 2026-10-21: Mage tome compatibility and pause repair
+
+- Source adapter now consumes native quantity by integer truncation, size, duration, projectile speed, damage, attack speed, criticals and bounce bonuses. Distinct real projectiles have separate visible launch positions/staggers; all their VFX layers follow one root.
+- Critical rolls moved into the shared ability hit path, with the former MageTalents duplicate removed. Native lifesteal and elite damage are retained in native damage-event processing.
+- Four-tome-slot patch remains unchanged. Source spell ranks/upgrades remain source-backed.
+- Added shared combat clock and native pause gates for source abilities, VFX, talents and Water Elemental.
+- Full native evidence, limits and probe contract: TOME_COMPAT_LOG.md and docs/tome-pause-probe-contract.md. Isolated Release compilation passes; runtime verification is pending the root background probe.

@@ -13,7 +13,7 @@ using Object=UnityEngine.Object;
 
 namespace AzerothMegabonk.MageVisuals;
 
-[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.5")]
+[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.7")]
 public sealed class Plugin:BasePlugin
 {
  public const string Id="local.azerothmegabonk.magevisuals";
@@ -25,7 +25,7 @@ public sealed class Plugin:BasePlugin
  public override bool Unload(){Unloading=true;harmony?.UnpatchSelf();NativeWeaponVisuals.Restore();SourceMageWeapon.Shutdown();CreatureVisualBridge.Shutdown();foreach(var v in Object.FindObjectsOfType<MageVisual>(true))v.RestoreNative();Model?.Release();Model=null;return true;}
 }
 
-public static class MageVisualBridge
+public static partial class MageVisualBridge
 {
  public static int ModelLoadCount {get;internal set;}
  public static int RecoveryAttempts {get;internal set;}
@@ -60,9 +60,9 @@ public sealed class MageVisual:MonoBehaviour
  private readonly List<(Renderer renderer,bool enabled)> hidden=new();
  private Model data;
  private Type bridge;
- private float nextSearch,nextFrame,clipStart,castUntil,lastHideScan;
+ private float nextSearch,nextFrame,clipStart,lastHideScan;
  private string clipName="";
- private int lastCast,lastFrame=-1;
+ private int lastFrame=-1;
  private float retryAt,nextFailureLog;
 
  void LateUpdate()
@@ -85,29 +85,24 @@ public sealed class MageVisual:MonoBehaviour
     HideTree(movement.transform);NativeMapMarkers.Describe(hidden.Count(x=>x.renderer!=null && NativeMapMarkers.IsProtected(x.renderer.transform)));
    }
    foreach(var saved in hidden)if(saved.renderer!=null)saved.renderer.enabled=false;
-   if(Time.time<nextFrame)return;
-   nextFrame=Time.time+1f/24;
+   float animationNow=MageAnimationClock.Now;
+   if(!MageAnimationClock.CanAnimate || animationNow<nextFrame)return;
+   nextFrame=animationNow+1f/24;
    var velocity=body!=null?body.velocity:Vector3.zero;
    var horizontal=new Vector3(velocity.x,0,velocity.z);
    if(horizontal.sqrMagnitude>.04f)visual.transform.rotation=Quaternion.LookRotation(horizontal);
-   int casts=(int)(bridge.GetProperty("CastCount")?.GetValue(null)??0);
-   if(casts>lastCast)
-   {
-    lastCast=casts;castUntil=Time.time+.72f;
-    var lastSpell=bridge.GetProperty("LastCastSpell")?.GetValue(null)?.ToString()??"";
-    if(lastSpell=="arcane_explosion")castUntil=Time.time+.7f;
-    var direction=bridge.GetProperty("LastCastDirection")?.GetValue(null);
-    if(direction is Vector3 dir){dir.y=0;if(dir.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(dir);}
-   }
-   string next=!movement.grounded?"jump":horizontal.sqrMagnitude>.16f?"run":Time.time<castUntil?"cast":"idle";
+   string next=MageMotionPolicy.Select(movement.grounded,(int)movement.crouchState,horizontal.sqrMagnitude);
+   MageMotionPolicy.Observe(movement.grounded,(int)movement.crouchState,horizontal.sqrMagnitude,next);
+   if(MageMotionPolicy.ProbeClip!=null)next=MageMotionPolicy.ProbeClip;
    if(!data.Clips.TryGetValue(next,out var clip))return;
-   if(clipName!=next){clipName=next;clipStart=Time.time;lastFrame=-1;MageVisualBridge.CurrentClip=next;}
-   float elapsed=Time.time-clipStart;
+   if(clipName!=next){clipName=next;clipStart=animationNow;lastFrame=-1;MageVisualBridge.CurrentClip=next;}
+   float elapsed=animationNow-clipStart;
    float t=clip.Loop?elapsed%clip.Duration:Math.Min(elapsed,clip.Duration);
    int frame=Math.Clamp((int)(t/clip.Duration*(clip.Count-1)),0,clip.Count-1);
    if(clip.Meshes[frame]==null)throw new InvalidOperationException("Original Mage animation frame was unloaded: "+next+"/"+frame);
    if(frame!=lastFrame){lastFrame=frame;filter.sharedMesh=clip.Meshes[frame];}
    SourceMageWeapon.SetFrame(next,frame);
+   MageMotionPolicy.ObserveFrame(next,clip.AnimationId,frame,clip.Loop,clip.Count);
    if(clip.Hands!=null)
    {
     MageVisualBridge.HandWorldPositions=new[]{visual.transform.TransformPoint(clip.Hands[frame*2]),visual.transform.TransformPoint(clip.Hands[frame*2+1])};
@@ -141,7 +136,7 @@ public sealed class MageVisual:MonoBehaviour
   var forward=target.orientation!=null?target.orientation.forward:target.transform.forward;forward.y=0;visual.transform.rotation=forward.sqrMagnitude>.001f?Quaternion.LookRotation(forward):Quaternion.identity;
   filter=visual.AddComponent<MeshFilter>();filter.sharedMesh=data.Template;renderer=visual.AddComponent<MeshRenderer>();renderer.sharedMaterial=data.Material;
   SourceMageWeapon.Bind(visual);
-  NativeMapMarkers.Refresh(MyPlayer.Instance,target.transform);HideTree(target.transform);NativeMapMarkers.Describe(0);lastHideScan=Time.unscaledTime;lastFrame=-1;clipName="";lastCast=(int)(bridge.GetProperty("CastCount")?.GetValue(null)??0);nextFrame=0;
+  NativeMapMarkers.Refresh(MyPlayer.Instance,target.transform);HideTree(target.transform);NativeMapMarkers.Describe(0);lastHideScan=Time.unscaledTime;lastFrame=-1;clipName="";nextFrame=0;
   MageVisualBridge.IsAttached=true;MageVisualBridge.SourceHeadClosed=data.HeadClosed;MageVisualBridge.SourceVertexCount=data.VertexCount;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Mage visual attached: original HumanMale M2, robe item 56/display 12647, {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched. Source head closed={data.HeadClosed}, vertices={data.VertexCount}.");
  }
  [HideFromIl2Cpp]
@@ -168,7 +163,7 @@ public sealed class MageVisual:MonoBehaviour
 
 internal sealed class Clip
 {
- public string Name="";public float Duration;public int Count;public bool Loop;public Mesh[] Meshes;public Vector3[] Hands;
+ public string Name="";public int AnimationId;public float Duration;public int Count;public bool Loop;public Mesh[] Meshes;public Vector3[] Hands;
 }
 
 internal sealed partial class Model
@@ -191,7 +186,7 @@ internal sealed partial class Model
    var shader=Shader.Find("Unlit/Texture")??Shader.Find("Standard")??Shader.Find("Sprites/Default");if(shader==null)throw new InvalidOperationException("No texture shader");model.Material=Retain(new Material(shader){mainTexture=model.Texture,color=Color.white});
    foreach(var c in j.GetProperty("animations").EnumerateArray())
    {
-    var clip=new Clip{Name=c.GetProperty("name").GetString(),Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32(),Loop=c.GetProperty("loop").GetBoolean()};clip.Meshes=new Mesh[clip.Count];model.Clips[clip.Name]=clip;
+    var clip=new Clip{Name=c.GetProperty("name").GetString(),AnimationId=c.GetProperty("animationId").GetInt32(),Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32(),Loop=c.GetProperty("loop").GetBoolean()};clip.Meshes=new Mesh[clip.Count];model.Clips[clip.Name]=clip;
     var bytes=File.ReadAllBytes(Path.Combine(folder,c.GetProperty("file").GetString()));if(bytes.Length!=clip.Count*count*12)throw new InvalidDataException("Animation frame length mismatch");using var r=new BinaryReader(new MemoryStream(bytes));
     for(int f=0;f<clip.Count;f++){var v=new Vector3[count];for(int i=0;i<count;i++)v[i]=new(r.ReadSingle(),r.ReadSingle(),r.ReadSingle());var mesh=Retain(Object.Instantiate(model.Template));mesh.vertices=v;mesh.RecalculateNormals();mesh.RecalculateBounds();clip.Meshes[f]=mesh;}
     if(c.TryGetProperty("attachmentsFile",out var af)){var ab=File.ReadAllBytes(Path.Combine(folder,af.GetString()));if(ab.Length!=clip.Count*2*12)throw new InvalidDataException("Attachment frame length mismatch");using var ar=new BinaryReader(new MemoryStream(ab));clip.Hands=new Vector3[clip.Count*2];for(int i=0;i<clip.Hands.Length;i++)clip.Hands[i]=new(ar.ReadSingle(),ar.ReadSingle(),ar.ReadSingle());}

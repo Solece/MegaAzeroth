@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace MageTalents;
 
-[BepInPlugin(Id,"Azeroth Mage Talents","0.1.0")]
+[BepInPlugin(Id,"Azeroth Mage Talents","0.1.1")]
 [BepInDependency("local.azerothmegabonk.abilities")]
 public sealed class Plugin:BasePlugin
 {
@@ -83,6 +83,8 @@ public static class TalentBridge
     public static string CatalogJson=>JsonSerializer.Serialize(Plugin.Catalog,TalentCatalog.Json);
     public static bool PendingNextRun=>TalentState.TemporaryPointBudget<=0 && MyPlayer.Instance!=null && MyPlayer.Instance.hasStarted;
     public static int Rank(string id)=>Plugin.Saved.Rank(id);
+    public static bool CanSpend(string id)=>Plugin.Catalog!=null && Plugin.Saved.Clone().Spend(Plugin.Catalog,id);
+    public static bool CanRefund(string id)=>Plugin.Catalog!=null && Plugin.Saved.Clone().Refund(Plugin.Catalog,id);
     public static bool Spend(string id){if(Plugin.Catalog==null||!Plugin.Saved.Spend(Plugin.Catalog,id))return false;ApplyDebugNow();Plugin.Save();return true;}
     public static bool Refund(string id){if(Plugin.Catalog==null||!Plugin.Saved.Refund(Plugin.Catalog,id))return false;ApplyDebugNow();Plugin.Save();return true;}
     public static void Reset(){Plugin.Saved.Ranks.Clear();ApplyDebugNow();Plugin.Save();}
@@ -176,7 +178,8 @@ static class StatPatch
             // Megabonk's native regeneration value is health per minute.
             case EStat.HealthRegen:__result+=s.Stat(c,6)*60;break;
             case EStat.MoveSpeedMultiplier:__result*=1+s.Stat(c,7);break;
-            case EStat.Luck:__result*=1+s.Stat(c,12);break;
+            // SourceStatsRebuild adds talent Luck to its zero-based Luck bonus (VA14590B7B0).
+            case EStat.Luck:__result+=s.Stat(c,12);break;
         }
     }
 }

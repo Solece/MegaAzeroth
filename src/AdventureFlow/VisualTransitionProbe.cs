@@ -79,9 +79,10 @@ internal static class VisualTransitionProbe
         if(Time.realtimeSinceStartup<bossWait)return false;
         if(bossPhase==0)
         {
-            string description=(string)Call("AzerothMegabonk.EnemyVisuals.EnemyVisualBridge","Describe",boss);
-            AssertBoss(description);Plugin.Note("VISUAL live native boss "+description);Validate("live boss after transition");
-            Capture("boss-visual-"+Safe(key)+".ppm");
+            // The native emergence sequence intentionally starts below ground; verify the settled body after teleporting completes.
+            if(boss.IsTeleporting())return false;
+            Validate("live boss after transition");
+            CaptureBossEvidence(boss,"boss-visual-"+Safe(key)+".ppm","live native boss");
             if(MapController.GetStageIndex()==0 && !MapController.IsFinalBossStage())
             {
                 var cam=Camera.main;var dir=cam.transform.forward;dir.y=0;dir.Normalize();
@@ -94,12 +95,38 @@ internal static class VisualTransitionProbe
         }
         if(bossPhase==1)
         {
-            string description=(string)Call("AzerothMegabonk.EnemyVisuals.EnemyVisualBridge","Describe",scorpion);
-            AssertBoss(description);Plugin.Note("VISUAL user-reported spider boss "+description);
-            Capture("boss-scorpion-ground.ppm");
+            if(scorpion!=null && scorpion.IsTeleporting())return false;
+            CaptureBossEvidence(scorpion,"boss-scorpion-ground.ppm","user-reported spider boss");
             scorpion.MakeInvulnerable(false);scorpion.Kill("AzerothVisualRegressionProbe");
         }
         boss.MakeInvulnerable(false);bosses.Add(current);Plugin.Note("PASS VISUAL BOSS "+current);return true;
+    }
+    static void CaptureBossEvidence(Enemy enemy,string file,string label)
+    {
+        var camera=Camera.main;
+        if(camera==null)throw new InvalidOperationException("Native camera missing for boss evidence");
+        var rotation=camera.transform.rotation;
+        try
+        {
+            var description=(string)Call("AzerothMegabonk.EnemyVisuals.EnemyVisualBridge","Describe",enemy);
+            using(var data=JsonDocument.Parse(description))
+            {
+                var j=data.RootElement;
+                if(!j.GetProperty("canVisible").GetBoolean())
+                {
+                    // Native random terrain can leave the test player's view pointed over a
+                    // cliff after its fixture teleport. Aim the real camera at the live body
+                    // for this screenshot, with its native projection and world position intact.
+                    var v=j.GetProperty("cameraViewport");
+                    var target=camera.ViewportToWorldPoint(new Vector3(v[0].GetSingle(),v[1].GetSingle(),v[2].GetSingle()));
+                    camera.transform.LookAt(target);
+                    Plugin.Note("VISUAL test camera aimed at live boss for capture; native projection, enemy position, AI and colliders unchanged");
+                    description=(string)Call("AzerothMegabonk.EnemyVisuals.EnemyVisualBridge","Describe",enemy);
+                }
+            }
+            AssertBoss(description);Plugin.Note("VISUAL "+label+" "+description);Capture(file);
+        }
+        finally{camera.transform.rotation=rotation;}
     }
     static void AssertBoss(string description)
     {

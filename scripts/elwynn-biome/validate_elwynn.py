@@ -10,10 +10,11 @@ sys.path.insert(0, str(ROOT / 'scripts/azeroth-mage'))
 from mpq_source import Archives
 from blp_decode import decode_blp
 from build_elwynn import array, unity
+from wmo_validate import validate_buildings
 
 def validate(folder):
  manifest = json.loads((folder / 'manifest.json').read_text(encoding='utf8'))
- assert manifest['format'] == 'azeroth-elwynn-biome-v1'
+ assert manifest['format'] in ['azeroth-elwynn-biome-v1', 'azeroth-elwynn-biome-v2']
  assert len(manifest['groundTextures']) == 6 and len(manifest['props']) == 15
  source = Archives(); stats = dict(sourceFiles=0, textures=0, props=0, passes=0, triangles=0, cutoutPasses=0)
  for item in manifest['sourceEvidence']:
@@ -61,9 +62,11 @@ def validate(folder):
     stats['cutoutPasses'] += 1
    stats['passes'] += 1; stats['triangles'] += len(p['triangles']) // 3
   stats['props'] += 1
+ stats.update(validate_buildings(folder, manifest, source, unity))
  report = dict(status='PASS', **stats, allSourceHashesMatch=True,
      allOriginalPositionsNormalsUvsMatch=True, allRenderPassesMatch=True,
-     rgbaOrientationVerified=True, alphaKeyPixelsPreserved=True)
+     rgbaOrientationVerified=True, alphaKeyPixelsPreserved=True,
+     wmoOriginalGeometryAndCollisionMatch=True, wmoDoorwaysUseActualOpenings=True)
  (folder / 'validation.json').write_text(json.dumps(report, indent=2), encoding='utf8')
  print(json.dumps(report, indent=2))
 

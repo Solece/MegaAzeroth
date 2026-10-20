@@ -27,6 +27,10 @@ public static class MageSpellBehaviors
     private static bool popping;
     private static readonly List<GroundArea> Areas=new();
     private static readonly Dictionary<IntPtr,Control> Controls=new();
+    internal static object Snapshot()=>new{
+        BarrierRemaining,BarrierExpiresIn=Mathf.Max(0,barrierExpires-CombatSimulation.Time),
+        Areas=Areas.Select(a=>new{Spell=a.Spell.Definition.Id,a.Radius,a.Damage,a.Remaining,NextTickIn=Mathf.Max(0,a.Next-CombatSimulation.Time),a.Interval}).ToArray(),
+        Controls=Controls.Values.Select(c=>new{Enemy=c.Id,SlowFor=Mathf.Max(0,c.SlowUntil-CombatSimulation.Time),RootFor=Mathf.Max(0,c.RootUntil-CombatSimulation.Time),StunFor=Mathf.Max(0,c.StunUntil-CombatSimulation.Time),SheepFor=Mathf.Max(0,c.SheepUntil-CombatSimulation.Time)}).ToArray()};
     private sealed class GroundArea
     {
         internal LearnedSpell Spell;internal Vector3 Center;internal float Radius,Damage,Next,Interval;
@@ -56,12 +60,12 @@ public static class MageSpellBehaviors
         return c;
     }
     public static bool IsSheep(Enemy enemy)=>enemy!=null && Controls.TryGetValue(enemy.Pointer,out var c)
-        && c.Id==enemy.id && c.SheepUntil>Time.time;
+        && c.Id==enemy.id && c.SheepUntil>CombatSimulation.Time;
     public static bool IsControlled(Enemy enemy)
     {
         if(enemy==null)return false;
         if(Controls.TryGetValue(enemy.Pointer,out var c) && c.Id==enemy.id
-            && (c.SlowUntil>Time.time || c.RootUntil>Time.time || c.StunUntil>Time.time || c.SheepUntil>Time.time))return true;
+            && (c.SlowUntil>CombatSimulation.Time || c.RootUntil>CombatSimulation.Time || c.StunUntil>CombatSimulation.Time || c.SheepUntil>CombatSimulation.Time))return true;
         return enemy.HasDebuff(EDebuff.Stun) || enemy.HasDebuff(EDebuff.Freeze) || enemy.HasDebuff(EDebuff.Charm);
     }
     public static void ApplyRoot(Enemy enemy,float duration,bool stun)
@@ -71,16 +75,16 @@ public static class MageSpellBehaviors
         var c=Get(enemy);
         if(stun)
         {
-            c.StunUntil=Mathf.Max(c.StunUntil,Time.time+duration);
+            c.StunUntil=Mathf.Max(c.StunUntil,CombatSimulation.Time+duration);
             enemy.AddDebuff(EDebuff.Stun,new DamageContainer(0,"Azeroth:MageTalent"),duration,1);
         }
-        else c.RootUntil=Mathf.Max(c.RootUntil,Time.time+duration);
+        else c.RootUntil=Mathf.Max(c.RootUntil,CombatSimulation.Time+duration);
     }
     internal static float SpeedFactor(Enemy enemy)
     {
         if(!AbilityRuntime.Active || enemy==null || !Controls.TryGetValue(enemy.Pointer,out var c) || c.Id!=enemy.id)return 1;
-        if(c.RootUntil>Time.time || c.StunUntil>Time.time || c.SheepUntil>Time.time)return 0;
-        return c.SlowUntil>Time.time?c.SlowFactor:1;
+        if(c.RootUntil>CombatSimulation.Time || c.StunUntil>CombatSimulation.Time || c.SheepUntil>CombatSimulation.Time)return 0;
+        return c.SlowUntil>CombatSimulation.Time?c.SlowFactor:1;
     }
     public static bool TryCast(LearnedSpell spell,MyPlayer player,out bool casted)
     {
@@ -96,8 +100,8 @@ public static class MageSpellBehaviors
                 // Native book damage is separate from the original rank factor.
                 BarrierRemaining=health.maxHp*d.StatusValue*AbilityRuntime.Catalog.DamageScale*Mathf.Sqrt(spell.DamageFactor);
                 BarrierRemaining*=Mathf.Max(0,BarrierMultiplier?.Invoke(spell)??1);
-                barrierExpires=Time.time+d.Duration*AbilityRuntime.Catalog.DurationScale*spell.DurationFactor;
-                Fx(d.Id,"aura",player.transform.position,1,Mathf.Max(.1f,barrierExpires-Time.time));
+                barrierExpires=CombatSimulation.Time+TomeCompatibility.SpellDuration(spell);
+                Fx(d.Id,"aura",player.transform.position,1,Mathf.Max(.1f,barrierExpires-CombatSimulation.Time));
                 casted=true;return true;
             case "cone":
                 var origin=player.transform.position;
@@ -121,32 +125,32 @@ public static class MageSpellBehaviors
                     foreach(var e in candidates)if((e.transform.position-at).sqrMagnitude<=radius*radius)count++;
                     if(count>best){best=count;center=at;}
                 }
-                var duration=d.Duration*AbilityRuntime.Catalog.DurationScale*spell.DurationFactor;
+                var duration=TomeCompatibility.SpellDuration(spell);
                 var totalTicks=Mathf.Max(1,(int)MathF.Round(duration/Mathf.Max(.01f,d.Duration)*Mathf.Max(1,d.Ticks),MidpointRounding.AwayFromZero));
                 Areas.Add(new GroundArea{Spell=spell,Center=center,Radius=radius,Damage=AbilityRuntime.Damage(spell)/Mathf.Max(1,d.Ticks),
-                    Remaining=totalTicks,Next=Time.time+.25f,Interval=duration/totalTicks});
+                    Remaining=totalTicks,Next=CombatSimulation.Time+.25f,Interval=duration/totalTicks});
                 Fx(d.Id,"area",center,radius,duration);casted=true;return true;
             default:return false;
         }
     }
     public static void Tick()
     {
-        if(!AbilityRuntime.Active)return;
-        if(BarrierRemaining>0 && Time.time>=barrierExpires)
+        if(!CombatSimulation.CanSimulate)return;
+        if(BarrierRemaining>0 && CombatSimulation.Time>=barrierExpires)
         {BarrierRemaining=0;}
         // Process a snapshot: hit procs may create more statuses and visual callbacks.
         foreach(var pair in Controls.ToArray())
         {
             var c=pair.Value;
             if(!Alive(c.Enemy) || c.Enemy.id!=c.Id){Controls.Remove(pair.Key);continue;}
-            if(c.WasSheep && c.SheepUntil<=Time.time)
+            if(c.WasSheep && c.SheepUntil<=CombatSimulation.Time)
             {c.WasSheep=false;}
-            if(c.SlowUntil<=Time.time && c.RootUntil<=Time.time && c.StunUntil<=Time.time && c.SheepUntil<=Time.time)Controls.Remove(pair.Key);
+            if(c.SlowUntil<=CombatSimulation.Time && c.RootUntil<=CombatSimulation.Time && c.StunUntil<=CombatSimulation.Time && c.SheepUntil<=CombatSimulation.Time)Controls.Remove(pair.Key);
         }
         for(var i=Areas.Count-1;i>=0;i--)
         {
             var area=Areas[i];
-            if(Time.time<area.Next)continue;
+            if(CombatSimulation.Time<area.Next)continue;
             var targets=AbilityRuntime.Targets(area.Center,area.Radius,false);
             foreach(var e in targets)AbilityRuntime.Hit(area.Spell,e,area.Damage,area.Center);
             area.Remaining--;area.Next+=area.Interval;
@@ -177,8 +181,8 @@ public static class MageSpellBehaviors
         var d=spell.Definition;
         if(d.StatusKind==1 && d.StatusDuration>0)
         {
-            var c=Get(target);var until=Time.time+d.StatusDuration;
-            if(c.SlowUntil<=Time.time)c.SlowFactor=1;
+            var c=Get(target);var until=CombatSimulation.Time+d.StatusDuration*TomeCompatibility.EffectDuration;
+            if(c.SlowUntil<=CombatSimulation.Time)c.SlowFactor=1;
             c.SlowFactor=Mathf.Min(c.SlowFactor,Mathf.Max(0,1-d.StatusValue));
             c.SlowUntil=Mathf.Max(c.SlowUntil,until);
         }
@@ -186,30 +190,31 @@ public static class MageSpellBehaviors
         {
             // Native root status stores duration in the value field. Source bosses are
             // rooted for a quarter of the ordinary duration, without changing their AI.
-            ApplyRoot(target,d.StatusValue,false);
+            ApplyRoot(target,d.StatusValue*TomeCompatibility.EffectDuration,false);
         }
         if(popping || d.Id=="polymorph" || target.IsBoss() || target.IsStageBoss() || target.IsFinalBoss() || IsSheep(target))return;
         var passive=AbilityRuntime.Spells.FirstOrDefault(s=>s.Definition.Id=="polymorph");
-        if(passive==null || Time.time<nextPolymorph || Controls.Values.Count(c=>c.SheepUntil>Time.time)>=3 || UnityEngine.Random.value>=.12f)return;
-        var sheep=Get(target);sheep.SheepUntil=Time.time+10;sheep.WasSheep=true;
-        nextPolymorph=Time.time+Mathf.Max(3,passive.Definition.BaseCooldown*AbilityRuntime.Catalog.CooldownScale*passive.CooldownFactor)
+        if(passive==null || CombatSimulation.Time<nextPolymorph || Controls.Values.Count(c=>c.SheepUntil>CombatSimulation.Time)>=3 || UnityEngine.Random.value>=.12f)return;
+        var sheepDuration=10*TomeCompatibility.EffectDuration;
+        var sheep=Get(target);sheep.SheepUntil=CombatSimulation.Time+sheepDuration;sheep.WasSheep=true;
+        nextPolymorph=CombatSimulation.Time+Mathf.Max(3,passive.Definition.BaseCooldown*AbilityRuntime.Catalog.CooldownScale*passive.CooldownFactor)
             /Mathf.Max(.1f,AbilityRuntime.Stat(EStat.AttackSpeed));
-        Fx("polymorph","aura",target.transform.position,1,10);
-        Plugin.Current?.Log.LogInfo($"Azeroth Polymorph proc: enemy={target.id},duration=10,next={nextPolymorph-Time.time:F3}");
+        Fx("polymorph","aura",target.transform.position,1,sheepDuration);
+        Plugin.Current?.Log.LogInfo($"Azeroth Polymorph proc: enemy={target.id},duration=10,next={nextPolymorph-CombatSimulation.Time:F3}");
     }
     internal static bool Wander(EnemyMovementRb movement)
     {
         var enemy=movement.enemy;if(!AbilityRuntime.Active || !IsSheep(enemy))return false;
         var c=Get(enemy);
-        if(Time.time>=c.ChangeDirection)
-        {var angle=(enemy.id*.618034f+Mathf.Floor(Time.time*.5f))*Mathf.PI*2;c.Wander=new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*.8f;c.ChangeDirection=Time.time+2;}
+        if(CombatSimulation.Time>=c.ChangeDirection)
+        {var angle=(enemy.id*.618034f+Mathf.Floor(CombatSimulation.Time*.5f))*Mathf.PI*2;c.Wander=new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*.8f;c.ChangeDirection=CombatSimulation.Time+2;}
         if(movement.rb!=null)
         {var velocity=movement.rb.velocity;movement.rb.velocity=new Vector3(c.Wander.x,velocity.y,c.Wander.z);}
         return true;
     }
     internal static void Absorb(DamageContainer dc)
     {
-        if(!AbilityRuntime.Active || BarrierRemaining<=0 || dc==null || dc.damage<=0 || Time.time>=barrierExpires)return;
+        if(!AbilityRuntime.Active || BarrierRemaining<=0 || dc==null || dc.damage<=0 || CombatSimulation.Time>=barrierExpires)return;
         var absorbed=Mathf.Min(BarrierRemaining,dc.damage);dc.damage-=absorbed;BarrierRemaining-=absorbed;
     }
 }

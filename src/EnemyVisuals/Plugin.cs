@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.EnemyVisuals;
 
-[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.1")]
+[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.3")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.azerothmegabonk.enemyvisuals";
@@ -81,7 +81,7 @@ internal static class EnemyInitPatch
             string key = boss ? BossModel(original) : original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar";
             var model = Plugin.GetModel(key) ?? Plugin.GetModel(boss ? "ogre" : "boar");
             if (model == null) return;
-            var visual = __instance.gameObject.GetComponent<AzerothVisual>() ?? __instance.gameObject.AddComponent<AzerothVisual>();
+            var visual = EnemyVisualOwnership.Find(__instance) ?? __instance.gameObject.GetComponent<AzerothVisual>() ?? __instance.gameObject.AddComponent<AzerothVisual>();
             visual.Bind(__instance, model, boss);
             if (++Plugin.Attached <= 8 || boss) Plugin.Logger.LogInfo($"Visual attached to native enemy {original}; hp={__instance.hp}, model={model.Name}, boss={boss}; collider and spawner retained. {visual.Describe()}");
         }
@@ -168,7 +168,7 @@ internal sealed partial class Model
     }
 }
 
-public sealed class AzerothVisual : MonoBehaviour
+public sealed partial class AzerothVisual : MonoBehaviour
 {
     public AzerothVisual(IntPtr ptr) : base(ptr) { }
     private Enemy enemy;
@@ -191,6 +191,7 @@ public sealed class AzerothVisual : MonoBehaviour
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     internal void Bind(Enemy target,Model data,bool boss)
     {
+        RegisterOwnership(target);
         enabled=true;enemy=target; original=target.renderer; model=data; isBoss=boss;retryAt=0;needsRebind=false;nextGroundSample=0;groundFound=false;nextAssetCheck=Time.unscaledTime+1;
         if(visual!=null) { visual.SetActive(false);Object.Destroy(visual); }
         visual=new GameObject("AzerothCreature_"+data.Name);
@@ -228,8 +229,8 @@ public sealed class AzerothVisual : MonoBehaviour
         replacement=visual.AddComponent<MeshRenderer>(); replacement.sharedMaterial=data.Material;
         PlaceAboveNativeFloor(mesh,true);
         if(Plugin.Attached<3 || boss) Plugin.Logger.LogInfo($"Visual scale evidence: boss={boss}, reference={scaleReference}, nativeRendererHeight={nativeRendererBounds.size.y}, nativeColliderHeight={nativeColliderBounds.size.y}, ratio={sizeMultiplier}, sourceHeight={sourceHeight}, localScale={scale}, visualBounds={replacement.bounds.size}, position={replacement.bounds.center}");
-        original.enabled=false;
-        startTime=Time.time; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
+        SuppressNativeBodies();
+        startTime=EnemyAnimationClock.Now; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void PlaceAboveNativeFloor(Mesh mesh,bool forceGround=false)
@@ -249,6 +250,7 @@ public sealed class AzerothVisual : MonoBehaviour
         float minY=replacement.bounds.min.y;
         float floor=groundFound?groundY:feet.y;floorCorrectionY=Math.Max(0,floor-minY);
         if(floorCorrectionY>0)visual.transform.position+=Vector3.up*floorCorrectionY;
+        ApplyNativeSpawnOffset(feet.y);
     }
     void LateUpdate()
     {
@@ -260,10 +262,12 @@ public sealed class AzerothVisual : MonoBehaviour
             {
                 var live=Plugin.GetModel(model.Key,needsRebind);if(live==null)return;Bind(enemy,live,isBoss);
             }
-            original.enabled=false;
+            SuppressNativeBodies();
             if(enemy.hp<=0){replacement.enabled=false;return;}
             replacement.enabled=true;
-            if(Time.time<nextFrame)return;nextFrame=Time.time+1f/24;
+            float animationNow=EnemyAnimationClock.Now;
+            if(!EnemyAnimationClock.CanAnimate){if(filter.sharedMesh!=null)PlaceAboveNativeFloor(filter.sharedMesh);return;}
+            if(animationNow<nextFrame)return;nextFrame=animationNow+1f/24;
             var position=enemy.transform.position;
             if(enemy.rb!=null)
             {
@@ -274,8 +278,8 @@ public sealed class AzerothVisual : MonoBehaviour
             if(model.Name.Equals("Tarantula",StringComparison.OrdinalIgnoreCase) && name=="run")name="walk";
             previous=position;
             if(!model.Clips.TryGetValue(name,out var clip))return;
-            if(clipName!=name){clipName=name;lastFrame=-1;startTime=Time.time;}
-            int frame=(int)(((Time.time-startTime)%clip.Duration)/clip.Duration*(clip.Count-1));
+            if(clipName!=name){clipName=name;lastFrame=-1;startTime=EnemyAnimationClock.Now;}
+            int frame=(int)(((animationNow-startTime)%clip.Duration)/clip.Duration*(clip.Count-1));
             var mesh=clip.Meshes[frame];if(mesh==null)throw new InvalidOperationException("Original enemy animation frame was unloaded: "+model.Key+"/"+name+"/"+frame);
             if(frame!=lastFrame){lastFrame=frame;filter.sharedMesh=mesh;}
             PlaceAboveNativeFloor(mesh);
@@ -283,7 +287,7 @@ public sealed class AzerothVisual : MonoBehaviour
         catch(Exception ex)
         {
             needsRebind=true;retryAt=Time.unscaledTime+1;Plugin.Recoveries++;
-            if(original!=null)original.enabled=true;if(replacement!=null)replacement.enabled=false;
+            RestoreNativeBodies();if(original!=null)original.enabled=true;if(replacement!=null)replacement.enabled=false;
             if(Time.unscaledTime>=nextFailureLog){nextFailureLog=Time.unscaledTime+5;Plugin.Logger.LogWarning("Enemy source visual will retry after native scene/asset change: "+ex);}
         }
     }
@@ -294,7 +298,7 @@ public sealed class AzerothVisual : MonoBehaviour
         var bounds=replacement!=null?replacement.bounds:new Bounds();
         var camera=Camera.main;bool canVisible=EnemyVisualGround.CameraVisible(camera,replacement,out var viewport);
         return JsonSerializer.Serialize(new {
-            enemyName=enemy?.enemyData?.enemyName.ToString(),
+            animationClock=EnemyAnimationClock.Snapshot(),enemyName=enemy?.enemyData?.enemyName.ToString(),
             enemyId=enemy!=null ? enemy.id : 0,
             boss=isBoss, stageBoss=enemy!=null && enemy.IsStageBoss(), finalBoss=enemy!=null && enemy.IsFinalBoss(),
             model=model?.Name, scaleReference,
@@ -302,7 +306,7 @@ public sealed class AzerothVisual : MonoBehaviour
             nativeColliderHeight=nativeColliderBounds.size.y,
             referenceHeight, sizeMultiplier, sourceHeight,
             expectedInitialHeight=referenceHeight*sizeMultiplier,
-            renderedHeight,nativeFeetY,nativeGroundCheckY,nativeBottomY=enemy!=null?enemy.GetBottomPosition().y:0,groundLayerMask=EnemyVisualGround.GroundLayerMask,nativeRendererFeetY=nativeRendererBounds.min.y,nativeColliderFeetY=nativeColliderBounds.min.y,
+            renderedHeight,nativeState=enemy!=null?enemy.state.ToString():"",nativeSpawnOffsetY,nativeFeetY,nativeGroundCheckY,nativeBottomY=enemy!=null?enemy.GetBottomPosition().y:0,groundLayerMask=EnemyVisualGround.GroundLayerMask,nativeRendererFeetY=nativeRendererBounds.min.y,nativeColliderFeetY=nativeColliderBounds.min.y,
             visualMinY=bounds.min.y,visualMaxY=bounds.max.y,groundY,groundFound,groundSampleFeetY,floorCorrectionY,templateMinY,frameMinY,frameMaxY,
             groundClearance=bounds.min.y-groundY,cameraViewport=new[]{viewport.x,viewport.y,viewport.z},canVisible,
             cameraName=camera!=null?camera.name:"",currentClip=clipName,currentFrame=lastFrame,modelAssetsValid=model!=null && model.IsUsable(false),
@@ -316,18 +320,20 @@ public sealed class AzerothVisual : MonoBehaviour
     public void RestoreNative()
     {
         enabled=false;
+        ReleaseOwnership();
         if(original!=null) original.enabled=true;
         if(visual!=null){visual.SetActive(false);Object.Destroy(visual);}
         original=null;enemy=null;filter=null;replacement=null;visual=null;
     }
-    void OnDestroy() { if(original!=null)original.enabled=true;if(visual!=null)Object.Destroy(visual); }
+    void OnDestroy() { ReleaseOwnership();if(visual!=null)Object.Destroy(visual); }
 }
 
 
 
 /// <summary>Read-only runtime evidence for native spawn and size checks.</summary>
-public static class EnemyVisualBridge
+public static partial class EnemyVisualBridge
 {
+    public static string AnimationDiagnostics()=>JsonSerializer.Serialize(new{clock=EnemyAnimationClock.Snapshot(),enemies=DescribeAll()});
     public static bool AllCachedAssetsValid=>Plugin.Models.Count>0 && Plugin.Models.Values.All(m=>m.IsUsable());
     public static string AssetDiagnostics()=>JsonSerializer.Serialize(new{allValid=AllCachedAssetsValid,sourceCount=Plugin.Models.Count,expectedSourceCount=Plugin.ModelKeys.Length,allElevenPrimed=Plugin.Models.Count==Plugin.ModelKeys.Length && AllCachedAssetsValid,modelLoads=Plugin.ModelLoads,recoveries=Plugin.Recoveries,models=Plugin.Models.Select(x=>new{key=x.Key,health=x.Value.Inspect()}).ToArray(),failedKeys=Plugin.FailedModels.ToArray()});
     public static bool PrimeAllModelsForProbe()

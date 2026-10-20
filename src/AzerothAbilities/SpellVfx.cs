@@ -52,7 +52,7 @@ internal static class SpellVfx
             InvalidTextures=cachedTextures.Count(t=>!Alive(t)),InvalidMeshes=meshes.Count(m=>!Alive(m)),
             PinnedTextures=cachedTextures.Count(t=>Pinned(t)),PinnedMeshes=meshes.Count(m=>Pinned(m)),
             ActiveMaterials=materials.Length,InvalidMaterials=materials.Count(m=>!Alive(m)),PinnedMaterials=materials.Count(m=>Pinned(m)),
-            FailedEffects=failed.Count,ActiveEffects=Live,Spawned,RecoveredTextures,RecoveredGeometry});
+            FailedEffects=failed.Count,ActiveEffects=Live,EffectAges=active.Where(fx=>Alive(fx)).Select(fx=>fx.Age).ToArray(),Spawned,RecoveredTextures,RecoveredGeometry});
     }
     internal static void PrimeAllAssets()
     {
@@ -122,7 +122,7 @@ internal static class SpellVfx
         if(!AbilityBehaviour.RenderVisuals || !Plugin.Current.SpellVisuals.Value)return;
         Spawn(id,stage,position,scale,duration>0?duration:.65f,false);
     }
-    internal static GameObject Projectile(string id,Vector3 position)=>Spawn(id,"missile",position,1,0,true);
+    internal static GameObject Projectile(string id,Vector3 position,float scale=1)=>Spawn(id,"missile",position,scale,0,true);
     private static GameObject Spawn(string id,string stage,Vector3 position,float scale,float life,bool loop)
     {
         if(!map.TryGetValue(id,out var stages) || Live>=64)return null;
@@ -133,24 +133,32 @@ internal static class SpellVfx
         }
         if(keys==null)return null;
         GameObject first=null;
+        var group=loop?new GameObject("AzerothProjectileVfx_"+id):null;
+        if(group!=null){group.transform.position=position;group.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);}
         foreach(var key in keys)
         {
             if(failed.Contains(key))continue;
             try
             {
-                var asset=Asset(key);var go=new GameObject("AzerothVfx_"+id+"_"+stage);go.transform.position=position;
-                go.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);
+                var asset=Asset(key);var go=new GameObject("AzerothVfx_"+id+"_"+stage);
+                if(group!=null)go.transform.SetParent(group.transform,false);
+                else{go.transform.position=position;go.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);}
                 var fx=go.AddComponent<SourceSpellEffect>();fx.Init(asset,life,loop);active.Add(fx);Spawned++;
                 first??=go;
             }
             catch(Exception ex){failed.Add(key);Plugin.Current.Log.LogError("Source spell VFX failed "+id+"/"+stage+": "+ex);}
         }
-        return first;
+        if(group!=null && first==null){Object.Destroy(group);return null;}
+        return group??first;
     }
     internal static void Release(GameObject go)
     {
         if(go==null)return;
-        var effect=go.GetComponent<SourceSpellEffect>();if(effect!=null)effect.Stop();else Object.Destroy(go);
+        var effect=go.GetComponent<SourceSpellEffect>();
+        if(effect!=null){effect.Stop();return;}
+        foreach(var child in go.GetComponentsInChildren<SourceSpellEffect>())
+        {child.Stop();child.transform.SetParent(null,true);}
+        Object.Destroy(go);
     }
     internal static void Removed(SourceSpellEffect effect)=>active.Remove(effect);
     internal static void Clear()
@@ -238,22 +246,23 @@ public sealed class SourceSpellEffect:MonoBehaviour
 {
     public SourceSpellEffect(IntPtr pointer):base(pointer){}
     private EffectAsset asset;private float began,life,stopAt=-1,next;private bool loop;
+    public float Age=>Mathf.Max(0,CombatSimulation.Time-began);
     private readonly List<ParticleLayer> particles=new();private readonly List<GeometryLayer> geometry=new();
     private readonly List<RibbonLayer> ribbons=new();
     [HideFromIl2Cpp]
     internal void Init(EffectAsset source,float duration,bool repeat)
     {
-        asset=source;began=Time.time;life=duration;loop=repeat;
+        asset=source;began=CombatSimulation.Time;life=duration;loop=repeat;
         foreach(var e in asset.Emitters)particles.Add(new ParticleLayer(transform,e,asset));
         foreach(var r in asset.Ribbons)ribbons.Add(new RibbonLayer(transform,r,asset));
         if(asset.Geometry!=null)foreach(var m in asset.Geometry.Nodes)geometry.Add(new GeometryLayer(transform,m,asset));
     }
     [HideFromIl2Cpp]
-    internal void Stop(){if(stopAt<0)stopAt=Time.time;}
+    internal void Stop(){if(stopAt<0)stopAt=CombatSimulation.Time;}
     void Update()
     {
-        if(asset==null)return;
-        float now=Time.time;if(now<next)return;float dt=next==0?1f/30:Mathf.Clamp(now-next+1f/30,0,.1f);next=now+1f/30;
+        if(asset==null || !CombatSimulation.CanSimulate)return;
+        float now=CombatSimulation.Time;if(now<next)return;float dt=next==0?1f/30:Mathf.Clamp(now-next+1f/30,0,.1f);next=now+1f/30;
         float elapsed=now-began;
         if(!loop && stopAt<0 && elapsed>=life)Stop();
         if(stopAt>=0 && now-stopAt>3){Object.Destroy(gameObject);return;}

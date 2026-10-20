@@ -5,6 +5,16 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.ElwynnBiome;
 
+public sealed class BuildingEntrance
+{
+    public int SourcePortalIndex { get; init; }
+    public Vector3 Center { get; init; }
+    public Vector3 Outward { get; init; }
+    public float Width { get; init; }
+    public float Height { get; init; }
+    public float FloorY { get; init; }
+}
+
 /// <summary>Locally converted original Elwynn pixels and static M2 prototypes.</summary>
 public sealed class BiomeAssets : IDisposable
 {
@@ -12,10 +22,18 @@ public sealed class BiomeAssets : IDisposable
     public Dictionary<string, GameObject> Props { get; } = new(StringComparer.Ordinal);
     public Dictionary<string, Bounds> PropBounds { get; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> PropSources { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, GameObject> Buildings { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, Bounds> BuildingBounds { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, float> BuildingFloorY { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, BuildingEntrance[]> BuildingEntrances { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, int> BuildingGroupCount { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, int> BuildingRenderTriangles { get; } = new(StringComparer.Ordinal);
+    public Dictionary<string, int> BuildingCollisionTriangles { get; } = new(StringComparer.Ordinal);
     public string SourceFolder { get; private set; } = "";
     public int Version { get; private set; }
     public int SourceVertices { get; private set; }
     public int SourceTriangles { get; private set; }
+    public int BuildingSourceVertices { get; private set; }
 
     readonly Dictionary<string, Texture2D> textures = new(StringComparer.Ordinal);
     readonly Dictionary<string, Material> materials = new(StringComparer.Ordinal);
@@ -50,7 +68,8 @@ public sealed class BiomeAssets : IDisposable
     {
         using var doc = JsonDocument.Parse(File.ReadAllText(PathInPack("manifest.json")));
         var manifest = doc.RootElement;
-        if (manifest.GetProperty("format").GetString() != "azeroth-elwynn-biome-v1")
+        var format = manifest.GetProperty("format").GetString();
+        if (format != "azeroth-elwynn-biome-v1" && format != "azeroth-elwynn-biome-v2")
             throw new InvalidDataException("Unsupported Elwynn pack format");
         Version = manifest.GetProperty("version").GetInt32();
         var groundIds = manifest.GetProperty("groundTextures").EnumerateObject()
@@ -97,8 +116,13 @@ public sealed class BiomeAssets : IDisposable
         Object.DontDestroyOnLoad(prototypes);
         foreach (var entry in manifest.GetProperty("props").EnumerateObject())
             LoadProp(entry.Name, entry.Value.GetProperty("file").GetString());
+        if (manifest.TryGetProperty("buildings", out var buildings))
+            foreach (var entry in buildings.EnumerateObject())
+                LoadBuilding(entry.Name, entry.Value.GetProperty("file").GetString());
         if (GroundTextures.Count != 6 || Props.Count != 15)
             throw new InvalidDataException("The original Elwynn source pack is incomplete");
+        if (Version >= 2 && Buildings.Count != 3)
+            throw new InvalidDataException("The original Elwynn WMO pack is incomplete");
     }
 
     static float[] Floats(JsonElement j, string key) => j.GetProperty(key).EnumerateArray().Select(x => x.GetSingle()).ToArray();
@@ -167,6 +191,82 @@ public sealed class BiomeAssets : IDisposable
         }
     }
 
+    void LoadBuilding(string id, string file)
+    {
+        using var doc = JsonDocument.Parse(File.ReadAllText(PathInPack(file)));
+        var j = doc.RootElement;
+        if (j.GetProperty("format").GetString() != "azeroth-elwynn-wmo-v1" || j.GetProperty("id").GetString() != id)
+            throw new InvalidDataException("Elwynn WMO identity mismatch: " + id);
+        var min = Vector(j.GetProperty("boundsMin")); var max = Vector(j.GetProperty("boundsMax"));
+        BuildingBounds.Add(id, new Bounds((min + max) * .5f, max - min));
+        BuildingFloorY.Add(id, j.GetProperty("floorY").GetSingle());
+        BuildingEntrances.Add(id, j.GetProperty("entrances").EnumerateArray().Select(e => new BuildingEntrance
+        {
+            SourcePortalIndex = e.GetProperty("sourcePortalIndex").GetInt32(), Center = Vector(e.GetProperty("center")),
+            Outward = Vector(e.GetProperty("outward")), Width = e.GetProperty("width").GetSingle(),
+            Height = e.GetProperty("height").GetSingle(), FloorY = e.GetProperty("floorY").GetSingle()
+        }).ToArray());
+        var prefab = Retain(new GameObject("AzerothElwynn_Building_" + id));
+        prefab.SetActive(false); prefab.transform.SetParent(prototypes.transform, false); Buildings.Add(id, prefab);
+        int groupCount = 0, renderCount = 0, collisionCount = 0;
+        foreach (var group in j.GetProperty("groups").EnumerateArray())
+        {
+            groupCount++;
+            int count = group.GetProperty("vertexCount").GetInt32(), groupId = group.GetProperty("id").GetInt32();
+            var p = Floats(group, "positions"); var n = Floats(group, "normals"); var uv = Floats(group, "uv");
+            if (p.Length != count * 3 || n.Length != count * 3 || uv.Length != count * 2)
+                throw new InvalidDataException("Elwynn WMO vertex arrays mismatch: " + id);
+            var vertices = new Vector3[count]; var normals = new Vector3[count]; var uvs = new Vector2[count];
+            for (int i = 0; i < count; i++)
+            {
+                vertices[i] = new(p[i * 3], p[i * 3 + 1], p[i * 3 + 2]);
+                normals[i] = new(n[i * 3], n[i * 3 + 1], n[i * 3 + 2]);
+                uvs[i] = new(uv[i * 2], uv[i * 2 + 1]);
+            }
+            BuildingSourceVertices += count;
+            var groupRoot = Retain(new GameObject("AzerothElwynn_WMOGroup_" + groupId));
+            groupRoot.transform.SetParent(prefab.transform, false);
+            int batch = 0;
+            foreach (var pass in group.GetProperty("passes").EnumerateArray())
+            {
+                int flags = pass.GetProperty("renderFlags").GetInt32(), blend = pass.GetProperty("blendMode").GetInt32();
+                var textureKey = pass.GetProperty("texture").GetString();
+                string key = "wmo:" + textureKey + ":" + flags + ":" + blend;
+                if (!materials.TryGetValue(key, out var material))
+                { material = CreateMaterial(key, textures[textureKey], flags, blend); materials.Add(key, material); }
+                var triangles = pass.GetProperty("triangles").EnumerateArray().Select(x => x.GetInt32()).ToArray();
+                CheckTriangles(id, count, triangles); renderCount += triangles.Length / 3;
+                if ((flags & 4) != 0)
+                {
+                    int size = triangles.Length; Array.Resize(ref triangles, size * 2);
+                    for (int i = 0; i < size; i += 3)
+                    { triangles[size + i] = triangles[i]; triangles[size + i + 1] = triangles[i + 2]; triangles[size + i + 2] = triangles[i + 1]; }
+                }
+                var mesh = Retain(new Mesh { name = "AzerothElwynn_WMO_" + id + "_" + groupId + "_" + batch });
+                meshes.Add(mesh); mesh.vertices = vertices; mesh.normals = normals; mesh.uv = uvs; mesh.triangles = triangles;
+                mesh.RecalculateBounds();
+                var child = Retain(new GameObject("AzerothElwynn_WMORenderBatch_" + batch++));
+                child.transform.SetParent(groupRoot.transform, false); child.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var renderer = child.AddComponent<MeshRenderer>(); renderer.sharedMaterial = material;
+                renderer.receiveShadows = true; renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            }
+            var solid = group.GetProperty("collisionTriangles").EnumerateArray().Select(x => x.GetInt32()).ToArray();
+            CheckTriangles(id, count, solid); collisionCount += solid.Length / 3;
+            var colliderMesh = Retain(new Mesh { name = "AzerothElwynn_WMOCollision_" + id + "_" + groupId });
+            meshes.Add(colliderMesh); colliderMesh.vertices = vertices; colliderMesh.triangles = solid; colliderMesh.RecalculateBounds();
+            var collision = Retain(new GameObject("AzerothElwynn_OriginalCollision_" + groupId));
+            collision.transform.SetParent(groupRoot.transform, false);
+            var collider = collision.AddComponent<MeshCollider>(); collider.convex = false; collider.sharedMesh = colliderMesh;
+        }
+        BuildingGroupCount.Add(id, groupCount); BuildingRenderTriangles.Add(id, renderCount); BuildingCollisionTriangles.Add(id, collisionCount);
+    }
+
+    static void CheckTriangles(string id, int count, int[] triangles)
+    {
+        if (triangles.Length == 0 || triangles.Length % 3 != 0 || triangles.Any(x => x < 0 || x >= count))
+            throw new InvalidDataException("Elwynn WMO triangle indices mismatch: " + id);
+    }
+
     Material CreateMaterial(string key, Texture2D texture, int flags, int blend)
     {
         bool cutout = blend == 1;
@@ -203,13 +303,17 @@ public sealed class BiomeAssets : IDisposable
 
     public bool AllAssetsValid => !released && prototypes != null && GroundTextures.Count == 6 && Props.Count == 15
         && textures.Values.All(x => x != null) && materials.Values.All(x => x != null)
-        && meshes.All(x => x != null) && Props.Values.All(x => x != null);
+        && meshes.All(x => x != null) && Props.Values.All(x => x != null)
+        && (Version < 2 || Buildings.Count == 3) && Buildings.Values.All(x => x != null);
 
     public string DiagnosticsJson() => JsonSerializer.Serialize(new
     {
         allValid = AllAssetsValid, packVersion = Version, groundCount = GroundTextures.Count, propCount = Props.Count,
         textureCount = textures.Count, meshCount = meshes.Count, materialCount = materials.Count,
         sourceVertices = SourceVertices, sourceTriangles = SourceTriangles,
+        buildingCount = Buildings.Count, buildingSourceVertices = BuildingSourceVertices,
+        buildingGroups = BuildingGroupCount.Values.Sum(), buildingRenderTriangles = BuildingRenderTriangles.Values.Sum(),
+        buildingCollisionTriangles = BuildingCollisionTriangles.Values.Sum(),
         invalidTextures = textures.Values.Count(x => x == null), invalidMeshes = meshes.Count(x => x == null),
         invalidMaterials = materials.Values.Count(x => x == null),
         retainedTextures = textures.Values.Count(x => x != null && (x.hideFlags & HideFlags.DontUnloadUnusedAsset) != 0),
@@ -229,6 +333,8 @@ public sealed class BiomeAssets : IDisposable
         foreach (var material in materials.Values) if (material != null) Object.Destroy(material);
         foreach (var texture in textures.Values) if (texture != null) Object.Destroy(texture);
         meshes.Clear(); materials.Clear(); textures.Clear(); GroundTextures.Clear(); Props.Clear(); PropBounds.Clear(); PropSources.Clear();
+        Buildings.Clear(); BuildingBounds.Clear(); BuildingFloorY.Clear(); BuildingEntrances.Clear();
+        BuildingGroupCount.Clear(); BuildingRenderTriangles.Clear(); BuildingCollisionTriangles.Clear();
     }
 
     public void Dispose() => Release();

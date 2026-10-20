@@ -57,13 +57,11 @@ public static class TalentRuntime
     {
         if(!AbilityRuntime.Active || dc==null || !Alive(enemy))return;
         if(MageSpellBehaviors.IsControlled(enemy))dc.damage*=1+S.Stat(C,18);
-        // Native Megabonk critical base/book stats are the adapter. Source talent deltas
-        // remain separate in StatPatch; the original Azeroth baseline is not fabricated.
-        dc.crit=DamageUtility.GetCritDamageMultiplier(Mathf.Max(0,PlayerStats.GetStat(EStat.CritChance)),out var multiplier);
-        if(dc.crit)dc.damage*=multiplier*Mathf.Max(0,PlayerStats.GetStat(EStat.CritDamage));
+        // The ability adapter rolls native criticals once. Talent deltas enter
+        // PlayerStats through StatPatch; rolling again here would apply books twice.
     }
     static bool Rate(Queue<float> q,int cap)
-    {while(q.Count>0 && Time.time-q.Peek()>=1)q.Dequeue();if(q.Count>=cap)return false;q.Enqueue(Time.time);return true;}
+    {while(q.Count>0 && CombatSimulation.Time-q.Peek()>=1)q.Dequeue();if(q.Count>=cap)return false;q.Enqueue(CombatSimulation.Time);return true;}
     static bool Free(string id)
     {
         if(freeDepth>0)return false;
@@ -91,7 +89,7 @@ public static class TalentRuntime
             if(Alive(target) && UnityEngine.Random.value<.02f*S.Rank("impact")){MageSpellBehaviors.ApplyRoot(target,1,true);ControlCount++;}
             if(dc.crit)
             {
-                if(Selected("ignite") && Alive(target))Burns.Add(new Burn{Target=target,Id=target.id,Damage=dc.damage*.8f/2,Next=Time.time+2,Ticks=2});
+                if(Selected("ignite") && Alive(target))Burns.Add(new Burn{Target=target,Id=target.id,Damage=dc.damage*.8f/2,Next=CombatSimulation.Time+2,Ticks=2});
                 if(Selected("hot_streak"))
                 {fireCriticals++;if(fireCriticals>=4){fireCriticals-=4;if(Rate(Pyrocasts,2))Free("pyroblast");}}
             }
@@ -112,7 +110,7 @@ public static class TalentRuntime
     }
     static void Raw(Enemy enemy,float damage,string school,Vector3 from,string id)
     {
-        if(!Alive(enemy) || damage<=0)return;
+        if(!CombatSimulation.CanSimulate || !Alive(enemy) || damage<=0)return;
         var dc=new DamageContainer(0,"AzerothTalent:"+id){damage=damage,crit=false,knockback=0,enemy=enemy,direction=(enemy.transform.position-from).normalized,element=school=="Fire"?EElement.Fire:EElement.Neutral};
         rawDepth++;
         try{enemy.DamageFromPlayerOther(dc);}
@@ -134,15 +132,15 @@ public static class TalentRuntime
         if(!AbilityRuntime.Active || C==null)return;
         var p=MyPlayer.Instance;var gm=GameManager.Instance;
         if(p==null || !p.hasStarted || gm==null)return;
-        if(!runStarted){runStarted=true;nextNova=Time.time+8;Plugin.Current.Log.LogInfo($"Mage talent run snapshot:{S.Spent}points; stats damage={S.Stat(C,0):F3}; starter={Starter("fireball")}");}
-        if(gm.isGameOver || Time.timeScale<=0 || p.inventory==null || p.inventory.pause || LevelupScreen.isLevelingUp)return;
+        if(!runStarted){runStarted=true;nextNova=CombatSimulation.Time+8;Plugin.Current.Log.LogInfo($"Mage talent run snapshot:{S.Spent}points; stats damage={S.Stat(C,0):F3}; starter={Starter("fireball")}");}
+        if(!CombatSimulation.CanSimulate)return;
         for(var i=Burns.Count-1;i>=0;i--)
         {
             var b=Burns[i];if(!Alive(b.Target)||b.Target.id!=b.Id){Burns.RemoveAt(i);continue;}
-            if(Time.time<b.Next)continue;Raw(b.Target,b.Damage,"Fire",p.transform.position,"ignite");IgniteTickCount++;b.Next+=2;b.Ticks--;
+            if(CombatSimulation.Time<b.Next)continue;Raw(b.Target,b.Damage,"Fire",p.transform.position,"ignite");IgniteTickCount++;b.Next+=2;b.Ticks--;
             if(b.Ticks<=0)Burns.RemoveAt(i);
         }
-        if(Selected("water_elemental") && Time.time>=nextNova){nextNova+=8;Free("frost_nova");}
+        if(Selected("water_elemental") && CombatSimulation.Time>=nextNova){nextNova+=8;Free("frost_nova");}
         if(Selected("water_elemental"))WaterElemental.Tick(p);
     }
     internal static void EndRun(bool won)

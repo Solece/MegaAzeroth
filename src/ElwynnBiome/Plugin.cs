@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.ElwynnBiome;
 
-[BepInPlugin("local.azerothmegabonk.elwynn", "Azeroth Elwynn Procedural Biome", "0.1.0")]
+[BepInPlugin("local.azerothmegabonk.elwynn", "Azeroth Elwynn Procedural Biome", "0.2.0")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
@@ -23,7 +23,9 @@ public sealed class Plugin : BasePlugin
     internal static string Report;
     internal static bool Enabled => Environment.GetCommandLineArgs().Contains("-azeroth-elwynn");
     internal static bool ProbeAllowed => Application.isBatchMode && Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST") == "1";
-    internal static bool Smoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-elwynn-smoke");
+    internal static bool FirstSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-elwynn-smoke");
+    internal static bool FeatureSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-feature-smoke");
+    internal static bool Smoke => FirstSmoke || FeatureSmoke;
     Harmony harmony;
     public override void Load()
     {
@@ -36,8 +38,9 @@ public sealed class Plugin : BasePlugin
         harmony = new Harmony("local.azerothmegabonk.elwynn");
         harmony.PatchAll(typeof(Plugin).Assembly);
         AddComponent<BiomeRuntime>();
-        if (Smoke) AddComponent<BiomeSmokeProbe>();
-        Note("Elwynn first-stage palette armed; native generation, movement, spawn and progression retained. Probe=" + Smoke);
+        if (FirstSmoke) AddComponent<BiomeSmokeProbe>();
+        if (FeatureSmoke) AddComponent<FeatureProbe>();
+        Note("Elwynn v2 all-stage palettes and original buildings armed; native generation, movement, spawn and progression retained. Probe=" + Smoke);
     }
     internal static BiomeAssets EnsureAssets()
     {
@@ -83,7 +86,7 @@ public sealed class BiomeRuntime : MonoBehaviour
             if (generator == null) return;
             NativeBiomeIntegration.ApplyFinalTerrainBindings(generator);
             var result = BiomeClearance.Apply(generator);
-            if (result.ReservedViolationsRemaining != 0 || result.NativeInteractablesBefore != result.NativeInteractablesAfter || !result.AddedCollisionsCannotBlockNativeRoute)
+            if (result.ReservedViolationsRemaining != 0 || result.NativeInteractablesBefore != result.NativeInteractablesAfter || !result.AddedCollisionsCannotBlockNativeRoute || result.Buildings.DoorViolationsRemaining != 0)
                 throw new InvalidOperationException("Elwynn decoration clearance failed: " + BiomeClearance.DiagnosticsJson);
             AppliedScene = scene; ClearanceSucceeded = true;
             Plugin.Note("Elwynn native generation completed: " + ElwynnBridge.Snapshot());

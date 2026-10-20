@@ -8,6 +8,7 @@
     <GameRoot>$(LabRoot)/Megabonk-Lab</GameRoot>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="$(GameRoot)/BepInEx/core/0Harmony.dll" Private="false" />
     <Reference Include="$(GameRoot)/BepInEx/core/BepInEx.Core.dll" Private="false" />
     <Reference Include="$(GameRoot)/BepInEx/core/BepInEx.Unity.IL2CPP.dll" Private="false" />
     <Reference Include="$(GameRoot)/BepInEx/core/Il2CppInterop.Runtime.dll" Private="false" />

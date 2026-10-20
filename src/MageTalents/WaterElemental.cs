@@ -45,6 +45,7 @@ public static class WaterElemental
     }
     public static void Tick(MyPlayer p)
     {
+        if(!CombatSimulation.CanSimulate)return;
         Bridge();if(create==null)return;
         var orientation=p.playerMovement?.orientation;
         var forward=orientation!=null?orientation.forward:p.transform.forward;forward.y=0;if(forward.sqrMagnitude<.001f)forward=Vector3.forward;forward.Normalize();
@@ -52,31 +53,31 @@ public static class WaterElemental
         var desired=feet-forward*2.8f;
         if(visual==null)
         {
-            position=desired;visualHeight=TargetHeight(p);visual=(GameObject)create.Invoke(null,new object[]{"waterelemental",position,visualHeight});nextAttack=Time.time;
+            position=desired;visualHeight=TargetHeight(p);visual=(GameObject)create.Invoke(null,new object[]{"waterelemental",position,visualHeight});nextAttack=CombatSimulation.Time;
             Plugin.Current.Log.LogInfo($"Source Water Elemental summoned:model110; sourceScale=.55; hostHeight={visualHeight:F3}; attack50*(1+.12*levelIndex)*globalDamage; interval2.2; range28; projectile116/speed28/slow.3for2sec.");
         }
         if((position-feet).sqrMagnitude>40*40){position=desired;travelling=false;}
-        if(Time.time>=nextFollow)
+        if(CombatSimulation.Time>=nextFollow)
         {
-            nextFollow=Time.time+.25f;
+            nextFollow=CombatSimulation.Time+.25f;
             if((position-desired).sqrMagnitude>3.5f*3.5f){followTarget=desired;travelling=true;}
         }
         var previous=position;
         if(travelling)
         {
             var speed=1.15f*Mathf.Max(7,7*Mathf.Max(0,PlayerStats.GetStat(EStat.MoveSpeedMultiplier)));
-            position=Vector3.MoveTowards(position,followTarget,speed*Time.deltaTime);if((position-followTarget).sqrMagnitude<.001f)travelling=false;
+            position=Vector3.MoveTowards(position,followTarget,speed*CombatSimulation.DeltaTime);if((position-followTarget).sqrMagnitude<.001f)travelling=false;
         }
         setPosition?.Invoke(null,new object[]{visual,position});
         var moving=(position-previous).sqrMagnitude>.0001f;
         if(moving)setFacing?.Invoke(null,new object[]{visual,position-previous});
-        if(Time.time>=castingUntil)setClip?.Invoke(null,new object[]{visual,moving?"run":"idle"});
-        if(Time.time<nextAttack)return;
+        if(CombatSimulation.Time>=castingUntil)setClip?.Invoke(null,new object[]{visual,moving?"run":"idle"});
+        if(CombatSimulation.Time<nextAttack)return;
         var enemies=AbilityRuntime.Targets(position,28,false);if(enemies.Count==0)return;
         var target=enemies[0];var levelIndex=Math.Max(0,p.inventory.playerXp.level);
         LastDamage=50*(1+.12f*levelIndex)*Mathf.Max(0,PlayerStats.GetStat(EStat.DamageMultiplier))*(1+Plugin.Run.Stat(Plugin.Catalog,17));
         if(!AbilityRuntime.LaunchPetProjectile(target,position+Vector3.up*(visualHeight*.55f),LastDamage))return;
-        nextAttack=Time.time+2.2f;ShotCount++;castingUntil=Time.time+1;
+        nextAttack=CombatSimulation.Time+2.2f;ShotCount++;castingUntil=CombatSimulation.Time+1;
         setFacing?.Invoke(null,new object[]{visual,target.transform.position-position});setClip?.Invoke(null,new object[]{visual,"cast"});
     }
 }

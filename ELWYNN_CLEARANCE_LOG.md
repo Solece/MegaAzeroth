@@ -66,6 +66,25 @@ For each clearance invocation, one concrete CLR `RaycastHit[]` is pinned with a 
 
 Standalone Release build: zero warnings/errors. No game launch, deployment or runtime PASS claimed by this entry; the owning task performs the real check.
 
+## 2026-10-21 — WMO v2 footprint and real door capsule safety
+
+Scope remains only `BiomeClearance.cs`, new `BuildingSafety.cs`, and this journal. The native integration places the original farm, Goldshire blacksmith and Goldshire inn as extra source scene instances named `AzerothElwynn_building_<id>_variant`. Safety reads `BiomeAssets.BuildingBounds`, `BuildingFloorY` and original external `BuildingEntrances`; it derives every world position through the actual `OriginalElwynnBuilding` transform, including the visual scale, native random root scale and yaw. Native renderer bounds are not used as source geometry evidence.
+
+Preprocessing runs after native generation, before final source-prop discovery:
+
+- Sample the native Ground floor across a dense grid of the full transformed horizontal source footprint, approximately5-unit spacing capped at19×19 samples. Missing ground, steep footprint samples, excessive height variation, unsupported foundations and excessive vertical relocation reject the whole source building. Surviving buildings are moved vertically only at their own extra root; native terrain and native landmarks are untouched.
+- Fit the source main floor to native ground at real outside door approaches. Record initial/final floor coordinates, native ground range, source foundation depth, fit delta and source footprint. Reject overlapping source building footprints.
+- Reserve the whole transformed source footprint plus wide real exterior door approach rectangles against the existing spawn/interactable/gate/portal/rail exclusion zones. A root-only circle cannot protect a large inn. All native interactables remain intact.
+- Remove added M2 foliage/rocks inside a surviving source footprint and in each wide source door approach. Native objects are never removed.
+
+Real door validation uses the measured native player capsule and the already verified pinned concrete NonAlloc physics binding. It checks scaled source opening width/height, actual collision support floors outside and inside, threshold step height, capsule standing outside, a capsule sweep through the real opening, and capsule standing inside. A source portal ray alone cannot mark a door passed. Every advertised external door must pass; otherwise the entire building is deactivated. The check runs before native-baseline routing and again after corridor clearing. Door diagnostics include original source portal index, world threshold/exterior/interior positions, actual support heights, width/height, capsule result, and the blocking collider name on collision failure.
+
+The native baseline still runs with all extra source colliders temporarily disabled. If a restored WMO group blocks the verified corridor, the source root and every wall/render group are removed together. If no native baseline can be proven or an interop failure triggers fallback, all extra buildings are removed entirely; they never become visible ghost houses with disabled wall collisions. Ordinary M2 fallback retains its previous collider-only behavior.
+
+Public diagnostics: `ClearanceReport.Buildings` exposes `Examined`, `Remaining`, `RejectedTerrain`, `RejectedDoors`, `RejectedOverlap`, `RemovedReserved`, `RemovedCorridor`, `RemovedFallback`, `DoorViolationsRemaining`, `DecorRemovedInside`, `DecorRemovedApproaches`, and detailed `Instances`/`Doors`. The owning probe should assert zero reserved/door violations, identical native interactable counts, a verified native route, and at least one surviving building before claiming WMO playability.
+
+Validation: standalone .NET6 Release build against installed interop and the frozen v2 asset loader succeeds with zero warnings/errors. The newly used `Transform.TransformVector(Vector3)` wrapper was also checked in installed CoreModule and has a real native method binding, unlike the previously broken public capsule cast wrapper. No game launch, deployment or Git action was performed by this task; real v2 door/corridor validation belongs to the owning native probe.
+
 ## Final integrated runtime evidence
 
 Final native NonAlloc binding ran without an interop exception. Seed31415 proved243.835m with334 samples and no collider fallback; native seed38203351 proved752.715m with864 samples and removed one added corridor prop. Seed27183 conservatively disabled348 added solid colliders after no native baseline was proved. All runs retained86 native interactables and zero reserved violations. See ELWYNN_TEST_LOG.md.

@@ -1,4 +1,5 @@
 using System.Reflection;
+using HarmonyLib;
 using System.Runtime.InteropServices;
 using Assets.Scripts.Actors.Player;
 using Assets.Scripts.Inventory__Items__Pickups;
@@ -14,27 +15,30 @@ using XpUtility = Inventory__Items__Pickups.XpUtility;
 
 namespace AzerothHud;
 
-[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.5.1")]
+[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.7.6")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
     internal ConfigEntry<bool> Enabled = null!;
     internal ConfigEntry<float> Scale = null!;
     internal string AssetRoot = "";
+    Harmony harmony;
+    public override bool Unload(){harmony?.UnpatchSelf();HudBehaviour.Current?.DisposeVisuals();return true;}
     public override void Load()
     {
         Current = this;
         Enabled = Config.Bind("HUD", "Enabled", true, "Show the Azeroth-style gameplay overlay. Native encounter windows remain available.");
         Scale = Config.Bind("HUD", "Scale", 1f, "HUD scale relative to 1080p.");
         AssetRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "assets");
+        harmony=new Harmony("local.azerothmegabonk.hud");harmony.PatchAll(typeof(Plugin).Assembly);
         AddComponent<HudBehaviour>();
-        Log.LogInfo("Azeroth HUD 0.5.1 loaded; restored original stone action bar, lifted native item inventory, 3.5x run timer.");
+        Log.LogInfo("Azeroth HUD 0.7.4 loaded; native gold/timer retained, native XP strip decorations masked, source player frame below native top row.");
     }
 }
 
 public sealed class HudBehaviour : MonoBehaviour
 {
-    public HudBehaviour(IntPtr pointer) : base(pointer) { }
+    public HudBehaviour(IntPtr pointer) : base(pointer) { Current=this; }
     readonly Dictionary<string, Texture2D> textures = new();
     readonly List<TomeView> tomes = new();
     GameObject canvasObject;
@@ -46,20 +50,27 @@ public sealed class HudBehaviour : MonoBehaviour
     readonly List<UiImage> images = new();
     readonly List<UiText> labels = new();
     UiImage portraitImage, hpFill, shieldFill, xpFill;
-    UiText heroLabel, levelLabel, hpLabel, shieldLabel, xpLabel, timerLabel, goldLabel;
+    UiText heroLabel, levelLabel, hpLabel, shieldLabel, xpLabel;
+    int playerImageCount,playerLabelCount;
+    UiImage playerFrame;
     readonly UiImage[] tomeIcons=new UiImage[4], spellFrames=new UiImage[16], spellIcons=new UiImage[16], cooldownMasks=new UiImage[16];
     readonly UiText[] tomeRanks=new UiText[4], spellRanks=new UiText[16], cooldownLabels=new UiText[16];
     readonly NativeHudMask nativeHud=new();
     readonly NativeItemLayout itemLayout=new();
+    readonly PauseSpellInventory pauseInventory=new();
+    readonly EncounterSpellInventory encounterInventory=new();
+    readonly PostCombatAdapter postCombat=new();
+    internal static HudBehaviour Current;
     bool uiBuilt;
     sealed class UiImage { public RectTransform Rect; public RawImage Image; public Rect Bounds; public int Anchor; }
     sealed class UiText { public RectTransform Rect; public TextMeshProUGUI Text; public Rect Bounds; public int Anchor; }
     float nextRead;
-    int hp, maxHp, level, xp, gold;
-    float shield, xpProgress, timer;
+    int hp, maxHp, level, xp, xpInLevel, xpLevelMax;
+    float shield, xpProgress;
     bool active, wasActive, failed;
     Type bridge, portraitBridge;
     string[] spellIds = Array.Empty<string>();
+    string[] spellNames=Array.Empty<string>(), spellDescriptions=Array.Empty<string>(), spellIconStems=Array.Empty<string>();
     int[] ranks = Array.Empty<int>();
     float[] remaining = Array.Empty<float>(), totals = Array.Empty<float>();
     Texture portrait;
@@ -85,21 +96,31 @@ public sealed class HudBehaviour : MonoBehaviour
     void Update()
     {
         var plugin = Plugin.Current;
-        if (plugin == null || !plugin.Enabled.Value) { active=false; SetVisible(false); return; }
+        if (plugin == null || !plugin.Enabled.Value) { active=false; SetVisible(false); pauseInventory.Restore(); encounterInventory.Restore(); return; }
         if (Time.unscaledTime < nextRead) return;
         nextRead = Time.unscaledTime + 0.1f;
         try
         {
             var player = MyPlayer.Instance;
             active = player != null && player.inventory != null && player.hasStarted;
-            if (!active) { wasActive=false; SetVisible(false); return; }
-            if(UiManager.Instance?.pause!=null && UiManager.Instance.pause.gameObject.activeInHierarchy){SetVisible(false);return;}
+            if(PostCombatAdapter.IsPostCombat())
+            {
+                ReadBridge();if(!uiBuilt)BuildUi();
+                SetVisible(false);pauseInventory.Restore();encounterInventory.Restore();
+                HudDiagnostics.PostCombat=true;
+                if(uiBuilt)postCombat.Refresh(mageActive,font,fontMaterial,magePortrait,spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
+                return;
+            }
+            HudDiagnostics.PostCombat=false;postCombat.Restore();
+            if (!active) { wasActive=false; SetVisible(false); pauseInventory.Restore(); encounterInventory.Restore(); return; }
+            bool paused=UiManager.Instance?.pause!=null && UiManager.Instance.pause.IsPaused();
             var inv = player.inventory;
             portrait=inv.characterData.GetIcon(); heroName=inv.characterData.GetName();
             hp=inv.playerHealth.hp; maxHp=inv.playerHealth.maxHp; shield=inv.playerHealth.shield;
-            level=inv.playerXp.level; xp=inv.playerXp.GetXpInt(); gold=inv.goldInt;
+            level=inv.playerXp.level; xp=inv.playerXp.GetXpInt();
             xpProgress=XpUtility.CurrentLevelProgress(xp);
-            timer=GameManager.Instance != null ? GameManager.Instance.GetAliveTime() : 0;
+            xpInLevel=Math.Max(0,xp-XpUtility.XpTotalCurrentLevel(xp));
+            xpLevelMax=Math.Max(1,XpUtility.XpTotalNextLevel(xp)-XpUtility.XpTotalCurrentLevel(xp));
             tomes.Clear();
             var all=DataManager.Instance?.GetAllTomes();
             if (all != null)
@@ -111,8 +132,15 @@ public sealed class HudBehaviour : MonoBehaviour
                     if (rank>0) tomes.Add(new(td.GetIcon(),td.GetName(),rank));
                 }
             ReadBridge();
+            if(mageActive)postCombat.RememberPortrait(magePortrait);
+            PostCombatAdapter.RefreshSources(spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
             if(!uiBuilt) BuildUi();
             if(!uiBuilt)return;
+            encounterInventory.Refresh(mageActive,font,fontMaterial,spellIds,ranks,spellNames,spellDescriptions,spellIconStems,Tex);
+            pauseInventory.Refresh(paused, mageActive, font, fontMaterial, spellIds, ranks, spellNames, spellDescriptions, spellIconStems, Tex);
+            HudDiagnostics.Paused=paused;
+            HudDiagnostics.NativeXp=xp;HudDiagnostics.Level=level;HudDiagnostics.XpInLevel=xpInLevel;HudDiagnostics.XpLevelMaximum=xpLevelMax;HudDiagnostics.XpProgress=xpProgress;
+            if(paused){SetVisible(false);return;}
             SetVisible(true);
             RefreshUi();
             nativeHud.Refresh();
@@ -127,6 +155,7 @@ public sealed class HudBehaviour : MonoBehaviour
         {
             active=false;
             SetVisible(false);
+            pauseInventory.Restore();
             if (!failed) { plugin.Log.LogWarning("HUD read failed: "+e); failed=true; }
         }
     }
@@ -139,6 +168,9 @@ public sealed class HudBehaviour : MonoBehaviour
         if (bridge==null) return;
         spellIds=ReadStatic(bridge,"SpellIds") as string[] ?? Array.Empty<string>();
         ranks=ReadStatic(bridge,"SpellRanks") as int[] ?? Array.Empty<int>();
+        spellNames=ReadStatic(bridge,"SpellNames") as string[] ?? Array.Empty<string>();
+        spellDescriptions=ReadStatic(bridge,"SpellDescriptions") as string[] ?? Array.Empty<string>();
+        spellIconStems=ReadStatic(bridge,"SpellIcons") as string[] ?? Array.Empty<string>();
         remaining=ReadStatic(bridge,"CooldownsRemaining") as float[] ?? Array.Empty<float>();
         totals=ReadStatic(bridge,"CooldownsTotal") as float[] ?? Array.Empty<float>();
         if(ReadStatic(bridge,"Active") is bool bridgeActive && bridgeActive && ReadStatic(bridge,"ClassId") is string classId && classId.Length>0)
@@ -177,6 +209,8 @@ public sealed class HudBehaviour : MonoBehaviour
             if(width<=0 || height<=0 || pixels.Length!=checked(width*height*4))
                 throw new InvalidDataException("Invalid HUD RGBA asset: "+raw);
             var tex=new Texture2D(width,height,TextureFormat.RGBA32,false);
+            tex.hideFlags=HideFlags.DontUnloadUnusedAsset;
+            tex.name=Path.GetFileNameWithoutExtension(original);
             var pinned=GCHandle.Alloc(pixels,GCHandleType.Pinned);
             try { tex.LoadRawTextureData(pinned.AddrOfPinnedObject(),pixels.Length);tex.Apply(false,false); }
             finally { pinned.Free(); }
@@ -188,7 +222,7 @@ public sealed class HudBehaviour : MonoBehaviour
     void SetVisible(bool visible)
     {
         if(canvasObject!=null && canvasObject.activeSelf!=visible)canvasObject.SetActive(visible);
-        if(!visible){nativeHud.Restore();itemLayout.Restore();}
+        if(!visible){nativeHud.Restore(Plugin.Current?.Enabled.Value==true && mageActive && MyPlayer.Instance?.inventory!=null);itemLayout.Restore();}
     }
     [HideFromIl2Cpp]
     RectTransform RectObject(string name)
@@ -283,15 +317,21 @@ public sealed class HudBehaviour : MonoBehaviour
         portraitImage=Image("Portrait",PlayerRect(52,22,44,44),null,Color.white);
         hpFill=Bar("Health",PlayerRect(106,41,119,12),new Color(.04f,.82f,.07f));
         shieldFill=Bar("Shield",PlayerRect(106,52,119,12),new Color(.05f,.48f,.92f));
-        Image("PlayerFrame",PlayerRect(0,0,232,100),Tex("Interface/TargetingFrame/UI-TargetingFrame.png"),Color.white,0,new Rect(1,.21875f,-.90625f,.78125f));
+        playerFrame=Image("PlayerFrame",PlayerRect(0,0,232,100),Tex("Interface/TargetingFrame/UI-TargetingFrame.png"),Color.white,0,new Rect(1,.21875f,-.90625f,.78125f));
         heroLabel=Label("Hero",PlayerRect(106,21,119,20),22,0,TextAlignmentOptions.Center);heroLabel.Text.color=Gold;
         levelLabel=Label("Level",PlayerRect(43,59,20,16),18,0,TextAlignmentOptions.Center);levelLabel.Text.color=Gold;
         hpLabel=Label("HealthValue",PlayerRect(107,41,117,12),20,0,TextAlignmentOptions.Center);hpLabel.Text.color=Color.white;
         shieldLabel=Label("ShieldValue",PlayerRect(107,52,117,12),16,0,TextAlignmentOptions.Center);shieldLabel.Text.color=new Color(.8f,.94f,1);
-        xpFill=Bar("Experience",PlayerRect(106,75,119,13),new Color(.45f,.08f,.68f));
-        xpLabel=Label("ExperienceValue",PlayerRect(107,75,117,13),16,0,TextAlignmentOptions.Center);xpLabel.Text.color=Color.white;
-        timerLabel=Label("RunTime",new Rect(-280,4,560,132),98,2,TextAlignmentOptions.Center);timerLabel.Text.color=Gold;
-        goldLabel=Label("Gold",new Rect(-288,13,250,35),24,3);goldLabel.Text.color=Gold;
+        playerImageCount=images.Count;playerLabelCount=labels.Count;
+        // Source MainMenuBar.xml: 1024x13 XP bar above the action bar, purple (.58,0,.55),
+        // four original atlas overlays (each 256x10) at y=3. No invented HP-adjacent XP widget.
+        const float xpArtScale=1300f/1024f;
+        xpFill=Bar("Experience",new Rect(-650,-116-13*xpArtScale,1300,13*xpArtScale),new Color(.58f,0,.55f),1);
+        var xpAtlas=Tex("Interface/MainMenuBar/UI-MainMenuBar-Human.png");
+        for(int quadrant=0;quadrant<4;quadrant++)
+            Image("ExperienceSourceFrame"+quadrant,new Rect(-650+quadrant*325,-116-10*xpArtScale,325,10*xpArtScale),xpAtlas,Color.white,1,new Rect(0,.16796875f+quadrant*.25f,1,.0390625f));
+        xpLabel=Label("ExperienceValue",new Rect(-640,-116-13*xpArtScale,1280,13*xpArtScale),13,1,TextAlignmentOptions.Center);xpLabel.Text.color=Color.white;
+        HudDiagnostics.ExperienceSource="MainMenuBar.xml 1024x13 + four 256x10 original atlas quadrants; native XP thresholds";
         // Reuse only the source atlas's blank stone strip and silver rails. The other
         // strips contain baked empty slots and must not be stretched behind live cells.
         var plate=Tex("Interface/MainMenuBar/UI-MainMenuBar-Human.png");
@@ -331,17 +371,16 @@ public sealed class HudBehaviour : MonoBehaviour
         var visiblePortrait=mageActive?(magePortrait!=null?magePortrait:Tex("Interface/Icons/Spell_Fire_FlameBolt.png")):portrait;
         portraitImage.Image.texture=visiblePortrait;portraitImage.Image.enabled=visiblePortrait!=null;
         var portraitBounds=mageActive&&magePortrait!=null?PlayerRect(42,12,64,64):PlayerRect(52,22,44,44);
-        Place(portraitImage.Rect,portraitBounds,0);
+        portraitImage.Bounds=portraitBounds;
         heroLabel.Text.text=heroName.Equals("Mage",StringComparison.OrdinalIgnoreCase)?"Маг":heroName;
         levelLabel.Text.text=level.ToString();
         hpLabel.Text.text=$"{hp} / {maxHp}";
         shieldLabel.Text.text=shield>0?$"Щит {shield:0}":"Щит —";
-        xpLabel.Text.text=$"XP {Mathf.Clamp01(xpProgress)*100:0}%";
-        var seconds=Math.Max(0,(int)timer);timerLabel.Text.text=$"{seconds/60:00}:{seconds%60:00}";
-        goldLabel.Text.text=$"Золото {gold}";
+        xpLabel.Text.text=$"Опыт: {xpInLevel} / {xpLevelMax}";
         Fill(hpFill,maxHp>0?(float)hp/maxHp:0);
         Fill(shieldFill,maxHp>0?shield/maxHp:0);
         Fill(xpFill,xpProgress);
+        PlacePlayerCluster(scale);
         for(int i=0;i<4;i++)
         {
             bool present=i<tomes.Count;
@@ -354,7 +393,12 @@ public sealed class HudBehaviour : MonoBehaviour
             bool present=i<spellIds.Length;
             spellFrames[i].Image.enabled=present;
             Texture2D icon=null;
-            if(present && Icons.TryGetValue(spellIds[i],out var name))icon=Tex("Interface/Icons/"+name+".png");
+            if(present)
+            {
+                string name=i<spellIconStems.Length?spellIconStems[i]:null;
+                if(string.IsNullOrWhiteSpace(name))Icons.TryGetValue(spellIds[i],out name);
+                if(!string.IsNullOrWhiteSpace(name))icon=Tex("Interface/Icons/"+name+".png");
+            }
             spellIcons[i].Image.texture=icon;spellIcons[i].Image.enabled=icon!=null;
             bool cooling=present&&i<remaining.Length&&i<totals.Length&&totals[i]>0&&remaining[i]>0;
             cooldownMasks[i].Image.enabled=cooling;
@@ -365,17 +409,72 @@ public sealed class HudBehaviour : MonoBehaviour
             spellRanks[i].Text.text=present&&i<ranks.Length?ranks[i].ToString():"";
         }
     }
+    [HideFromIl2Cpp]
+    void PlacePlayerCluster(float scale)
+    {
+        float nativeBottom=0;
+        foreach(var timer in Resources.FindObjectsOfTypeAll<GameTimer>())
+        {
+            if(timer==null || !timer.gameObject.scene.IsValid())continue;
+            nativeBottom=Mathf.Max(nativeBottom,TopRowBottom(timer.t_timerRun),TopRowBottom(timer.t_timerStage),TopRowBottom(timer.t_timerSpeedrun));
+        }
+        foreach(var counter in Resources.FindObjectsOfTypeAll<KillsAndGoldCounter>())
+        {
+            if(counter==null || !counter.gameObject.scene.IsValid())continue;
+            nativeBottom=Mathf.Max(nativeBottom,TopRowBottom(counter.t_gold),TopRowBottom(counter.t_kills),TopRowBottom(counter.t_silver),TopRowBottom(counter.t_chestPrice));
+        }
+        float top=Mathf.Max(80,Screen.height-Screen.safeArea.yMax+12,nativeBottom+12);
+        float unitToPixels=Mathf.Max(.0001f,Screen.height/1080f*scale);
+        float offset=top/unitToPixels;
+        for(int i=0;i<playerImageCount;i++)
+        {
+            var node=images[i];var bounds=node.Bounds;bounds.y+=offset;
+            if(node==hpFill)bounds.width*=maxHp>0?Mathf.Clamp01((float)hp/maxHp):0;
+            if(node==shieldFill)bounds.width*=maxHp>0?Mathf.Clamp01(shield/maxHp):0;
+            Place(node.Rect,bounds,node.Anchor);
+        }
+        for(int i=0;i<playerLabelCount;i++){var node=labels[i];var bounds=node.Bounds;bounds.y+=offset;Place(node.Rect,bounds,node.Anchor);}
+        HudDiagnostics.PlayerClusterTopScreenPixels=top;
+        HudDiagnostics.NativeTopRowBottomScreenPixels=nativeBottom;
+        HudDiagnostics.ScreenSafeArea=Screen.safeArea.ToString();
+        HudDiagnostics.PlayerClusterScreenBounds=NativeItemLayout.ScreenBounds(playerFrame.Rect,NativeItemLayout.FindCanvasCamera(playerFrame.Rect)).ToString();
+    }
+    [HideFromIl2Cpp]
+    static float TopRowBottom(Graphic graphic)
+    {
+        if(graphic==null || !graphic.enabled || !graphic.gameObject.activeInHierarchy)return 0;
+        var rect=NativeItemLayout.ScreenBounds(graphic.rectTransform,NativeItemLayout.FindCanvasCamera(graphic.transform));
+        float top=Screen.height-rect.yMax,bottom=Screen.height-rect.yMin;
+        return rect.width>0 && rect.height>0 && top>=-8 && bottom<Screen.height*.25f?Mathf.Max(0,bottom):0;
+    }
     void LateUpdate()
     {
+        pauseInventory.Enforce();
+        encounterInventory.Enforce();
+        postCombat.Enforce();
+        if(Plugin.Current?.Enabled.Value==true && mageActive && MyPlayer.Instance?.inventory!=null)nativeHud.EnforceXpOnly();
         if(active&&uiBuilt&&canvasObject!=null&&canvasObject.activeSelf)
         {
             nativeHud.Enforce();
             itemLayout.Refresh(176f*Screen.height/1080f*Mathf.Clamp(Plugin.Current.Scale.Value,.5f,2));
         }
     }
-    void OnDestroy()
+    [HideFromIl2Cpp]
+    internal void ForceRefresh(){nextRead=0;Update();Canvas.ForceUpdateCanvases();}
+    [HideFromIl2Cpp]
+    internal void ProbeScroll(float value){if(HudDiagnostics.PostCombat)postCombat.SetScroll(value);else pauseInventory.SetScroll(value);}
+    [HideFromIl2Cpp]
+    internal bool ProbeTooltip(int index)=>pauseInventory.ShowTooltip(index);
+    [HideFromIl2Cpp]
+    internal string[] DescribePause()=>pauseInventory.Describe();
+    [HideFromIl2Cpp]
+    internal string[] DescribeResults()=>postCombat.DescribeInventory();
+    void OnDestroy()=>DisposeVisuals();
+    [HideFromIl2Cpp]
+    internal void DisposeVisuals()
     {
-        nativeHud.Restore();itemLayout.Restore();
+        nativeHud.Restore();itemLayout.Restore();pauseInventory.Dispose();postCombat.Dispose();encounterInventory.Dispose();
+        if(Current==this)Current=null;
         if(canvasObject!=null)UnityEngine.Object.Destroy(canvasObject);
         foreach(var texture in textures.Values)if(texture!=null)UnityEngine.Object.Destroy(texture);
         // The font belongs to the game; only the private readable material belongs to this HUD.

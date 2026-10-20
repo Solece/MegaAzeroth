@@ -18,15 +18,17 @@ internal static class AbilityOffers
     private static readonly Dictionary<string,Texture2D> Icons=new();
     internal static readonly HashSet<IntPtr> NativeWeaponCards=new();
     private static readonly HashSet<IntPtr> HiddenWeaponCards=new();
-    internal static void Begin(){Bound.Clear();Used.Clear();NativeWeaponCards.Clear();}
+    internal static void Begin(){Bound.Clear();Used.Clear();NativeWeaponCards.Clear();LuckCompatibility.Cards.Clear();}
     internal static void ResetCard(UpgradeButton button)
     {
         Bound.Remove(button.Pointer);NativeWeaponCards.Remove(button.Pointer);
+        LuckCompatibility.Cards.Remove(button.Pointer);
         if(HiddenWeaponCards.Remove(button.Pointer))button.gameObject.SetActive(true);
     }
     internal static void HideNativeCard(UpgradeButton button)
     {
         Bound.Remove(button.Pointer);HiddenWeaponCards.Add(button.Pointer);
+        LuckCompatibility.Cards.Remove(button.Pointer);
         button.gameObject.SetActive(false);NativeWeaponPolicy.UnboundCardsHidden++;
     }
     internal static AbilityChoice Bind(IntPtr button,int rarity)
@@ -116,8 +118,8 @@ internal static class OfferCardPatch
         AbilityOffers.NativeWeaponCards.Add(__instance.Pointer);
         try
         {
-            var sourceRarity=__instance.rarity;
-            if(sourceRarity==ERarity.New)sourceRarity=Rarity.GetUpgradeOfferRarity(PlayerStats.GetStat(EStat.Luck));
+            var nativeRarity=__instance.rarity;
+            var sourceRarity=LuckCompatibility.ResolveQuality(__instance);
             var choice=AbilityOffers.Bind(__instance.Pointer,Math.Clamp((int)sourceRarity-1,0,4));
             if(choice==null){AbilityOffers.HideNativeCard(__instance);return;}
             // WeaponData is only an engine-owned card template. Selection applies
@@ -125,10 +127,11 @@ internal static class OfferCardPatch
             __instance.t_name.text=choice.Upgrade==null?choice.Spell.Name:choice.Label;
             __instance.t_description.text=choice.Description;
             __instance.t_level.text=choice.Upgrade==null?"New spell · Rank 1":"Spell upgrade";
-            __instance.t_rarity.text=choice.Upgrade==null?"Azeroth":sourceRarity.ToString();
+            __instance.t_rarity.text=sourceRarity.ToString();
             __instance.icon.texture=AbilityOffers.Icon(choice.Spell);
+            LuckCompatibility.Bound(__instance,choice,nativeRarity,sourceRarity);
             NativeWeaponPolicy.SourceCardsBound++;
-            Plugin.Current?.Log.LogInfo($"Azeroth offer bound: {choice.Label}; native tome cards unchanged");
+            Plugin.Current?.Log.LogInfo($"Azeroth offer bound: {choice.Label}; quality={sourceRarity},luck={LuckCompatibility.Luck:0.####}; native tome cards unchanged");
         }
         catch(Exception ex)
         {
@@ -147,6 +150,7 @@ internal static class OfferSelectionPatch
         if(AbilityOffers.Bound.TryGetValue(__instance.Pointer,out var choice))
         {
             AbilityRuntime.Apply(choice);NativeWeaponPolicy.SourceCardsSelected++;
+            LuckCompatibility.Selected(__instance,choice);
             AbilityOffers.Bound.Remove(__instance.Pointer);
             __instance.upgradePicker.levelupScreen.CloseLevelupScreen();
             return false;

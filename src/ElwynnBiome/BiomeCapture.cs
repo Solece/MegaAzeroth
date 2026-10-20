@@ -30,7 +30,7 @@ static class BiomeCapture
             // for this offscreen camera conversion, then restore the real gameplay mask.
             foreach(var graphic in Resources.FindObjectsOfTypeAll<Graphic>())
                 if(graphic!=null && graphic.gameObject.activeInHierarchy)camera.cullingMask|=1<<graphic.gameObject.layer;
-            foreach(var canvas in canvases)if(canvas.renderMode==RenderMode.ScreenSpaceOverlay){canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=camera;canvas.planeDistance=1;}
+            foreach(var canvas in canvases)if(canvas.renderMode==RenderMode.ScreenSpaceOverlay){canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=camera;canvas.planeDistance=camera.nearClipPlane+.001f;}
             foreach(var marker in mapOnlyRenderers)marker.forceRenderingOff=true;
             Canvas.ForceUpdateCanvases();camera.Render();RenderTexture.active=rt;
             image=new Texture2D(width,height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,width,height),0,0);image.Apply();

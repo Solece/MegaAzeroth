@@ -126,7 +126,7 @@ public sealed class BiomeSmokeProbe : MonoBehaviour
 [HarmonyPatch(typeof(GameManager), nameof(GameManager.CreateInstances))]
 static class BatchElwynnSeedPatch
 {
-    static bool Prepare() => Plugin.Smoke;
+    static bool Prepare() => Plugin.FirstSmoke || Plugin.FeatureSmoke;
     static void Postfix()
     {
         var seed = BiomeSmokeProbe.RequestedSeed;
@@ -138,7 +138,7 @@ static class BatchElwynnSeedPatch
 [HarmonyPatch(typeof(PlayerMovement), nameof(PlayerMovement.MovementTick))]
 static class BatchNativeMovementInputPatch
 {
-    static bool Prepare() => Plugin.Smoke;
+    static bool Prepare() => Plugin.FirstSmoke || Plugin.FeatureSmoke;
     static void Prefix(PlayerMovement __instance)
     {
         if (BiomeSmokeProbe.Instance == null) return;

@@ -50,6 +50,7 @@ internal static class SourceMageWeapon
         if(sequence.Meshes[selected]==null){var owner=root;Bind(owner);return;}
         if(clip!=name || frame!=selected){filter.sharedMesh=sequence.Meshes[selected];clip=name;frame=selected;}
     }
+    internal static bool FrameMatches(string name,int index)=>visual!=null && renderer!=null && renderer.enabled && clip==name && frame==index;
     internal static string Describe()
     {
         var native=NativeWeaponVisuals.Describe();

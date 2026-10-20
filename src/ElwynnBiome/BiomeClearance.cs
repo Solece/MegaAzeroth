@@ -78,6 +78,7 @@ public sealed class ClearanceReport
     public long ElapsedMilliseconds { get; set; }
     public List<float[]> Route { get; set; } = new();
     public Dictionary<string, int> RemovedBySource { get; set; } = new();
+    public BuildingSafetyReport Buildings { get; set; } = new();
 }
 
 // Runs once after native generation and interactable placement. Its only writes
@@ -90,6 +91,8 @@ public static class BiomeClearance
     const float GroundSkin = .16f;
     static ClearanceReport last = new() { Reason = "Not applied" };
     static CapsuleQueryBuffer activeCastQueries;
+    static BuildingSafety activeBuildings;
+    internal static string LastObstacleDescription { get; private set; }
     public static string DiagnosticsJson => JsonSerializer.Serialize(last);
     public static ClearanceReport LastReport => last;
 
@@ -102,7 +105,7 @@ public static class BiomeClearance
     }
     readonly record struct Zone(Vector3 Center, float Radius, Bounds Bounds, bool IsBounds, bool Rail);
     readonly record struct Node(Vector3 Feet, bool Valid);
-    readonly record struct Body(float Radius, float Height);
+    internal readonly record struct Body(float Radius, float Height);
 
     [StructLayout(LayoutKind.Sequential)]
     struct QuerySpan
@@ -161,9 +164,8 @@ public static class BiomeClearance
             NativeMapSeed = MapGenerationController.mapSeed
         };
         last = report;
-        var props = FindProps();
+        var props = new List<Prop>();
         var zones = new List<Zone>();
-        report.PropsExamined = props.Count;
         var savedColliders = new List<Collider>();
         CapsuleQueryBuffer queryBuffer = null;
         bool safeFallback = false;
@@ -228,16 +230,28 @@ public static class BiomeClearance
                 else zones.Add(new(rail.transform.position, Math.Max(5, body.Radius * 4), default, false, true));
             }
             report.ReservedZones = zones.Count;
+            // Fit/reject complete source WMO instances before discovering the
+            // final decoration set. Their bounds come from the source data and
+            // actual visual transform, not possibly empty startup renderer bounds.
+            activeBuildings = new BuildingSafety(Plugin.Assets, body, report.GroundMask, report.ObstacleMask);
+            report.Buildings = activeBuildings.Report;
+            activeBuildings.Prepare();
+            props = FindProps();
+            report.PropsExamined = props.Count;
             foreach (var prop in props)
             {
                 foreach (var zone in zones)
                 {
                     if (!IntersectsZone(prop, zone)) continue;
-                    Remove(prop, report);
+                    Remove(prop, report, "Reserved");
                     if (zone.Rail) report.RemovedRail++; else report.RemovedReserved++;
                     break;
                 }
             }
+            var propsByPointer = props.ToDictionary(x => x.Root.Pointer, x => x);
+            activeBuildings.ClearInteriorAndApproaches(props.Select(x => x.Root), root =>
+            { if (propsByPointer.TryGetValue(root.Pointer, out var prop)) Remove(prop, report, "Building approach"); });
+            activeBuildings.ValidateDoors();
 
             if (target == null)
             {
@@ -298,7 +312,7 @@ public static class BiomeClearance
                 foreach (var hit in Physics.OverlapCapsule(lower, upper, body.Radius, -1, QueryTriggerInteraction.Ignore))
                 {
                     var prop = OwningProp(hit, roots);
-                    if (prop != null && !prop.Removed) { Remove(prop, report); report.RemovedCorridor++; }
+                    if (prop != null && !prop.Removed) { Remove(prop, report, "Corridor"); report.RemovedCorridor++; }
                 }
             }
             for (int i = 1; i < route.Count; i++)
@@ -309,10 +323,11 @@ public static class BiomeClearance
                 foreach (var hit in activeCastQueries.Cast(lower, upper, body.Radius, delta.normalized, delta.magnitude, -1))
                 {
                     var prop = OwningProp(hit.collider, roots);
-                    if (prop != null && !prop.Removed) { Remove(prop, report); report.RemovedCorridor++; }
+                    if (prop != null && !prop.Removed) { Remove(prop, report, "Corridor"); report.RemovedCorridor++; }
                 }
             }
             Physics.SyncTransforms();
+            activeBuildings.ValidateDoors();
             report.DecoratedRouteClear = true;
             for (int i = 1; i < route.Count; i++)
                 if (HasObstacle(route[i - 1], route[i], body, report.ObstacleMask))
@@ -343,6 +358,14 @@ public static class BiomeClearance
             foreach (var collider in savedColliders) if (collider != null) collider.enabled = true;
             if (safeFallback)
             {
+                // A disabled wall with a visible house is misleading. Whole WMO
+                // instances are removed when the native baseline is unproven;
+                // only ordinary M2 foliage/rocks use the collider-only fallback.
+                activeBuildings?.RemoveForFallback();
+                int unprocessed = BuildingSafety.RemoveUnprocessedBuildingsForFallback();
+                report.Buildings.RemovedFallback += unprocessed;
+                report.Buildings.Examined += unprocessed;
+                if (props.Count == 0) { props = FindProps(); report.PropsExamined = props.Count; }
                 foreach (var prop in props)
                     foreach (var collider in prop.Colliders)
                         if (collider != null && collider.enabled && prop.Root.activeInHierarchy && !collider.isTrigger)
@@ -354,6 +377,8 @@ public static class BiomeClearance
             report.ReservedViolationsRemaining = props.Count(x => x.Root != null && x.Root.activeInHierarchy && zones.Any(z => IntersectsZone(x, z)));
             report.NativeInteractablesAfter = Object.FindObjectsOfType<BaseInteractable>()
                 .Count(x => x != null && x.gameObject.scene.IsValid() && x.gameObject.activeInHierarchy);
+            activeBuildings?.RefreshReport();
+            activeBuildings = null;
             report.ElapsedMilliseconds = timer.ElapsedMilliseconds;
         }
     }
@@ -392,10 +417,11 @@ public static class BiomeClearance
             if (roots.TryGetValue(t.gameObject.Pointer, out var prop)) return prop;
         return null;
     }
-    static void Remove(Prop prop, ClearanceReport report)
+    static void Remove(Prop prop, ClearanceReport report, string reason)
     {
         if (prop.Removed) return;
         prop.Removed = true;
+        activeBuildings?.NoteRemoval(prop.Root, reason);
         prop.Root.SetActive(false);
         report.RemovedBySource.TryGetValue(prop.Source, out var count);
         report.RemovedBySource[prop.Source] = count + 1;
@@ -407,9 +433,12 @@ public static class BiomeClearance
         var center = prop.Root.transform.position;
         var bounds = new Bounds(center, Vector3.one * .1f);
         bool hasCollider = false;
-        foreach (var collider in prop.Colliders)
-            if (collider != null && collider.enabled && !collider.isTrigger)
-            { if (!hasCollider) { bounds = collider.bounds; hasCollider = true; } else bounds.Encapsulate(collider.bounds); }
+        Bounds sourceBounds = default;
+        bool sourceBuilding = BuildingSafety.IsBuilding(prop.Root) && activeBuildings != null && activeBuildings.TryBounds(prop.Root, out sourceBounds);
+        if (sourceBuilding) { bounds = sourceBounds; hasCollider = true; }
+        else foreach (var collider in prop.Colliders)
+                if (collider != null && collider.enabled && !collider.isTrigger)
+                { if (!hasCollider) { bounds = collider.bounds; hasCollider = true; } else bounds.Encapsulate(collider.bounds); }
         if (zone.IsBounds)
             return bounds.min.x <= zone.Bounds.max.x && bounds.max.x >= zone.Bounds.min.x &&
                 bounds.min.z <= zone.Bounds.max.z && bounds.max.z >= zone.Bounds.min.z &&
@@ -679,18 +708,19 @@ public static class BiomeClearance
         lower = feet + Vector3.up * (body.Radius + GroundSkin);
         upper = feet + Vector3.up * (body.Height - body.Radius + GroundSkin);
     }
-    static bool HasObstacle(Vector3 from, Vector3 to, Body body, int mask)
+    internal static bool HasObstacle(Vector3 from, Vector3 to, Body body, int mask)
     {
+        LastObstacleDescription = null;
         if (mask == 0) return false;
         Capsule(from, body, out var lower, out var upper);
         foreach (var collider in Physics.OverlapCapsule(lower, upper, body.Radius, mask, QueryTriggerInteraction.Ignore))
-            if (StaticObstacle(collider)) return true;
+            if (StaticObstacle(collider)) { LastObstacleDescription = collider.name + " layer=" + collider.gameObject.layer; return true; }
         var delta = to - from;
         if (delta.sqrMagnitude <= .0001f) return false;
         // Both the stripped public all-hit stub and the broken abstract-array
         // unmarshalling are bypassed by a concrete pinned native query buffer.
         foreach (var hit in activeCastQueries.Cast(lower, upper, body.Radius, delta.normalized, delta.magnitude, mask))
-            if (StaticObstacle(hit.collider)) return true;
+            if (StaticObstacle(hit.collider)) { LastObstacleDescription = hit.collider.name + " layer=" + hit.collider.gameObject.layer; return true; }
         return false;
     }
     static bool StaticObstacle(Collider collider)

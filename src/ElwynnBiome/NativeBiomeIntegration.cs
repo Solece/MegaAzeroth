@@ -15,7 +15,7 @@ namespace AzerothMegabonk.ElwynnBiome;
 public static class NativeBiomeIntegration
 {
     const string Prefix = "AzerothElwynn_";
-    const int PaletteVersion = 1;
+    const int PaletteVersion = 2;
     const float ElwynnGroundScale = .15f;
     const float ElwynnSideScale = .12f;
     static MapData originalMap, runMap;
@@ -34,11 +34,36 @@ public static class NativeBiomeIntegration
     static int nativeSpawnerCalls, decorGroupCalls, nativeRngRestores, nativeRngRestoreFailures;
     static float nativeAmountMultiplier;
     static bool overrideRestored;
+    sealed class StagePalette
+    {
+        internal int Index;
+        internal StageData Original, Stage;
+        internal Il2CppReferenceArray<RandomMapObject> Palette;
+        internal Dictionary<IntPtr, int> Groups;
+    }
+    static readonly List<StagePalette> stagePalettes = new();
+    static StagePalette activePalette;
+    static int paletteStageIndex;
 
-    public static bool IsElwynnStage => Plugin.Enabled && elwynnStage != null
-        && MapController.currentStage != null && MapController.currentStage.Pointer == elwynnStage.Pointer
-        && !MapController.IsFinalBossStage() && MapController.GetStageIndex() == 0;
 
+    public static bool IsElwynnStage
+    {
+        get
+        {
+            if (!Plugin.Enabled || runMap == null || MapController.IsFinalBossStage() || MapController.currentStage == null) return false;
+            var context = stagePalettes.FirstOrDefault(x => x.Stage.Pointer == MapController.currentStage.Pointer);
+            if (context == null) return false;
+            if (activePalette != context) Activate(context);
+            return true;
+        }
+    }
+    static void Activate(StagePalette context)
+    {
+        activePalette = context; paletteStageIndex = context.Index;
+        originalStage = context.Original; elwynnStage = context.Stage; elwynnPalette = context.Palette;
+        decorGroups.Clear(); foreach (var pair in context.Groups) decorGroups.Add(pair.Key, pair.Value);
+        ResetPlacementTelemetry(); finalGroundChanges.Clear();
+    }
     static T Retain<T>(T value) where T : Object
     { value.hideFlags |= HideFlags.DontUnloadUnusedAsset; owned.Add(value); return value; }
 
@@ -47,72 +72,69 @@ public static class NativeBiomeIntegration
         if (!Plugin.Enabled || config?.mapData == null || config.mapData.eMap != EMap.Desert) return;
         if (runMap != null && config.mapData.Pointer == runMap.Pointer)
         {
-            // Native RestartRun reuses the same RunConfig object. Re-arm the
-            // first-stage override after a previous transition restored it.
-            runMap.randomObjectsOverride = elwynnPalette;
-            overrideRestored = false; nativeGenerateCalls = 0;
-            ResetPlacementTelemetry();
-            return;
+            runMap.randomObjectsOverride = Array.Empty<RandomMapObject>(); overrideRestored = false;
+            Activate(stagePalettes[0]); nativeGenerateCalls = 0; return;
         }
         var assets = Plugin.EnsureAssets();
-        if (assets == null || !assets.AllAssetsValid) throw new InvalidOperationException("Original Elwynn assets are not loaded");
+        if (assets == null || !assets.AllAssetsValid || assets.Buildings.Count != 3)
+            throw new InvalidOperationException("Original Elwynn v2 environment/buildings are not loaded");
         ReleaseVariants();
         originalMap = config.mapData;
-        if (originalMap.stages == null || originalMap.stages.Length == 0) throw new InvalidOperationException("Native Desert has no first stage");
-        originalStage = originalMap.stages[0];
-        if (originalStage == null) throw new InvalidOperationException("Native Desert first stage is absent");
-        runMap = Retain(Object.Instantiate(originalMap));
-        runMap.name = originalMap.name + "_ElwynnLab";
-        elwynnStage = Retain(Object.Instantiate(originalStage));
-        elwynnStage.name = originalStage.name + "_ElwynnLab";
-        // Unity Instantiate deep-copies embedded serialized classes. Restore
-        // exact native gameplay references rather than relying on equal data.
-        elwynnStage.stageTimeline = originalStage.stageTimeline;
-        elwynnStage.stageTilePrefabs = originalStage.stageTilePrefabs;
-        elwynnStage.mapParameters = originalStage.mapParameters;
-        var stages = originalMap.stages.ToArray(); stages[0] = elwynnStage;
-        runMap.stages = stages;
-        nativeOverride = originalMap.randomObjectsOverride;
-        overrideRestored = false;
-        nativeObjectLayer = FindObjectLayer(originalStage.randomMapObjects, nativeOverride);
-        ApplyGroundPalette(assets, elwynnStage);
-        BuildPalette(assets);
-        elwynnStage.randomMapObjects = elwynnPalette;
-        // MapData overrides StageData whenever it is populated. Scope this field
-        // to the private run clone and restore its native value before stage 1.
-        runMap.randomObjectsOverride = elwynnPalette;
+        if (originalMap.stages == null || originalMap.stages.Length == 0) throw new InvalidOperationException("Native Desert has no stages");
+        runMap = Retain(Object.Instantiate(originalMap)); runMap.name = originalMap.name + "_ElwynnLab";
+        nativeOverride = originalMap.randomObjectsOverride; overrideRestored = false;
+        var sourceStages = originalMap.stages.ToArray();
+        var newStages = new StageData[sourceStages.Length];
         var forest = DataManager.Instance?.GetMap(EMap.Forest);
-        var forestStage = forest?.stages?.Length > 0 ? forest.stages[0] : null;
-        if (forestStage != null)
+        for (int index = 0; index < sourceStages.Length; index++)
         {
-            elwynnStage.skybox = forestStage.skybox;
-            elwynnStage.fogColor = forestStage.fogColor;
-            elwynnStage.fogIntensity = forestStage.fogIntensity * .65f;
-            elwynnStage.ambienceColor = forestStage.ambienceColor;
-            elwynnStage.lightColor = forestStage.lightColor;
-            elwynnStage.lightIntensity = forestStage.lightIntensity;
-            // Native grass shader and placement remain in use. Its source
-            // material is cloned so tinting this biome cannot affect Forest.
-            if (forestStage.grassMaterial != null)
+            paletteStageIndex = index; originalStage = sourceStages[index];
+            if (originalStage == null) throw new InvalidOperationException("Native stage is absent: " + index);
+            elwynnStage = Retain(Object.Instantiate(originalStage)); elwynnStage.name = originalStage.name + "_ElwynnLab";
+            elwynnStage.stageTimeline = originalStage.stageTimeline;
+            elwynnStage.stageTilePrefabs = originalStage.stageTilePrefabs;
+            elwynnStage.mapParameters = originalStage.mapParameters;
+            nativeObjectLayer = FindObjectLayer(originalStage.randomMapObjects, nativeOverride);
+            ApplyGroundPalette(assets, elwynnStage);
+            decorGroups.Clear(); BuildPalette(assets); elwynnStage.randomMapObjects = elwynnPalette;
+            var forestStage = forest?.stages?.Length > 0 ? forest.stages[Math.Min(index, forest.stages.Length - 1)] : null;
+            if (forestStage != null)
             {
-                elwynnStage.grassMaterial = Retain(new Material(forestStage.grassMaterial));
-                elwynnStage.grassMaterial.name = Prefix + "NativeGrass";
+                elwynnStage.skybox = forestStage.skybox;
+                elwynnStage.fogColor = forestStage.fogColor; elwynnStage.fogIntensity = forestStage.fogIntensity * .65f;
+                elwynnStage.ambienceColor = forestStage.ambienceColor; elwynnStage.lightColor = forestStage.lightColor;
+                elwynnStage.lightIntensity = forestStage.lightIntensity;
+                if (forestStage.grassMaterial != null)
+                { elwynnStage.grassMaterial = Retain(new Material(forestStage.grassMaterial)); elwynnStage.grassMaterial.name = Prefix + "NativeGrass_" + index; }
             }
+            elwynnStage.particles = null; newStages[index] = elwynnStage;
+            stagePalettes.Add(new StagePalette { Index = index, Original = originalStage, Stage = elwynnStage, Palette = elwynnPalette, Groups = new(decorGroups) });
         }
-        elwynnStage.particles = null;
-        config.mapData = runMap;
-        if (config.stageData != null && config.stageData.Pointer == originalStage.Pointer) config.stageData = elwynnStage;
-        nativeGenerateCalls = 0; ResetPlacementTelemetry();
-        Plugin.Note("First stage uses a private Elwynn palette clone; native generator, map parameters, stage timeline, enemy spawn, movement, ground colliders, special tiles and boss portals retained. " + Describe());
+        runMap.stages = newStages;
+        // Stage-specific palettes preserve each native stage's own ground
+        // landmarks. A map-wide override would overwrite later stage palettes.
+        runMap.randomObjectsOverride = Array.Empty<RandomMapObject>(); config.mapData = runMap;
+        if (config.stageData != null)
+            for (int i = 0; i < sourceStages.Length; i++)
+                if (config.stageData.Pointer == sourceStages[i].Pointer) { config.stageData = newStages[i]; break; }
+        Activate(stagePalettes[0]); nativeGenerateCalls = 0;
+        Plugin.Note("Original Elwynn environment/buildings armed for all native stages; stage-specific generation parameters, timelines and special tiles retained. " + Describe());
     }
 
-    public static void RestoreNativePaletteForLaterStage()
+    public static void PrepareNextElwynnStage()
     {
-        if (runMap == null || overrideRestored || MapController.GetStageIndex() < 0) return;
-        if (MapController.currentMap == null || MapController.currentMap.Pointer != runMap.Pointer) return;
-        runMap.randomObjectsOverride = nativeOverride;
-        overrideRestored = true;
-        Plugin.Note("Native map override restored before leaving Elwynn stage; later stages and final arena retain their original palettes.");
+        if (runMap == null || MapController.currentMap?.Pointer != runMap.Pointer) return;
+        runMap.randomObjectsOverride = Array.Empty<RandomMapObject>(); overrideRestored = false;
+    }
+    public static void RestoreNativeFinalStage()
+    {
+        if (runMap == null || MapController.currentMap?.Pointer != runMap.Pointer) return;
+        runMap.randomObjectsOverride = nativeOverride; overrideRestored = true;
+        // FinalBossMap is a separate native arena. Do not carry a cloned
+        // outdoor stage palette or its materials into the final arena.
+        var current = stagePalettes.FirstOrDefault(x => MapController.currentStage?.Pointer == x.Stage.Pointer);
+        if (current != null) MapController.currentStage = current.Original;
+        Plugin.Note("Native final-arena stage and palette restored before LoadFinalStage.");
     }
 
     static int FindObjectLayer(params Il2CppReferenceArray<RandomMapObject>[] palettes)
@@ -131,8 +153,8 @@ public static class NativeBiomeIntegration
 
     static void BuildPalette(BiomeAssets assets)
     {
-        variants = Retain(new GameObject(Prefix + "VariantLibrary"));
-        variants.SetActive(false); Object.DontDestroyOnLoad(variants);
+        if (variants == null)
+        { variants = Retain(new GameObject(Prefix + "VariantLibrary")); variants.SetActive(false); Object.DontDestroyOnLoad(variants); }
         var palette = new List<RandomMapObject>();
         var native = nativeOverride?.Length > 0 ? nativeOverride : originalStage.randomMapObjects;
         // Ground landmarks are part of native traversable geometry. Keep their
@@ -155,6 +177,17 @@ public static class NativeBiomeIntegration
             };
             decorGroups.Add(group.Pointer, decorGroups.Count);
             palette.Add(group);
+        }
+        // Native placement tries large buildings before small foliage so tree
+        // colliders do not consume every potential village footprint.
+        foreach (var id in new[] { "farm", "goldshireblacksmith", "goldshireinn" })
+        {
+            var prefab = MakeBuildingVariant(assets, id);
+            float span = Math.Max(assets.BuildingBounds[id].size.x, assets.BuildingBounds[id].size.z);
+            var group = new RandomMapObject { prefabs = new[] { prefab }, amount = id == "goldshireinn" ? 3 : 5, maxAmount = 8,
+                scaleMin = .95f, scaleMax = 1.05f, checkRadius = span * 1.35f * .55f + 2, maxSlopeAngle = 9, upOffset = 0,
+                randomRotationVector = new Vector3(0, 1, 0), alignWithNormal = false };
+            decorGroups.Add(group.Pointer, decorGroups.Count); palette.Add(group);
         }
         Group(new[] { "elwynntreecanopy01", "elwynntreecanopy02", "elwynntreecanopy03", "elwynntreecanopy04" }, 25, 70, 90, 5.5f, 25, "trunk");
         Group(new[] { "elwynntreemid01" }, 14, 22, 30, 3.5f, 28, "trunk");
@@ -212,7 +245,7 @@ public static class NativeBiomeIntegration
                 stageMaterial.stageMaterials = stageMaterial.stageMaterials.Select(entry => entry == null ? null : new ObjectStageMaterial.StageMaterial
                 {
                     stageIndex = entry.stageIndex,
-                    material = entry.stageIndex == 0 ? elwynnStage.triplanarMaterial : entry.material
+                    material = elwynnStage.triplanarMaterial
                 }).ToArray();
                 stageMaterialTables++;
             }
@@ -261,6 +294,25 @@ public static class NativeBiomeIntegration
         // Instantiate(position,rotation) detaches it, creating an active clone.
         root.SetActive(true);
         variantDiagnostics.Add(new { source = id, height, scale, nativeObjectLayer, collider, visualBounds = new[] { size.x, size.y, size.z } });
+        return root;
+    }
+
+    static GameObject MakeBuildingVariant(BiomeAssets assets, string id)
+    {
+        var root = Retain(new GameObject(Prefix + "building_" + id + "_variant"));
+        root.transform.SetParent(variants.transform, false); root.layer = nativeObjectLayer;
+        root.AddComponent<ElwynnPropMarker>().SourceId = "building_" + id;
+        var visual = Object.Instantiate(assets.Buildings[id]); visual.name = "OriginalElwynnBuilding";
+        visual.transform.SetParent(root.transform, false);
+        visual.transform.localScale = Vector3.one * 1.35f;
+        visual.transform.localPosition = Vector3.down * assets.BuildingFloorY[id] * 1.35f; visual.SetActive(true);
+        void Layer(Transform t) { t.gameObject.layer = nativeObjectLayer; for (int i = 0; i < t.childCount; i++) Layer(t.GetChild(i)); }
+        Layer(root.transform); root.SetActive(true);
+        var bounds = assets.BuildingBounds[id];
+        variantDiagnostics.Add(new { source = "building_" + id, groups = assets.BuildingGroupCount[id],
+            floorY = assets.BuildingFloorY[id], sourceEntrances = assets.BuildingEntrances[id].Length,
+            renderTriangles = assets.BuildingRenderTriangles[id], collisionTriangles = assets.BuildingCollisionTriangles[id],
+            bounds = new[] { bounds.size.x, bounds.size.y, bounds.size.z }, nativeObjectLayer });
         return root;
     }
 
@@ -320,7 +372,7 @@ public static class NativeBiomeIntegration
     public static string Describe() => JsonSerializer.Serialize(new
     {
         enabled = Plugin.Enabled, active = IsElwynnStage, paletteVersion = PaletteVersion,
-        map = runMap?.name, stage = elwynnStage?.name,
+        map = runMap?.name, stage = elwynnStage?.name, stageIndex = activePalette?.Index, configuredElwynnStages = stagePalettes.Count,
         stageCount = runMap?.stages?.Length, nativeStageTimeline = elwynnStage?.stageTimeline?.Pointer.ToInt64() == originalStage?.stageTimeline?.Pointer.ToInt64(),
         nativeMapParameters = elwynnStage?.mapParameters?.Pointer.ToInt64() == originalStage?.mapParameters?.Pointer.ToInt64(),
         nativeSpecialTiles = elwynnStage?.stageTilePrefabs?.Pointer.ToInt64() == originalStage?.stageTilePrefabs?.Pointer.ToInt64(),
@@ -480,6 +532,7 @@ public static class NativeBiomeIntegration
     {
         if (variants != null) { variants.SetActive(false); Object.Destroy(variants); }
         foreach (var value in owned) if (value != null && value != variants) Object.Destroy(value);
+        stagePalettes.Clear(); activePalette = null;
         owned.Clear(); materialChanges.Clear(); variantDiagnostics.Clear(); preservedTerrain.Clear(); decorGroups.Clear(); finalGroundMaterials.Clear(); finalGroundChanges.Clear();
         ResetPlacementTelemetry();
         variants = null; originalMap = null; runMap = null; originalStage = null; elwynnStage = null;
@@ -565,11 +618,11 @@ static class ElwynnRunPalettePatch
 
 [HarmonyPatch(typeof(MapController), nameof(MapController.LoadNextStage))]
 static class ElwynnLaterStagePatch
-{ static void Prefix() => NativeBiomeIntegration.RestoreNativePaletteForLaterStage(); }
+{ static void Prefix() => NativeBiomeIntegration.PrepareNextElwynnStage(); }
 
 [HarmonyPatch(typeof(MapController), nameof(MapController.LoadFinalStage))]
 static class ElwynnFinalStagePatch
-{ static void Prefix() => NativeBiomeIntegration.RestoreNativePaletteForLaterStage(); }
+{ static void Prefix() => NativeBiomeIntegration.RestoreNativeFinalStage(); }
 
 [HarmonyPatch(typeof(RandomObjectPlacer), nameof(RandomObjectPlacer.Generate))]
 static class ElwynnNativePlacementPatch
@@ -597,6 +650,6 @@ static class ElwynnStageDisplayNamePatch
     static void Postfix(StageData __instance, ref string __result)
     {
         if (NativeBiomeIntegration.IsElwynnStage && __instance.Pointer == MapController.currentStage.Pointer)
-            __result = "Элвиннский лес";
+            __result = "Элвиннский лес — " + (MapController.GetStageIndex() + 1);
     }
 }

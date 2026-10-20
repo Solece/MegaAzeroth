@@ -14,6 +14,7 @@ namespace AzerothMegabonk.MageVisuals;
 public static class CreatureVisualBridge
 {
  private static readonly Dictionary<string,Model> Models=new();
+ public static string AnimationDiagnostics()=>System.Text.Json.JsonSerializer.Serialize(new{clock=MageAnimationClock.Snapshot(),creatures=Object.FindObjectsOfType<MageCompanionVisual>(true).Select(v=>v.AnimationState()).ToArray()});
  private static bool registered;
  private static GameObject tracker;
  public static int ActiveSheep {get;internal set;}
@@ -64,24 +65,29 @@ public static class CreatureVisualBridge
 public sealed class MageCompanionVisual:MonoBehaviour
 {
  public MageCompanionVisual(IntPtr p):base(p){}
- private Model model;private MeshFilter filter;private MeshRenderer renderer;private GameObject meshObject;private string clip="idle";private float start,nextFrame,height,retryAt,nextFailureLog;private int last=-1;
+ private Model model;private MeshFilter filter;private MeshRenderer renderer;private GameObject meshObject;private string clip="idle",pendingClip;private float start,nextFrame,height,retryAt,nextFailureLog;private int last=-1;
  [HideFromIl2Cpp]
  internal void Bind(Model value,float height)
  {
   if(meshObject!=null)Object.Destroy(meshObject);model=value;this.height=height;last=-1;var child=new GameObject("AzerothOriginalCreatureMesh");meshObject=child;child.transform.SetParent(transform,false);var bounds=value.Template.bounds;float scale=Math.Max(.05f,height)/Math.Max(.01f,bounds.size.y);child.transform.localScale=Vector3.one*scale;child.transform.localPosition=-new Vector3(bounds.center.x,bounds.min.y,bounds.center.z)*scale;
-  filter=child.AddComponent<MeshFilter>();filter.sharedMesh=model.Template;renderer=child.AddComponent<MeshRenderer>();renderer.sharedMaterial=model.Material;start=Time.time;
+  filter=child.AddComponent<MeshFilter>();filter.sharedMesh=model.Template;renderer=child.AddComponent<MeshRenderer>();renderer.sharedMaterial=model.Material;start=MageAnimationClock.Now;
  }
  [HideFromIl2Cpp]
- internal void Play(string name){if(model==null || !model.Clips.ContainsKey(name))return;if(clip!=name || !model.Clips[name].Loop){clip=name;start=Time.time;last=-1;}}
+ internal void Play(string name){if(model==null || !model.Clips.ContainsKey(name))return;if(!MageAnimationClock.CanAnimate){pendingClip=name;return;}if(clip!=name || !model.Clips[name].Loop){clip=name;start=MageAnimationClock.Now;last=-1;}}
+ [HideFromIl2Cpp]
+ internal object AnimationState()=>new{name=gameObject.name,clip,currentFrame=last,pendingClip,animationStart=start};
  void LateUpdate()
  {
-  if(model==null || Time.time<nextFrame || Time.unscaledTime<retryAt)return;
+  if(model==null || Time.unscaledTime<retryAt)return;
   try
   {
-   nextFrame=Time.time+1f/24;
    if(filter==null || renderer==null || !model.IsUsable(false))Bind(CreatureVisualBridge.GetModel(Path.GetFileName(model.SourceFolder)),height);
+   float animationNow=MageAnimationClock.Now;
+   if(!MageAnimationClock.CanAnimate || animationNow<nextFrame)return;
+   nextFrame=animationNow+1f/24;
+   if(pendingClip!=null){var pending=pendingClip;pendingClip=null;Play(pending);}
    if(!model.Clips.TryGetValue(clip,out var c))return;
-   float elapsed=Time.time-start;if(!c.Loop && elapsed>=c.Duration && clip!="death"){Play("idle");return;}
+   float elapsed=animationNow-start;if(!c.Loop && elapsed>=c.Duration && clip!="death"){Play("idle");return;}
    float t=c.Loop?elapsed%c.Duration:Math.Min(elapsed,c.Duration);int frame=Math.Clamp((int)(t/c.Duration*(c.Count-1)),0,c.Count-1);
    if(c.Meshes[frame]==null){Bind(CreatureVisualBridge.GetModel(Path.GetFileName(model.SourceFolder)),height);return;}
    if(frame!=last){last=frame;filter.sharedMesh=c.Meshes[frame];}

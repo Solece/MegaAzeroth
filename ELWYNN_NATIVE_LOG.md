@@ -64,3 +64,6 @@ Actual bound values are recorded in `Describe().groundScale`, `materials[].groun
 ## Final integrated runtime evidence
 
 Final actual runtime PASS: eight unique decoration groups,16 calls/16 RNG restorations/zero failures; original gameplay references retained; original sand world-edge material rebound once. Native full route reached live Pharaoh3 after restoring the later-stage palette. Different seeds produced different native terrain signatures; complete-world determinism is not claimed. See ELWYNN_TEST_LOG.md.
+
+## V2 native probe correction
+First v2 probe PID68224 reached all native decorative groups but GenerateMap raised NullReferenceException after a null map-wide override was supplied. The original uses an empty serialized array. V2 now preserves that shape with Array.Empty<RandomMapObject>() while keeping per-stage palettes; the next native probe owns confirmation. Failed logs retained in private-assets/elwynn-v2-test-runtime/reports.

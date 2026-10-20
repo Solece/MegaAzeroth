@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / 'scripts/azeroth-assets'))
 sys.path.insert(0, str(ROOT / 'scripts/azeroth-mage'))
 from mpq_source import Archives
 from blp_decode import decode_blp
+from wmo_export import export_buildings
 
 GROUNDS = {
  'grass': r'Tileset\Elwynn\ElwynnGrassBase_s.blp',
@@ -130,16 +131,17 @@ def build(out):
   (out / file).write_text(json.dumps(model, separators=(',', ':')), encoding='utf8')
   props[key] = dict(file=file, vertexCount=len(rows), passCount=len(passes),
       triangleCount=sum(len(p['triangles']) // 3 for p in passes), boundsMin=model['boundsMin'], boundsMax=model['boundsMax'])
- manifest = dict(format='azeroth-elwynn-biome-v1', version=1,
+ buildings = export_buildings(out, read, texture, unity)
+ manifest = dict(format='azeroth-elwynn-biome-v2', version=2,
      coordinateSystem='Unity left-handed Y-up: source(x,y,z)->(-y,z,x); V flipped; reversed winding; source units',
      origin='Installed Azeroth Survivors archives, read-only source; local pack only',
-     groundTextures=ground, textures=textures, props=props, sourceEvidence=list(evidence.values()),
-     limits=['Static M2 environment only; original WMO buildings and source particles are not included',
+     groundTextures=ground, textures=textures, props=props, buildings=buildings, sourceEvidence=list(evidence.values()),
+     limits=['Static original M2 and three complete WMO architectures; source particles, placed WMO furniture and local lights are not emitted',
        'No game files are distributed; run this converter against the locally owned installation'])
  (out / 'manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf8')
  print(json.dumps(dict(status='PASS', output=str(out), groundCount=len(ground), propCount=len(props),
      textureCount=len(textures), totalVertices=sum(p['vertexCount'] for p in props.values()),
-     totalTriangles=sum(p['triangleCount'] for p in props.values()), props=props), indent=2))
+     totalTriangles=sum(p['triangleCount'] for p in props.values()), props=props, buildings=buildings), indent=2))
 
 if __name__ == '__main__':
  parser = argparse.ArgumentParser(description=__doc__)
