@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.EnemyVisuals;
 
-[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.1.0")]
+[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.0")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.azerothmegabonk.enemyvisuals";
@@ -51,18 +51,27 @@ public sealed class Plugin : BasePlugin
 [HarmonyPatch(typeof(Enemy), nameof(Enemy.InitEnemy))]
 internal static class EnemyInitPatch
 {
+    internal static string BossModel(string name)
+    {
+        if(name.Contains("skeleton") || name.Contains("calcium")) return "bonegolem";
+        if(name.Contains("ghost") || name.Contains("pharaoh")) return "lich";
+        if(name.Contains("golem")) return "infernal";
+        if(name.Contains("scorpion") || name.Contains("spider")) return "tarantula";
+        return "ogre";
+    }
     static void Postfix(Enemy __instance)
     {
         try
         {
-            if (__instance.IsBoss() || __instance.IsStageBoss() || __instance.IsFinalBoss()) return;
+            if (__instance.renderer == null || __instance.enemyData == null) return;
+            bool boss = __instance.IsBoss() || __instance.IsStageBoss() || __instance.IsFinalBoss();
             string original = __instance.enemyData.enemyName.ToString().ToLowerInvariant();
-            string key = original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar";
-            var model = Plugin.GetModel(key) ?? Plugin.GetModel("boar");
+            string key = boss ? BossModel(original) : original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar";
+            var model = Plugin.GetModel(key) ?? Plugin.GetModel(boss ? "ogre" : "boar");
             if (model == null) return;
             var visual = __instance.gameObject.GetComponent<AzerothVisual>() ?? __instance.gameObject.AddComponent<AzerothVisual>();
-            visual.Bind(__instance, model);
-            if (++Plugin.Attached <= 8) Plugin.Logger.LogInfo($"Visual attached to native enemy {original}; hp={__instance.hp}, model={model.Name}, collider and spawner retained.");
+            visual.Bind(__instance, model, boss);
+            if (++Plugin.Attached <= 8 || boss) Plugin.Logger.LogInfo($"Visual attached to native enemy {original}; hp={__instance.hp}, model={model.Name}, boss={boss}; collider and spawner retained. {visual.Describe()}");
         }
         catch (Exception ex) { Plugin.Logger.LogError($"Visual attachment failed; native enemy retained: {ex}"); }
     }
@@ -160,10 +169,14 @@ public sealed class AzerothVisual : MonoBehaviour
     private int lastFrame=-1;
     private Vector3 previous;
     private string clipName="";
+    private bool isBoss;
+    private Bounds nativeRendererBounds, nativeColliderBounds;
+    private float sourceHeight, referenceHeight, sizeMultiplier;
+    private string scaleReference="";
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
-    internal void Bind(Enemy target,Model data)
+    internal void Bind(Enemy target,Model data,bool boss)
     {
-        enemy=target; original=target.renderer; model=data;
+        enemy=target; original=target.renderer; model=data; isBoss=boss;
         if(visual!=null) { visual.SetActive(false);Object.Destroy(visual); }
         visual=new GameObject("AzerothCreature_"+data.Name);
         visual.layer=original.gameObject.layer;
@@ -172,25 +185,33 @@ public sealed class AzerothVisual : MonoBehaviour
         visual.transform.SetParent(target.transform,false);
         visual.transform.localPosition=Vector3.zero; visual.transform.localRotation=Quaternion.identity;
         var mesh=data.Template;
-        float desired=1f;
-        var oldFilter=original.GetComponent<MeshFilter>();
         float parentScale=Math.Max(.00001f,Math.Abs(target.transform.lossyScale.y));
-        var nativeBounds=original.bounds;
+        // Capture native geometry before hiding it. Native boss size already includes
+        // rendererScale, elite scaling and the spawner's extraSizeMultiplier.
+        nativeRendererBounds=original.bounds;
+        nativeColliderBounds=nativeRendererBounds;
         if(target.collider!=null)
         {
             var c=target.collider;
             float worldHeight=(c.direction==1?c.height:c.radius*2)*Math.Abs(c.transform.lossyScale.y);
-            nativeBounds=new Bounds(c.transform.TransformPoint(c.center),new Vector3(c.radius*2,worldHeight,c.radius*2));
+            nativeColliderBounds=new Bounds(c.transform.TransformPoint(c.center),new Vector3(c.radius*2,worldHeight,c.radius*2));
         }
-        desired=Math.Max(.1f,nativeBounds.size.y)/parentScale;
+        // Ordinary creatures use exactly two-thirds of the former collider-normalized
+        // visual height. Bosses retain their original Megabonk rendered height.
+        bool rendererValid=float.IsFinite(nativeRendererBounds.size.y) && nativeRendererBounds.size.y>.01f;
+        var nativeBounds=boss && rendererValid ? nativeRendererBounds : nativeColliderBounds;
+        scaleReference=boss && rendererValid ? "native-renderer" : "native-collider";
+        referenceHeight=Math.Max(.01f,nativeBounds.size.y);
+        sizeMultiplier=boss ? 1f : 2f/3f;
+        float desired=referenceHeight*sizeMultiplier/parentScale;
         var feetWorld=nativeBounds.center-Vector3.up*(nativeBounds.size.y*.5f);
-        float height=Math.Max(.01f,mesh.bounds.size.y);
-        float scale=Math.Max(.1f,desired)/height;
+        sourceHeight=Math.Max(.01f,mesh.bounds.size.y);
+        float scale=desired/sourceHeight;
         visual.transform.localScale=Vector3.one*scale;
         visual.transform.localPosition=target.transform.InverseTransformPoint(feetWorld)-new Vector3(mesh.bounds.center.x*scale,mesh.bounds.min.y*scale,mesh.bounds.center.z*scale);
         filter=visual.AddComponent<MeshFilter>(); filter.sharedMesh=mesh;
         replacement=visual.AddComponent<MeshRenderer>(); replacement.sharedMaterial=data.Material;
-        if(Plugin.Attached<3) Plugin.Logger.LogInfo($"Visual scale evidence: parentScale={parentScale}, collider={nativeBounds.size}, sourceHeight={height}, localScale={scale}, visualBounds={replacement.bounds.size}, position={replacement.bounds.center}");
+        if(Plugin.Attached<3 || boss) Plugin.Logger.LogInfo($"Visual scale evidence: boss={boss}, reference={scaleReference}, nativeRendererHeight={nativeRendererBounds.size.y}, nativeColliderHeight={nativeColliderBounds.size.y}, ratio={sizeMultiplier}, sourceHeight={sourceHeight}, localScale={scale}, visualBounds={replacement.bounds.size}, position={replacement.bounds.center}");
         original.enabled=false;
         startTime=Time.time; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
     }
@@ -219,6 +240,25 @@ public sealed class AzerothVisual : MonoBehaviour
         filter.sharedMesh=clip.Meshes[frame];
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
+    public string Describe()
+    {
+        float renderedHeight=replacement!=null ? replacement.bounds.size.y : 0;
+        return JsonSerializer.Serialize(new {
+            enemyName=enemy?.enemyData?.enemyName.ToString(),
+            enemyId=enemy!=null ? enemy.id : 0,
+            boss=isBoss, stageBoss=enemy!=null && enemy.IsStageBoss(), finalBoss=enemy!=null && enemy.IsFinalBoss(),
+            model=model?.Name, scaleReference,
+            nativeRendererHeight=nativeRendererBounds.size.y,
+            nativeColliderHeight=nativeColliderBounds.size.y,
+            referenceHeight, sizeMultiplier, sourceHeight,
+            expectedInitialHeight=referenceHeight*sizeMultiplier,
+            renderedHeight, currentLocalScale=visual!=null ? visual.transform.localScale.y : 0,
+            nativeRendererHidden=original!=null && !original.enabled,
+            visualActive=visual!=null && visual.activeInHierarchy,
+            colliderEnabled=enemy?.collider!=null && enemy.collider.enabled
+        });
+    }
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     public void RestoreNative()
     {
         enabled=false;
@@ -230,3 +270,17 @@ public sealed class AzerothVisual : MonoBehaviour
 }
 
 
+
+/// <summary>Read-only runtime evidence for native spawn and size checks.</summary>
+public static class EnemyVisualBridge
+{
+    public const float OrdinarySizeMultiplier=2f/3f;
+    public const float BossSizeMultiplier=1f;
+    public static string Describe(Enemy enemy)
+    {
+        var visual=enemy!=null ? enemy.gameObject.GetComponent<AzerothVisual>() : null;
+        return visual!=null ? visual.Describe() : "{\"attached\":false}";
+    }
+    public static string[] DescribeAll()
+        => Object.FindObjectsOfType<AzerothVisual>(true).Select(v=>v.Describe()).ToArray();
+}

@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
-    <LabRoot>D:/Games/Saitan/AzerothMegabonkLab</LabRoot>
+    <LabRoot Condition="'$(LabRoot)' == ''">$(MSBuildProjectDirectory)/../..</LabRoot>
     <GameRoot>$(LabRoot)/Megabonk-Lab</GameRoot>
   </PropertyGroup>
   <ItemGroup>
@@ -19,4 +19,3 @@
     <Reference Include="$(GameRoot)/BepInEx/interop/Unity.TextMeshPro.dll" Private="false" />
   </ItemGroup>
 </Project>
-

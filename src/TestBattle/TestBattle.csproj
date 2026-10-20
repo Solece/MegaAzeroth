@@ -8,5 +8,5 @@
 <Reference Include="UnityEngine.CoreModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
 <Reference Include="UnityEngine.PhysicsModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
 <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
-<Reference Include="UnityEngine.UI"><HintPath>$(BepInExRoot)/interop/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference><Reference Include="UnityEngine.UIModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference></ItemGroup></Project>
+<Reference Include="UnityEngine.UI"><HintPath>$(BepInExRoot)/interop/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference><Reference Include="UnityEngine.UIModule"><HintPath>$(BepInExRoot)/interop/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference><Reference Include="Unity.TextMeshPro"><HintPath>$(BepInExRoot)/interop/Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference></ItemGroup></Project>
 

@@ -1,30 +1,115 @@
-# Azeroth × Megabonk — local prototype
+# MegaAzeroth
 
-Work root: D:/Games/Saitan/AzerothMegabonkLab.
+Локальный прототип модификации Megabonk: движение, камера, физика, AI и спавн противников остаются от Megabonk; облик мага, монстров, способности, таланты и оформление интерфейса переносятся из установленного Azeroth Survivors.
 
-## Launch
-Double-click Start-AzerothMegabonk.cmd when you want to play. It launches only the separate Megabonk-Lab copy. No game is launched by this README. The original Steam game folder is unchanged.
+Репозиторий: [Solece/MegaAzeroth](https://github.com/Solece/MegaAzeroth).
 
-The initial prototype uses Mage. Its configuration is Megabonk-Lab/BepInEx/config/local.azerothmegabonk.abilities.cfg (SelectedClass = mage). Set none to use native Megabonk weapons instead.
+Это исходники модов и инструменты локального извлечения данных. Игры, их архивы, модели, текстуры, анимации и готовая папка с игрой в репозиторий не включены. Для сборки и запуска нужны собственные установленные игры и подготовленные локальные файлы. Автоматического установщика для чистого клона пока нет.
 
-## Implemented
-- Native Megabonk movement, enemy AI, encounters and spawn schedule remain the host systems.
-- Four tome slots are available immediately through a runtime hook; weapon slot limits and saved unlocks are not overwritten.
-- Azeroth creature visuals loaded from the local installation: boar, skeleton, murloc, wolf, kobold, gnoll and optional tarantula. The visual mapping to Megabonk enemy families is an integration choice, not an original Azeroth encounter roster.
-- WoW-style HUD using the original Azeroth interface textures: player frame, action bar and gryphons; actual native health, experience, gold, timer and books. The native HUD and encounter dialogs remain during this first visual-validation stage.
-- Five Mage spells and source-backed per-rank damage/cooldown/target/radius formulas. Damage/cooldown constants and rank formulas were recovered from the installed Azeroth v0.102.3 executable and checked against it.
+## Что работает
 
-## Prototype limitations
-This is not a complete Azeroth Survivors port. Other classes, the rest of the Mage spell pool, talents, racials, original critical/proc behavior, original spell VFX and minimap are not reproduced. Source rank formulas are retained; card/rarity selection uses the Megabonk upgrade screen. Spell VFX are temporary procedural shapes. Boss visuals remain native until attack/phase animation integration can be verified.
+- Нативное управление Megabonk, камера, столкновения и спавн мобов. Визуальные замены не создают отдельную систему физики.
+- Оригинальная модель Human male Mage в стартовой мантии, 12 исходных анимационных клипов, портрет, эффекты заклинаний, Water Elemental и овца для Polymorph. Геометрия затылка и шеи восстановлена из исходной модели.
+- Все 13 заклинаний мага с исходными параметрами и типами улучшений; три дерева и все 39 талантов. Поведение адаптировано к объектам и боевой системе Megabonk.
+- Четыре слота книжек Megabonk доступны с начала забега. Оригинальные изображения оружия скрыты в режиме мага. Панель здоровья использует текущие HP, щит и опыт игрового персонажа.
+- Автоматический запуск тестового боя с магом, журналирование и ограниченные фоновые прогоны Unity с настоящим рендером.
 
-Headless runtime checks and screenshots are recorded in reports/. Full interactive HUD layout, sustained gameplay balance and broad boss/pool stress testing are not yet verified. Read MODLOG.md for the exact latest results.
+Это не полный перенос Azeroth Survivors. Другие классы, точное совпадение всех графических проходов исходного движка, длительный баланс и все сочетания эффектов ещё требуют работы. Переход через портал и полный цикл боёв с боссами пока не считаются подтверждённой возможностью; наличие исследовательского кода или ресурсов само по себе этого не доказывает.
 
-## Files and rollback
-- Source: src/; conversion scripts: scripts/azeroth-assets/ and scripts/prepare-runtime-textures.py.
-- Native local assets: private-assets/ and Megabonk-Lab/AzerothAssets/. Keep these private.
-- Main log: MODLOG.md; worker logs: ASSET_LOG.md, BOOKS_LOG.md, UI_LOG.md, ABILITIES_LOG.md.
-- Runtime log: Megabonk-Lab/BepInEx/LogOutput.log; normal launch log: reports/megabonk-play.log.
-- Save backup: um-data/backups/megabonk-before-lab/20261020-193811.zip; registry export: backups/Megabonk-PlayerPrefs-before.reg.
-- To play unmodified, use Steam to launch the original Megabonk installation. Do not restore an old backup over newer progress unless you intend to.
+## Запуск подготовленной локальной сборки
 
-Universal Modder 0.2.0 is installed in Codex. Its skills are available on the next turn. The local CLI wrapper is um.ps1.
+Запускатели работают относительно своей папки и используют отдельную копию `Megabonk-Lab`.
+
+| Файл | Режим |
+| --- | --- |
+| `Start-Mage-Battle.cmd` | Сразу тестовый бой с магом и максимальными талантами. |
+| `Start-AzerothMegabonk.cmd` | Тот же быстрый тестовый запуск. |
+| `Start-AzerothMegabonk-Menu.cmd` | Обычные меню и нормальная прогрессия модификации. |
+
+В тестовом запуске задан бюджет **999 очков талантов**. Все **39 талантов** прокачиваются до исходного максимального ранга **до загрузки боя**: расходуется **121 очко**, остаётся **878**. Это число талантов, а не число рангов: один талант может иметь несколько рангов.
+
+**F6** открывает дерево талантов. В тестовом режиме покупки, возврат очков и сброс применяются сразу; уже изученные ранги заклинаний сохраняются. В обычном режиме действует исходный предел 51 очко и собственная сохранённая прогрессия модификации; изменения выбранного билда применяются к следующему забегу.
+
+Тестовый запуск использует аргументы:
+
+```text
+-azeroth-test-battle -azeroth-talent-points=999 -azeroth-talents-max
+```
+
+Записи прогресса в тестовом бою подавляются. Профиль талантов обычного режима хранится отдельно в `Megabonk-Lab/BepInEx/config/`. Для немодифицированной игры запускайте исходную установку Megabonk через Steam.
+
+## Подготовка из исходников
+
+Проверенная локальная среда: Windows x64, Megabonk 1.0.69 / Unity 2023.2.22f1, BepInEx **6.0.0-be.755 для IL2CPP**, проекты с целевой платформой `net6.0`. Для сборки нужен совместимый .NET SDK; в разработке использован SDK 10.0.400. Для конвертеров нужны Python, NumPy, Pillow, mpyq и pefile.
+
+1. Клонируйте репозиторий. Текущие скрипты извлечения рассчитаны на рабочую папку `D:\Games\Saitan\AzerothMegabonkLab` и установленный Azeroth Survivors в `D:\Games\Saitan\AzerothSurvivorsWindowsNew\AzerothSurvivors`. При другом расположении настройте локальные пути, описанные ниже.
+2. Подготовьте отдельную копию своей установки Megabonk в `Megabonk-Lab/`. Установите в неё совместимый BepInEx IL2CPP и получите локальные interop-сборки. Оригинальная установка игры не является рабочей папкой модификации.
+3. Извлеките нужные ресурсы из собственной установки Azeroth Survivors и соберите частные packs. Скрипты читают исходные MPQ/DBC/M2/BLP и исполняемый файл; их вывод остаётся локальным. Это несколько инструментов подготовки, а не единый готовый установщик.
+4. Соберите нужные проекты `src/`, затем разместите DLL, каталоги JSON и подготовленные ресурсы в папках runtime, указанных ниже. Обновляйте runtime-файлы при закрытой игре.
+5. Используйте обычный запускатель для игры либо отдельный фоновый прогон для проверки изменений.
+
+### Локальные ресурсы
+
+| Инструменты | Назначение |
+| --- | --- |
+| `scripts/azeroth-assets/` | Чтение MPQ/DBC, экспорт монстров, проверка meshes и анимаций. |
+| `scripts/azeroth-mage/` | Составная модель мага, sheep/water elemental, исправленный BLP2-декодер, проверки геометрии и кадров. |
+| `scripts/azeroth-ui/` | Исходные изображения интерфейса, FrameXML и подготовка RGBA для Unity. |
+| `scripts/azeroth-vfx/` | Связи Spell/SpellVisual/Kit/EffectName и экспорт исходных эффектов. |
+| `scripts/azeroth-mage-talents/` | Извлечение таблицы талантов и независимые проверки каталога/прогрессии. |
+
+`scripts/azeroth-assets/mpq_source.py` задаёт корень лаборатории и папку `Data` исходной игры. Ряд других Python-скриптов тоже содержит локальные `ROOT`/`root`/пути импорта. Изменение MSBuild-свойства `LabRoot` не перенастраивает Python автоматически. Для VFX отдельно поддерживается переменная `AZEROTH_VFX_WORK`, но это только папка вывода VFX.
+
+В runtime используются следующие частные папки:
+
+```text
+Megabonk-Lab/
+  AzerothAssets/                         # packs монстров
+  AzerothMageAssets/human-male/           # модель мага и все кадры анимации
+  AzerothMageAssets/sheep/
+  AzerothMageAssets/waterelemental/
+  BepInEx/plugins/
+    AzerothAbilities/                    # DLL, mage.json, icons/VFX
+    MageTalents/                         # AzerothMageTalents.dll, mage-talents.json
+    MageVisuals/                         # AzerothMegabonk.MageVisuals.dll
+    ...                                  # HUD, BookSlots, EnemyVisuals, TestBattle
+```
+
+Не смешивайте `model.json` от одной версии pack с `.vertices.bin` от другой: число вершин во всех анимационных кадрах должно совпадать с каталогом модели. Текстуры для runtime загружаются из подготовленного RGBA с явным размером и порядком строк.
+
+### Сборка и переносимость путей
+
+Большинство `.csproj` разрешает `Megabonk-Lab/BepInEx` относительно `$(MSBuildProjectDirectory)`. `src/AzerothHud/AzerothHud.csproj` пока содержит локальное значение `LabRoot`, которое можно переопределить при сборке:
+
+```powershell
+dotnet build .\src\MageVisuals\MageVisuals.csproj -c Release
+dotnet build .\src\AzerothHud\AzerothHud.csproj -c Release -p:LabRoot=C:/Projects/MegaAzeroth
+```
+
+При сохранении обычной структуры папок остальные подсистемы не требуют того же абсолютного пути. Для нестандартного расположения interop-сборок проекты с `BepInExRoot` принимают `-p:BepInExRoot=C:/Path/To/BepInEx`. Компилируемые библиотеки игры и Unity берутся из локальной установки BepInEx, а не из репозитория.
+
+`src/LabSmoke` — служебный тестовый модуль. Не размещайте его в обычном наборе плагинов для игры. `src/TestBattle` включается специальными аргументами и обслуживает автоматический старт/проверки.
+
+## Проверки
+
+После локального извлечения packs:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\azeroth-mage\validate_mage.py
+.\.venv\Scripts\python.exe .\scripts\azeroth-mage\validate_companions.py
+dotnet run --project .\scripts\azeroth-mage-talents\checks\TalentChecks.csproj -- .\src\MageTalents\mage-talents.json
+```
+
+Проверка мага контролирует индексы, конечные координаты/UV, размеры всех кадров и исходных hand attachments, непрозрачность RGBA и закрытую заднюю поверхность головы/шеи. Проверки талантов контролируют каталог, ранги, ограничения, стоимость, прогрессию и тестовый бюджет.
+
+Фоновые runtime-прогоны используют Unity `-batchmode`, переменную `AZEROTH_LAB_HEADLESS_TEST=1` и аргумент `-azeroth-test-smoke`. Для графической проверки сохраняется реальный D3D-рендер: `-nographics` для неё не подходит. Тест не управляет клавиатурой или мышью и должен запускаться отдельным скрытым процессом с собственным журналом; по окончании он сам завершает только свой процесс.
+
+Проверенный короткий прогон охватывает старт боя, активного мага, четыре книжки, исходные visuals/VFX, работу талантов и элементаля, обновление HP и отрисовку панели F6. Это не замена длительной интерактивной проверке, балансу и тестам всех боссов/переходов. Точный результат каждого изменения фиксируется в журналах; наличие успешной старой проверки не означает, что более поздняя сборка уже проверена.
+
+## Журналы и приватные файлы
+
+Основной журнал — `MODLOG.md`. Подробности подсистем: `UI_LOG.md`, `MAGE_VISUAL_LOG.md`, `MAGE_ABILITIES_LOG.md`, `MAGE_TALENTS_LOG.md`, `MAGE_VFX_LOG.md`, `ASSET_LOG.md` и `BOOKS_LOG.md`.
+
+Локальные журналы запуска находятся в `reports/` и `Megabonk-Lab/BepInEx/LogOutput.log`. Обычные запускатели создают отдельный файл на каждый запуск. Снимки проверок и извлечённые packs тоже остаются локальными.
+
+`.gitignore` исключает `Megabonk-Lab/`, `private-assets/`, `reports/`, `cache/`, `downloads/`, `backups/`, `um-data/`, `universal-modder/`, виртуальную среду, `bin/obj`, DLL и PDB. Эти правила не удаляют ранее отслеживаемые файлы автоматически: перед публикацией проверяйте список отслеживаемых файлов и содержимое коммита. Не добавляйте исходные игровые архивы, бинарники, textures/meshes/animations или файлы сохранений в Git. Права на игровые ресурсы остаются у их правообладателей.

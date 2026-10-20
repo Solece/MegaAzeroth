@@ -2,8 +2,11 @@ using System.Reflection;
 using Assets.Scripts.Actors.Player;
 using Assets.Scripts.Actors.Enemies;
 using Assets.Scripts.Inventory__Items__Pickups;
+using Assets.Scripts.Inventory__Items__Pickups.Items;
 using Assets.Scripts._Data.MapsAndStages;
 using Assets.Scripts.Inventory.Stats;
+using Assets.Scripts.Managers;
+using EEnemy = Actors.Enemies.EEnemy;
 using Assets.Scripts.Menu.Shop;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
@@ -89,6 +92,7 @@ public sealed class BattleRunner:MonoBehaviour
                 if(Plugin.Smoke && !menuChecked){CheckMenuAndIcons();menuChecked=true;}
                 map.runConfig.mapData=desert;map.runConfig.stageData=desert.stages[0];map.runConfig.mapTierIndex=0;map.runConfig.challenge=null;
                 Plugin.Note("Starting native map="+desert.name+" stage="+desert.stages[0].name+" tierIndex=0");
+                if(Plugin.Smoke && Environment.GetCommandLineArgs().Contains("-azeroth-talents-max"))ProbeStartupMax();
                 map.StartMap();stage=2;next=Time.realtimeSinceStartup+8;return;
             }
             if(stage==2)
@@ -106,7 +110,14 @@ public sealed class BattleRunner:MonoBehaviour
             if(stage==3)
             {
                 ticks++;
+                if(ticks==1 && Environment.GetEnvironmentVariable("AZEROTH_LAB_UI_PROBE")=="1")
+                {
+                    var items=MyPlayer.Instance.inventory.itemInventory;
+                    items.AddItem(EItem.Oats);items.AddItem(EItem.BeefyRing);items.AddItem(EItem.Battery);
+                    Plugin.Note("UI probe native items granted through ItemInventory: Oats, BeefyRing, Battery");
+                }
                 if(ticks==2 && Environment.GetEnvironmentVariable("AZEROTH_LAB_TALENT_PROBE")=="1")ProbeBudget();
+                if(ticks==6 && Environment.GetEnvironmentVariable("AZEROTH_LAB_ENEMY_SCALE_PROBE")=="1")ProbeEnemySizes();
                 if(ticks==3)
                 {
                     var health=MyPlayer.Instance.inventory.playerHealth;health.hp=Math.Max(1,health.maxHp/2);
@@ -183,6 +194,41 @@ public sealed class BattleRunner:MonoBehaviour
         Plugin.Note("Original Mage raw RGBA icons loaded="+count);
     }
     [HideFromIl2Cpp]
+    void ProbeEnemySizes()
+    {
+        var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothMegabonk.EnemyVisuals.EnemyVisualBridge",false)).First(t=>t!=null);
+        var describe=type.GetMethod("Describe");
+        var regular=Object.FindObjectsOfType<Enemy>().FirstOrDefault(e=>e.hp>0 && e.gameObject.activeInHierarchy && !e.IsBoss()&&!e.IsStageBoss()&&!e.IsFinalBoss());
+        if(regular==null)throw new InvalidOperationException("No native regular enemy for scale probe");
+        CheckEnemySize((string)describe.Invoke(null,new object[]{regular}),false);
+        var position=MyPlayer.Instance.transform.position;
+        foreach(var id in new[]{25,34,50})
+        {
+            var flag=id==34?EEnemyFlag.StageBoss:EEnemyFlag.Boss;
+            var spawned=EnemyManager.Instance.SpawnBoss((EEnemy)id,-1,flag,position+new Vector3(80+(id%3)*12,0,80),1);
+            if(spawned==null)throw new InvalidOperationException("Native boss spawn failed "+id);
+            CheckEnemySize((string)describe.Invoke(null,new object[]{spawned}),true);
+        }
+        Plugin.Note("PASS native enemy size probe: regular2/3; Golem/Pharaoh/CalciumDad original Azeroth models at native Megabonk boss height");
+    }
+    [HideFromIl2Cpp]
+    void CheckEnemySize(string description,bool boss)
+    {
+        Plugin.Note("Enemy size probe "+description);
+        using var doc=System.Text.Json.JsonDocument.Parse(description);var data=doc.RootElement;
+        float ratio=data.GetProperty("sizeMultiplier").GetSingle(), expected=data.GetProperty("expectedInitialHeight").GetSingle(),actual=data.GetProperty("renderedHeight").GetSingle();
+        if(data.GetProperty("boss").GetBoolean()!=boss || Math.Abs(ratio-(boss?1f:2f/3f))>.001f || Math.Abs(actual-expected)>Math.Max(.02f,expected*.01f) || !data.GetProperty("nativeRendererHidden").GetBoolean())
+            throw new InvalidOperationException("Azeroth enemy sizing/replacement mismatch "+description);
+    }
+    [HideFromIl2Cpp]
+    void ProbeStartupMax()
+    {
+        var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("MageTalents.TalentBridge",false)).First(t=>t!=null);
+        int spent=(int)type.GetProperty("SpentPoints").GetValue(null),free=(int)type.GetProperty("AvailablePoints").GetValue(null);
+        if(spent!=121 || free!=878)throw new InvalidOperationException($"Startup maxed build mismatch: spent={spent},free={free}");
+        Plugin.Note("PASS startup all39 talents BEFORE battle: spent121,free878,budget999");
+    }
+    [HideFromIl2Cpp]
     void ProbeTalents()
     {
         var talents=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("MageTalents.TalentBridge",false)).FirstOrDefault(t=>t!=null);
@@ -200,6 +246,7 @@ public sealed class BattleRunner:MonoBehaviour
     void ProbeBudget()
     {
         var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("MageTalents.TalentBridge",false)).First(t=>t!=null);
+        if(Environment.GetCommandLineArgs().Contains("-azeroth-talents-max")){ProbeStartupMax();return;}
         int before=(int)type.GetProperty("AvailablePoints").GetValue(null);if(before!=999)throw new InvalidOperationException("Expected 999 free test talent points; got "+before);
         var ranks=(int[])bridge.GetProperty("SpellRanks").GetValue(null);
         if(!(bool)type.GetMethod("Spend").Invoke(null,new object[]{"arcane_focus"}))throw new InvalidOperationException("Test talent could not be purchased");
@@ -230,6 +277,19 @@ public sealed class BattleRunner:MonoBehaviour
         var hudImages=Object.FindObjectsOfType<RawImage>().Count(i=>i.transform.IsChildOf(hud.transform));
         if(hudImages<12)throw new InvalidOperationException("Azeroth HUD incomplete; image nodes="+hudImages);
         Plugin.Note("Native Azeroth HUD active: imageNodes="+hudImages+" totalNodes="+hud.transform.childCount);
+        if(Environment.GetEnvironmentVariable("AZEROTH_LAB_UI_PROBE")=="1")
+        {
+            var timer=hud.transform.Find("RunTime").GetComponent<TMPro.TextMeshProUGUI>();
+            var plate=hud.transform.Find("ActionBarBackground").GetComponent<RawImage>();
+            if(timer.fontSize<98 || plate.texture==null || hud.transform.Find("ActionBarTopRail")==null)
+                throw new InvalidOperationException("Restored action bar artwork or 3.5x timer missing");
+            var itemLayout=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothHud.NativeItemLayoutDiagnostics",false)).First(t=>t!=null);
+            int count=(int)itemLayout.GetProperty("VisibleItemCount").GetValue(null);
+            float lowest=(float)itemLayout.GetProperty("LowestVisibleItemScreenY").GetValue(null);
+            float inset=(float)itemLayout.GetProperty("BottomInsetScreenPixels").GetValue(null);
+            Plugin.Note($"UI layout probe: timer={timer.fontSize}/28=3.5x; source backing={plate.texture.name}; items={count}; lowestY={lowest}; inset={inset}");
+            if(Environment.GetEnvironmentVariable("AZEROTH_LAB_UI_TRACE")!="1" && (count<3 || lowest+1<inset))throw new InvalidOperationException("Native items still obscured by bottom action bar");
+        }
         var modelBridge=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothMegabonk.MageVisuals.MageVisualBridge",false)).FirstOrDefault(t=>t!=null);
         if(modelBridge!=null)
         {
@@ -237,6 +297,12 @@ public sealed class BattleRunner:MonoBehaviour
             bool portrait=modelBridge.GetProperty("PortraitTexture").GetValue(null)!=null;
             Plugin.Note("Source Mage model attached="+attached+" portrait="+portrait+" clip="+modelBridge.GetProperty("CurrentClip").GetValue(null));
             if(!attached || !portrait)throw new InvalidOperationException("Source Mage model or portrait missing");
+            if(Environment.GetEnvironmentVariable("AZEROTH_LAB_UI_PROBE")=="1")
+            {
+                bool closed=(bool)modelBridge.GetProperty("SourceHeadClosed").GetValue(null);int vertices=(int)modelBridge.GetProperty("SourceVertexCount").GetValue(null);
+                Plugin.Note($"Mage original scalp restored: headClosed={closed},vertices={vertices}");
+                if(!closed || vertices!=810)throw new InvalidOperationException("Corrected original Mage head pack not active");
+            }
         }
         if(bridge.GetProperty("SourceVfxSpawned")!=null)
         {
@@ -263,19 +329,26 @@ public sealed class BattleRunner:MonoBehaviour
                 if(shown>0)throw new InvalidOperationException("Native inventory grid remains visible: "+propName);
             }
         }
+        if(fileName=="mage-battle-canvas.ppm")DescribeItems("normal-screen");
         var camera=Camera.main;
         if(camera==null)throw new InvalidOperationException("Native battle camera missing");
         var canvases=Object.FindObjectsOfType<Canvas>().Where(c=>c.isRootCanvas && c.isActiveAndEnabled).ToArray();
         var states=canvases.Select(c=>(Canvas:c,Mode:c.renderMode,Camera:c.worldCamera,Distance:c.planeDistance)).ToArray();
-        var previousTarget=camera.targetTexture;var previousActive=RenderTexture.active;
+        var previousTarget=camera.targetTexture;var previousActive=RenderTexture.active;int previousMask=camera.cullingMask;
         const int width=960,height=540;
         var rt=new RenderTexture(width,height,24);rt.Create();
         Texture2D image=null;
         try
         {
             camera.targetTexture=rt;
+            // Native overlay UI bypasses the world camera mask. Include its layers only
+            // for this offscreen camera conversion, then restore the real gameplay mask.
+            foreach(var graphic in Resources.FindObjectsOfTypeAll<Graphic>())
+                if(graphic!=null && graphic.gameObject.activeInHierarchy)camera.cullingMask|=1<<graphic.gameObject.layer;
+            Plugin.Note($"Capture camera culling mask {previousMask}->{camera.cullingMask}");
             foreach(var canvas in canvases)if(canvas.renderMode==RenderMode.ScreenSpaceOverlay){canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=camera;canvas.planeDistance=1;}
             Canvas.ForceUpdateCanvases();camera.Render();RenderTexture.active=rt;
+            if(fileName=="mage-battle-canvas.ppm")DescribeItems("capture-rendered");
             image=new Texture2D(width,height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,width,height),0,0);image.Apply();
             var path=Path.Combine(Path.GetDirectoryName(Plugin.Report),fileName);
             using var stream=File.Create(path);stream.Write(System.Text.Encoding.ASCII.GetBytes($"P6\n{width} {height}\n255\n"));
@@ -288,8 +361,15 @@ public sealed class BattleRunner:MonoBehaviour
         finally
         {
             foreach(var state in states){state.Canvas.renderMode=state.Mode;state.Canvas.worldCamera=state.Camera;state.Canvas.planeDistance=state.Distance;}
-            camera.targetTexture=previousTarget;RenderTexture.active=previousActive;rt.Release();Object.Destroy(rt);if(image!=null)Object.Destroy(image);
+            camera.cullingMask=previousMask;camera.targetTexture=previousTarget;RenderTexture.active=previousActive;rt.Release();Object.Destroy(rt);if(image!=null)Object.Destroy(image);
         }
+    }
+    [HideFromIl2Cpp]
+    void DescribeItems(string stage)
+    {
+        var type=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothHud.NativeItemLayoutDiagnostics",false)).FirstOrDefault(t=>t!=null);
+        var description=type?.GetMethod("DescribeItems")?.Invoke(null,null) as string[];
+        if(description!=null)foreach(var line in description)Plugin.Note("Items "+stage+": "+line);
     }
     void OnApplicationQuit(){Plugin.Note("Unity quit stage="+stage+" combatTicks="+ticks);}
 }

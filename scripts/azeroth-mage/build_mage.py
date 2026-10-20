@@ -34,7 +34,7 @@ def dbc(name):
  b=read('DBFilesClient\\'+name+'.dbc');n,nf,stride,ss=struct.unpack_from('<4I',b,4);s=b[20+n*stride:]
  def st(off):return s[off:s.find(b'\0',off)].decode('utf8','replace')
  return [struct.unpack_from('<'+'I'*(stride//4),b,20+i*stride) for i in range(n)],st
-sections,ss=dbc('CharSections');outfits,os=dbc('CharStartOutfit');items,its=dbc('ItemDisplayInfo')
+sections,ss=dbc('CharSections');outfits,os=dbc('CharStartOutfit');items,its=dbc('ItemDisplayInfo');hair_geosets,hs=dbc('CharHairGeosets')
 outfit=next(r for r in outfits if (r[1]&0xffffff)==0x000801)
 itemrows={r[0]:r for r in items}
 regions=[(0,0,128,64),(0,64,128,64),(0,128,128,32),(128,0,128,64),(128,64,128,32),(128,96,128,64),(128,160,128,64),(128,224,128,32)]
@@ -70,9 +70,14 @@ p='Character\\Human\\Male\\HumanMale.m2';b=read(p);assert b[:4]==b'MD20' and str
 vs=arr(b,68,'3f4B4B3f2f2f');allpos=np.array([v[:3] for v in vs]);allweights=np.array([v[3:7] for v in vs])/255.;allbi=np.array([v[7:11] for v in vs]);allnorm=np.array([v[11:14] for v in vs]);alluv=np.array([v[14:16] for v in vs]);alluv[:,1]=1-alluv[:,1]
 vo=struct.unpack_from('<I',b,80)[0];lookup=arr(b,vo,'H');rawtri=arr(b,vo+8,'H');indices=[lookup[t[0]][0] for t in rawtri];submeshes=arr(b,vo+24,'10H3f')
 # Bald, clean-shaven, source appearance 0; robe sets sleeves 802 and skirt
-# 1302. Keep source base-body/facial/glove geosets, hide cloak and boot volume
-# under the robe. No arbitrary NPC display model is substituted.
-selected_ids={0,101,201,301,401,802,1302}
+# 1302. A bald variation still needs scalp geoset 1: geoset 0 is the body,
+# not a closed skull. CharHairGeosets.Showscalp=1 selects that cap. Original
+# ears use 702; 701 is the earless replacement used under covering helmets.
+# Keep the body back-closure 1501: only 1502+ are cloak sheets. Hide boots
+# under the robe; retain original facial and glove geosets.
+hair_row=next(r for r in hair_geosets if r[1:4]==(1,0,0))
+scalp_geoset=1 if hair_row[5] else hair_row[4]
+selected_ids={0,101,201,301,401,702,802,1302,1501,scalp_geoset}
 selected=[s for s in submeshes if s[0] in selected_ids]
 used=[];remap={};newindices=[]
 for sub in selected:
@@ -114,7 +119,7 @@ for label,animid in [('idle',0),('walk',4),('run',5),('jump_start',37),('jump',3
  clips.append(dict(name=label,file=file,animationId=animid,sequenceIndex=seq,frameCount=fc,vertexCount=len(used),duration=duration,fps=(fc-1)/duration,loop=label in ['idle','walk','run','channel'],attachmentsFile=attachment_file,attachmentIds=hand_ids,attachmentCount=2,maxVertexDisplacement=float(np.max(np.linalg.norm(frames-frames[0],axis=2)))))
  print(label,fc,duration,flush=True)
 idle=next(i for i,a in enumerate(anims) if a[0]==0);base=pose(anims[idle][2],idle);tri=np.array(newindices).reshape(-1,3)[:,[0,2,1]]
-d=dict(format='azeroth-unity-mesh-v1',name='HumanMaleMage',coordinateSystem='Unity left-handed Y-up +Z-forward: source (x,y,z) -> (-y,z,x); V flipped',texture='texture.png',vertexCount=len(used),positions=flat(base),normals=flat(unity(normals)),uv=flat(uv),triangles=flat(tri),animations=clips,boundsMin=mn.tolist(),boundsMax=mx.tolist(),source=dict(model=p,version=256,bodySha256=hashlib.sha256(b).hexdigest(),raceId=1,classId=8,sexId=0,skinColor=0,faceStyle=0,hairStyle=0,facialHairStyle=0,outfitId=outfit[0],selectedGeosetIds=sorted(selected_ids),equipment=equipment,boneCount=nBones,evidence=evidence,limitation='Verified original human male Mage starter outfit; no claim to reproduce an unidentified last-selected Azeroth save appearance.'))
+d=dict(format='azeroth-unity-mesh-v1',name='HumanMaleMage',coordinateSystem='Unity left-handed Y-up +Z-forward: source (x,y,z) -> (-y,z,x); V flipped',texture='texture.png',vertexCount=len(used),positions=flat(base),normals=flat(unity(normals)),uv=flat(uv),triangles=flat(tri),animations=clips,boundsMin=mn.tolist(),boundsMax=mx.tolist(),source=dict(model=p,version=256,bodySha256=hashlib.sha256(b).hexdigest(),raceId=1,classId=8,sexId=0,skinColor=0,faceStyle=0,hairStyle=0,facialHairStyle=0,outfitId=outfit[0],selectedGeosetIds=sorted(selected_ids),headGeosets=dict(hairGeosetRow=list(hair_row),scalp=scalp_geoset,ears=702,scalpTriangles=sum(s[5]//3 for s in selected if s[0]==scalp_geoset),earTriangles=sum(s[5]//3 for s in selected if s[0]==702)),equipment=equipment,boneCount=nBones,evidence=evidence,limitation='Verified original human male Mage starter outfit; no claim to reproduce an unidentified last-selected Azeroth save appearance.'))
 (OUT/'model.json').write_text(json.dumps(d,separators=(',',':')))
 (OUT/'source-evidence.json').write_text(json.dumps(d['source'],indent=2))
 print(json.dumps(dict(output=str(OUT),vertices=len(used),triangles=len(tri),clips=len(clips),equipment=equipment),indent=2))

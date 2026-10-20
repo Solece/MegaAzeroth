@@ -14,7 +14,7 @@ using XpUtility = Inventory__Items__Pickups.XpUtility;
 
 namespace AzerothHud;
 
-[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.4.1")]
+[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.5.0")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
@@ -28,7 +28,7 @@ public sealed class Plugin : BasePlugin
         Scale = Config.Bind("HUD", "Scale", 1f, "HUD scale relative to 1080p.");
         AssetRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "assets");
         AddComponent<HudBehaviour>();
-        Log.LogInfo("Azeroth HUD 0.4.1 loaded; source PlayerFrame geometry, separate shield/XP, masked duplicate local-player world HP bar.");
+        Log.LogInfo("Azeroth HUD 0.5.0 loaded; restored original stone action bar, lifted native item inventory, 3.5x run timer.");
     }
 }
 
@@ -50,6 +50,7 @@ public sealed class HudBehaviour : MonoBehaviour
     readonly UiImage[] tomeIcons=new UiImage[4], spellFrames=new UiImage[16], spellIcons=new UiImage[16], cooldownMasks=new UiImage[16];
     readonly UiText[] tomeRanks=new UiText[4], spellRanks=new UiText[16], cooldownLabels=new UiText[16];
     readonly NativeHudMask nativeHud=new();
+    readonly NativeItemLayout itemLayout=new();
     bool uiBuilt;
     sealed class UiImage { public RectTransform Rect; public RawImage Image; public Rect Bounds; public int Anchor; }
     sealed class UiText { public RectTransform Rect; public TextMeshProUGUI Text; public Rect Bounds; public int Anchor; }
@@ -114,6 +115,7 @@ public sealed class HudBehaviour : MonoBehaviour
             SetVisible(true);
             RefreshUi();
             nativeHud.Refresh();
+            itemLayout.Refresh(176f*Screen.height/1080f*Mathf.Clamp(Plugin.Current.Scale.Value,.5f,2));
             if (!wasActive)
             {
                 plugin.Log.LogInfo($"HUD bound native run: HP {hp}/{maxHp}, level {level}, XP {xp}, tomes {tomes.Count}; available tome slots {InventoryUtility.GetNumAvailableTomeSlots()}");
@@ -185,7 +187,7 @@ public sealed class HudBehaviour : MonoBehaviour
     void SetVisible(bool visible)
     {
         if(canvasObject!=null && canvasObject.activeSelf!=visible)canvasObject.SetActive(visible);
-        if(!visible)nativeHud.Restore();
+        if(!visible){nativeHud.Restore();itemLayout.Restore();}
     }
     [HideFromIl2Cpp]
     RectTransform RectObject(string name)
@@ -287,35 +289,35 @@ public sealed class HudBehaviour : MonoBehaviour
         shieldLabel=Label("ShieldValue",PlayerRect(107,52,117,12),16,0,TextAlignmentOptions.Center);shieldLabel.Text.color=new Color(.8f,.94f,1);
         xpFill=Bar("Experience",PlayerRect(106,75,119,13),new Color(.45f,.08f,.68f));
         xpLabel=Label("ExperienceValue",PlayerRect(107,75,117,13),16,0,TextAlignmentOptions.Center);xpLabel.Text.color=Color.white;
-        timerLabel=Label("RunTime",new Rect(-80,10,160,44),28,2,TextAlignmentOptions.Center);timerLabel.Text.color=Gold;
+        timerLabel=Label("RunTime",new Rect(-280,4,560,132),98,2,TextAlignmentOptions.Center);timerLabel.Text.color=Gold;
         goldLabel=Label("Gold",new Rect(-288,13,250,35),24,3);goldLabel.Text.color=Gold;
-        // MainMenuBar-Human has a full empty slot grid baked into its pixels. Use a plain backing
-        // so only actual learned spells and the requested four book cells look like slots.
-        Image("ActionBarBorder",new Rect(-640,-78,1280,78),null,new Color(.27f,.2f,.09f,.96f),1);
-        Image("ActionBarBackground",new Rect(-638,-76,1276,76),null,new Color(.045f,.035f,.022f,.96f),1);
+        // Reuse only the source atlas's blank stone strip and silver rails. The other
+        // strips contain baked empty slots and must not be stretched behind live cells.
+        var plate=Tex("Interface/MainMenuBar/UI-MainMenuBar-Human.png");
+        Image("ActionBarBackground",new Rect(-650,-116,1300,108),plate,Color.white,1,new Rect(35f/256,128f/256,220f/256,38f/256));
+        Image("ActionBarTopRail",new Rect(-650,-116,1300,12),plate,Color.white,1,new Rect(0,168f/256,1,12f/256));
+        Image("ActionBarBottomRail",new Rect(-650,-20,1300,12),plate,Color.white,1,new Rect(0,168f/256,1,12f/256));
         var cap=Tex("Interface/MainMenuBar/UI-MainMenuBar-EndCap-Human.png");
-        Image("LeftGryphon",new Rect(-778,-160,160,160),cap,Color.white,1);
-        Image("RightGryphon",new Rect(618,-160,160,160),cap,Color.white,1,new Rect(1,0,-1,1));
+        Image("LeftGryphon",new Rect(-778,-168,160,160),cap,Color.white,1);
+        Image("RightGryphon",new Rect(618,-168,160,160),cap,Color.white,1,new Rect(1,0,-1,1));
         var empty=Tex("Interface/Buttons/UI-EmptySlot.png");
-        Image("BooksTitleBackground",new Rect(384,-106,244,29),null,new Color(.045f,.035f,.022f,.92f),1);
-        Image("SpellsTitleBackground",new Rect(-632,-106,310,29),null,new Color(.045f,.035f,.022f,.92f),1);
-        var booksTitle=Label("BooksTitle",new Rect(389,-106,250,29),22,1);booksTitle.Text.text="Книжки";booksTitle.Text.color=Gold;
-        var spellsTitle=Label("MageAbilitiesTitle",new Rect(-627,-106,800,29),22,1);spellsTitle.Text.text="Способности мага";spellsTitle.Text.color=Gold;
+        var booksTitle=Label("BooksTitle",new Rect(389,-102,250,26),22,1);booksTitle.Text.text="Книжки";booksTitle.Text.color=Gold;
+        var spellsTitle=Label("MageAbilitiesTitle",new Rect(-619,-102,800,26),22,1);spellsTitle.Text.text="Способности мага";spellsTitle.Text.color=Gold;
         for(int i=0;i<4;i++)
         {
             float x=384+i*61;
-            Image("TomeSlot"+i,new Rect(x,-65,56,56),empty,Color.white,1);
-            tomeIcons[i]=Image("TomeIcon"+i,new Rect(x+5,-60,46,46),null,Color.white,1);
-            tomeRanks[i]=Label("TomeRank"+i,new Rect(x+4,-31,49,22),18,1,TextAlignmentOptions.Right);tomeRanks[i].Text.color=Color.white;
+            Image("TomeSlot"+i,new Rect(x,-72,56,56),empty,Color.white,1);
+            tomeIcons[i]=Image("TomeIcon"+i,new Rect(x+5,-67,46,46),null,Color.white,1);
+            tomeRanks[i]=Label("TomeRank"+i,new Rect(x+4,-38,49,22),18,1,TextAlignmentOptions.Right);tomeRanks[i].Text.color=Color.white;
         }
         for(int i=0;i<16;i++)
         {
-            float x=-632+i*50;
-            spellFrames[i]=Image("SpellSlot"+i,new Rect(x,-60,46,46),empty,Color.white,1);
-            spellIcons[i]=Image("SpellIcon"+i,new Rect(x+3,-57,40,40),null,Color.white,1);
-            cooldownMasks[i]=Image("SpellCooldownMask"+i,new Rect(x,-60,46,46),null,new Color(0,0,0,.7f),1);
-            cooldownLabels[i]=Label("SpellCooldown"+i,new Rect(x+2,-52,42,26),18,1,TextAlignmentOptions.Center);cooldownLabels[i].Text.color=Color.white;
-            spellRanks[i]=Label("SpellRank"+i,new Rect(x+28,-30,20,20),17,1);spellRanks[i].Text.color=Color.white;
+            float x=-620+i*56;
+            spellFrames[i]=Image("SpellSlot"+i,new Rect(x,-72,56,56),empty,Color.white,1);
+            spellIcons[i]=Image("SpellIcon"+i,new Rect(x+5,-67,46,46),null,Color.white,1);
+            cooldownMasks[i]=Image("SpellCooldownMask"+i,new Rect(x,-72,56,56),null,new Color(0,0,0,.7f),1);
+            cooldownLabels[i]=Label("SpellCooldown"+i,new Rect(x+3,-60,50,30),18,1,TextAlignmentOptions.Center);cooldownLabels[i].Text.color=Color.white;
+            spellRanks[i]=Label("SpellRank"+i,new Rect(x+34,-38,20,20),17,1);spellRanks[i].Text.color=Color.white;
         }
         uiBuilt=true;
         Plugin.Current.Log.LogInfo($"HUD native Canvas constructed: {images.Count} RawImages, {labels.Count} TMP labels; borrowed game TMP font, private material without thick outline; IMGUI disabled.");
@@ -364,11 +366,15 @@ public sealed class HudBehaviour : MonoBehaviour
     }
     void LateUpdate()
     {
-        if(active&&uiBuilt&&canvasObject!=null&&canvasObject.activeSelf)nativeHud.Enforce();
+        if(active&&uiBuilt&&canvasObject!=null&&canvasObject.activeSelf)
+        {
+            nativeHud.Enforce();
+            itemLayout.Refresh(176f*Screen.height/1080f*Mathf.Clamp(Plugin.Current.Scale.Value,.5f,2));
+        }
     }
     void OnDestroy()
     {
-        nativeHud.Restore();
+        nativeHud.Restore();itemLayout.Restore();
         if(canvasObject!=null)UnityEngine.Object.Destroy(canvasObject);
         foreach(var texture in textures.Values)if(texture!=null)UnityEngine.Object.Destroy(texture);
         // The font belongs to the game; only the private readable material belongs to this HUD.

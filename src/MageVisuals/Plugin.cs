@@ -12,7 +12,7 @@ using Object=UnityEngine.Object;
 
 namespace AzerothMegabonk.MageVisuals;
 
-[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.0")]
+[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.1")]
 public sealed class Plugin:BasePlugin
 {
  public const string Id="local.azerothmegabonk.magevisuals";
@@ -26,6 +26,8 @@ public static class MageVisualBridge
 {
  public static Texture PortraitTexture {get;internal set;}
  public static bool IsAttached {get;internal set;}
+ public static bool SourceHeadClosed {get;internal set;}
+ public static int SourceVertexCount {get;internal set;}
  public static int BindCount {get;internal set;}
  public static string CurrentClip {get;internal set;}="";
  public static Vector3[] HandWorldPositions {get;internal set;}=Array.Empty<Vector3>();
@@ -109,7 +111,7 @@ public sealed class MageVisual:MonoBehaviour
   var forward=target.orientation!=null?target.orientation.forward:target.transform.forward;forward.y=0;visual.transform.rotation=forward.sqrMagnitude>.001f?Quaternion.LookRotation(forward):Quaternion.identity;
   filter=visual.AddComponent<MeshFilter>();filter.sharedMesh=data.Template;renderer=visual.AddComponent<MeshRenderer>();renderer.sharedMaterial=data.Material;
   HideTree(target.transform);lastFrame=-1;clipName="";lastCast=(int)(bridge.GetProperty("CastCount")?.GetValue(null)??0);nextFrame=0;
-  MageVisualBridge.IsAttached=true;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Mage visual attached: original HumanMale M2, robe item 56/display 12647, {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched.");
+  MageVisualBridge.IsAttached=true;MageVisualBridge.SourceHeadClosed=data.HeadClosed;MageVisualBridge.SourceVertexCount=data.VertexCount;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Mage visual attached: original HumanMale M2, robe item 56/display 12647, {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched. Source head closed={data.HeadClosed}, vertices={data.VertexCount}.");
  }
  [HideFromIl2Cpp]
  private void HideTree(Transform node)
@@ -136,6 +138,7 @@ internal sealed class Clip
 
 internal sealed class Model
 {
+ public int VertexCount;public bool HeadClosed;
  public Mesh Template;public Material Material;public Texture2D Texture;public Dictionary<string,Clip> Clips=new();
  public static Model Load(string folder)
  {
@@ -145,6 +148,8 @@ internal sealed class Model
    float[] Floats(string key)=>j.GetProperty(key).EnumerateArray().Select(x=>x.GetSingle()).ToArray();
    var p=Floats("positions");var n=Floats("normals");var uv=Floats("uv");int count=j.GetProperty("vertexCount").GetInt32();var verts=new Vector3[count];var norms=new Vector3[count];var uvs=new Vector2[count];
    for(int i=0;i<count;i++){verts[i]=new(p[i*3],p[i*3+1],p[i*3+2]);norms[i]=new(n[i*3],n[i*3+1],n[i*3+2]);uvs[i]=new(uv[i*2],uv[i*2+1]);}
+   model.VertexCount=count;
+   if(j.TryGetProperty("source",out var source) && source.TryGetProperty("selectedGeosetIds",out var gs)){var ids=gs.EnumerateArray().Select(x=>x.GetInt32()).ToHashSet();model.HeadClosed=ids.Contains(1)&&ids.Contains(702)&&ids.Contains(1501);}
    model.Template=new Mesh{name="AzerothMage_OriginalHumanMale"};model.Template.vertices=verts;model.Template.normals=norms;model.Template.uv=uvs;model.Template.triangles=j.GetProperty("triangles").EnumerateArray().Select(x=>x.GetInt32()).ToArray();model.Template.RecalculateBounds();
    using var tm=JsonDocument.Parse(File.ReadAllText(Path.Combine(folder,"texture.rgba.json")));int w=tm.RootElement.GetProperty("width").GetInt32(),h=tm.RootElement.GetProperty("height").GetInt32();var raw=File.ReadAllBytes(Path.Combine(folder,"texture.rgba"));if(raw.Length!=w*h*4)throw new InvalidDataException("RGBA size mismatch");
    model.Texture=new Texture2D(w,h,TextureFormat.RGBA32,false);var pin=GCHandle.Alloc(raw,GCHandleType.Pinned);try{model.Texture.LoadRawTextureData(pin.AddrOfPinnedObject(),raw.Length);model.Texture.Apply(false,true);}finally{pin.Free();}model.Texture.filterMode=FilterMode.Bilinear;

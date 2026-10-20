@@ -7,7 +7,7 @@ from convert_m2 import arr
 
 def validate():
  results=[]
- for name in ['boar','skeleton','murloc','wolf','kobold','gnoll','tarantula']:
+ for name in ['boar','skeleton','murloc','wolf','kobold','gnoll','tarantula','ogre','infernal','lich','bonegolem']:
   folder=ROOT/'private-assets/azeroth'/name;d=json.loads((folder/'model.json').read_text());n=d['vertexCount'];p=np.asarray(d['positions']).reshape(-1,3);normal=np.asarray(d['normals']).reshape(-1,3);uv=np.asarray(d['uv']).reshape(-1,2);tri=np.asarray(d['triangles']).reshape(-1,3)
   assert p.shape==(n,3) and normal.shape==(n,3) and uv.shape==(n,2)
   assert tri.min()>=0 and tri.max()<n and np.isfinite(p).all() and np.isfinite(uv).all()
@@ -22,7 +22,7 @@ def validate():
    checks.append(dict(name=a['name'],bytes=f.stat().st_size,sha256=hashlib.sha256(f.read_bytes()).hexdigest(),loopClosureMaxDistance=float(np.max(np.linalg.norm(frames[-1]-frames[0],axis=1)))))
   results.append(dict(name=name,vertexCount=n,triangleCount=len(tri),textureSize=tex.size,textureMode=tex.mode,boundsMin=low.tolist(),boundsMax=high.tolist(),allAnimationFramesInsideBounds=True,animations=checks,passAll=True))
  source=Archives();known=[]
- for name in ['Boar','Murloc','Skeleton','Wolf','Kobold','Gnoll','Tarantula']:
+ for name in ['Boar','Murloc','Skeleton','Wolf','Kobold','Gnoll','Tarantula','Ogre','Infernal','Lich','BoneGolem']:
   known.append(f'Creature\\{name}\\{name}.m2')
  known += [r'DBFilesClient\CreatureModelData.dbc',r'DBFilesClient\CreatureDisplayInfo.dbc',r'Creature\Boar\BoarSkinBrown.blp',r'Creature\Skeleton\SkeletonSkin.blp',r'Creature\Murloc\Sahauginskin.blp']
  inventory=[]

@@ -169,3 +169,14 @@ HUD is a separate module. Book-slot override is a separate runtime-only module.
 - Talentsourceofflinechecks204PASS. Abilitysourcechecks65PASS. TestharnessJsonCaseproblem andearlierpanelnativeobjectlifetimeerror corrected; attemptlogsretained. Finalproof reports/mage-battle-smoke.log andmage-final999-player-attempt2.log.
 - Added startupmaximumallocationafterthepassedruntimeall-maxprobe; samevalidated39-nodeallocationrunsfromPlugin.Load. No additional long interactive test. Sourcephysics/controladapters andsourceVFXfidelitylimitations remainincomponentlogs.
 
+
+## 2026-10-20 — HUD 0.5.0, closed Mage head and native boss sizes
+
+- Restored the action-bar backing from the original Azeroth atlas blank stone strip and silver rails. No baked empty weapon grid is used. The bar and original gryphons have an 8-pixel lower inset; book and learned-spell cells share one row.
+- Run timer font changed 28 -> 98 (3.5x), with a larger centered text rectangle.
+- Native ItemsHud is moved above the bar and gryphons, preserving its own inventory updates and stack counts. Placement is calculated from real screen bounds, does not accumulate offsets, and restores outside the custom HUD. In the native test all three granted items were visible: bottom216px > required176px at1080p.
+- Offscreen proof initially missed native item artwork because MainCamera excludes its UI render layer. The capture temporarily includes active Graphic layers and restores the original camera mask afterward; actual gameplay overlay rendering was not changed. The new screenshot visibly confirms all three items.
+- Mage export now includes original scalp/ears/back closure geosets1/702/1501:810vertices/918triangles, all12clips rebuilt. Opaque original texture unchanged. Rear-head source checks12/12 and native HeadClosed=True/vertices810 passed.
+- Ordinary enemy visual height is2/3 of the prior collider-normalized size. Boss visuals use the original Megabonk renderer height1:1; imported Azeroth Ogre/Infernal/Lich/BoneGolem packs added. Runtime probes: Golem15.984662, Pharaoh28.003963, CalciumDad18.657084 world units, each matching its native reference. Native movement, health, AI, spawning and colliders unchanged by visual code.
+- Background native D3D11 probe PID35172, desktop window handle0,40combat ticks: PASS; Mage damage, original model, timer/backing, three actual items, all4books, native UI masks and3boss variants verified. A stale dead-enemy collider assertion in an earlier harness attempt was corrected; previous logs retained. Final proof: reports/ui-head-fix/ui-boss-smoke-passed.log and ui-boss-player-passed.log.
+- Repository origin set to https://github.com/Solece/MegaAzeroth.git; branch main. Private game assets/binaries and local reports remain excluded by .gitignore. Native portal progression is undergoing its separate full-route probe.

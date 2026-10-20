@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><TargetFramework>net6.0</TargetFramework><AssemblyName>AzerothMegabonk.AdventureFlow</AssemblyName><LangVersion>latest</LangVersion><Nullable>disable</Nullable><ImplicitUsings>enable</ImplicitUsings><BepInExRoot>$(MSBuildProjectDirectory)/../../Megabonk-Lab/BepInEx</BepInExRoot><RestorePackagesPath>$(MSBuildProjectDirectory)/../../cache/nuget</RestorePackagesPath></PropertyGroup>
+<ItemGroup>
+<Reference Include="$(BepInExRoot)/core/BepInEx.Core.dll"><Private>false</Private></Reference>
+<Reference Include="$(BepInExRoot)/core/BepInEx.Unity.IL2CPP.dll"><Private>false</Private></Reference>
+<Reference Include="$(BepInExRoot)/core/0Harmony.dll"><Private>false</Private></Reference>
+<Reference Include="$(BepInExRoot)/core/Il2CppInterop.Runtime.dll"><Private>false</Private></Reference>
+<Reference Include="$(BepInExRoot)/interop/Unity*.dll"><Private>false</Private></Reference>
+<Reference Include="$(BepInExRoot)/interop/Assembly-CSharp.dll"><Private>false</Private></Reference>
+<Reference Include="$(BepInExRoot)/interop/Il2Cppmscorlib.dll"><Private>false</Private></Reference>
+<ProjectReference Include="../AzerothAbilities/AzerothAbilities.csproj"><Private>false</Private></ProjectReference>
+</ItemGroup></Project>

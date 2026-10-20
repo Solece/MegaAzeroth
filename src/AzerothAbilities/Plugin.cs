@@ -125,6 +125,21 @@ public static class AbilityRuntime
         lastInventory=MyPlayer.Instance?.inventory?.Pointer??IntPtr.Zero;
         Plugin.Current?.Log.LogInfo($"Azeroth run reset: selected={Plugin.Current.SelectedClass.Value}; source-backed rank-one spells={Spells.Count}");
     }
+    // A native stage change keeps the same run and its learned source upgrades.
+    // Only scene-owned projectiles/statuses are discarded; ResetRun is reserved for a new run.
+    public static void RebindNativeStage()
+    {
+        foreach(var projectile in Projectiles)projectile.Dispose();Projectiles.Clear();
+        MageSpellBehaviors.Clear();SpellVfx.Clear();
+        foreach(var spell in Spells)spell.NextCast=Time.time;
+        lastInventory=MyPlayer.Instance?.inventory?.Pointer??IntPtr.Zero;
+        Plugin.Current?.Log.LogInfo($"Azeroth stage rebound: stage={MapController.GetStageIndex()},final={MapController.IsFinalBossStage()}; retained="+string.Join(",",Spells.Select(s=>$"{s.Definition.Id}:{s.Rank}")));
+    }
+    public static void StartNativePlayer()
+    {
+        if(Active && Spells.Count>0 && (MapController.GetStageIndex()>0 || MapController.IsFinalBossStage()))RebindNativeStage();
+        else ResetRun();
+    }
     internal static float Stat(EStat stat)
     {
         try{return PlayerStats.GetStat(stat);}catch{return stat==EStat.Projectiles?0:1;}
@@ -135,7 +150,7 @@ public static class AbilityRuntime
     {
         var p=MyPlayer.Instance;
         if(!Active || p==null || !p.hasStarted || p.inventory==null)return;
-        if(lastInventory!=p.inventory.Pointer){ResetRun();lastInventory=p.inventory.Pointer;}
+        if(lastInventory!=p.inventory.Pointer){StartNativePlayer();lastInventory=p.inventory.Pointer;}
         var gm=GameManager.Instance;
         if(gm==null || gm.isGameOver || Time.timeScale<=0 || p.inventory.pause || LevelupScreen.isLevelingUp)return;
         MageSpellBehaviors.Tick();
@@ -359,7 +374,7 @@ internal static class NativeWeaponsPatch
 [HarmonyPatch(typeof(MyPlayer),nameof(MyPlayer.StartPlayer))]
 internal static class StartRunPatch
 {
-    private static void Postfix(){AbilityRuntime.ResetRun();}
+    private static void Postfix(){AbilityRuntime.StartNativePlayer();}
 }
 
 

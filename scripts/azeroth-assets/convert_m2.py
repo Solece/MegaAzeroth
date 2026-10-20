@@ -1,7 +1,10 @@
 """Local Vanilla M2 reader. Asset data stays private; source game is read-only.
 References: wowdev/pywowlib m2_format.py and wow-1121-client-internals/models.md.
 """
-import struct,json,math,hashlib,io
+import struct,json,math,hashlib,io,sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"azeroth-mage"))
+from blp_decode import decode_blp
 import numpy as np
 from PIL import Image
 from mpq_source import Archives,ROOT
@@ -55,7 +58,7 @@ def convert(name,skin,display_id):
  assert max(bi.flatten())<nBones
  globals=[x[0] for x in arr(b,20,'I')];anims=arr(b,28,'HHIIfIhHIII7fhH');texturemeta=arr(b,92,'4I')
  skins=[skin] if isinstance(skin,str) else skin
- texpath=f'Creature\\{name}\\{skins[0]}.blp';tex,texarc=source.read(texpath);image=Image.open(io.BytesIO(tex)).convert('RGBA');texture_sources=[texpath]
+ texpath=f'Creature\\{name}\\{skins[0]}.blp';tex,texarc=source.read(texpath);image=decode_blp(tex);texture_sources=[texpath]
  # Use the first (diffuse) pass of each submesh. Reflection/additive passes are omitted.
  texlookup=arr(b,148,'H');submesh_texture={}
  for unit in texunits:
@@ -68,7 +71,7 @@ def convert(name,skin,display_id):
    if typ in [11,12,13]:path=f'Creature\\{name}\\{skins[typ-11]}.blp'
    elif typ==0:path=b[off:off+length].rstrip(b'\0').decode('utf8')
    else:raise ValueError(f'Unsupported primary texture replacement {typ}')
-   tb,_=source.read(path);images[ti]=Image.open(io.BytesIO(tb)).convert('RGBA');(out/f'original-texture-{ti}.blp').write_bytes(tb);texture_sources.append(path)
+   tb,_=source.read(path);images[ti]=decode_blp(tb);(out/f'original-texture-{ti}.blp').write_bytes(tb);texture_sources.append(path)
   # Four-pixel duplicated gutters avoid bilinear bleeding between atlas cells.
   pad=4;w=sum(im.width+2*pad for im in images.values());h=max(im.height+2*pad for im in images.values());atlas=Image.new('RGBA',(w,h));rects={};x=0
   for ti,im in images.items():
