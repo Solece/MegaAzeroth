@@ -14,7 +14,7 @@ using XpUtility = Inventory__Items__Pickups.XpUtility;
 
 namespace AzerothHud;
 
-[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.5.0")]
+[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.5.1")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
@@ -28,7 +28,7 @@ public sealed class Plugin : BasePlugin
         Scale = Config.Bind("HUD", "Scale", 1f, "HUD scale relative to 1080p.");
         AssetRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "assets");
         AddComponent<HudBehaviour>();
-        Log.LogInfo("Azeroth HUD 0.5.0 loaded; restored original stone action bar, lifted native item inventory, 3.5x run timer.");
+        Log.LogInfo("Azeroth HUD 0.5.1 loaded; restored original stone action bar, lifted native item inventory, 3.5x run timer.");
     }
 }
 
@@ -93,6 +93,7 @@ public sealed class HudBehaviour : MonoBehaviour
             var player = MyPlayer.Instance;
             active = player != null && player.inventory != null && player.hasStarted;
             if (!active) { wasActive=false; SetVisible(false); return; }
+            if(UiManager.Instance?.pause!=null && UiManager.Instance.pause.gameObject.activeInHierarchy){SetVisible(false);return;}
             var inv = player.inventory;
             portrait=inv.characterData.GetIcon(); heroName=inv.characterData.GetName();
             hp=inv.playerHealth.hp; maxHp=inv.playerHealth.maxHp; shield=inv.playerHealth.shield;

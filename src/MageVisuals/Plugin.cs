@@ -12,7 +12,7 @@ using Object=UnityEngine.Object;
 
 namespace AzerothMegabonk.MageVisuals;
 
-[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.1")]
+[BepInPlugin(Id,"Azeroth Megabonk - Mage Visuals","0.1.3")]
 public sealed class Plugin:BasePlugin
 {
  public const string Id="local.azerothmegabonk.magevisuals";
@@ -27,6 +27,12 @@ public static class MageVisualBridge
  public static Texture PortraitTexture {get;internal set;}
  public static bool IsAttached {get;internal set;}
  public static bool SourceHeadClosed {get;internal set;}
+ public static int MapRenderersProtected {get;internal set;}
+ public static int MapRenderersEnabled {get;internal set;}
+ public static int MapRenderersHiddenByMage {get;internal set;}
+ public static bool PlayerMapArrowVisible {get;internal set;}
+ public static string PlayerMapArrowPath {get;internal set;}="";
+ public static string MapMarkersJson {get;internal set;}="{}";
  public static int SourceVertexCount {get;internal set;}
  public static int BindCount {get;internal set;}
  public static string CurrentClip {get;internal set;}="";
@@ -63,8 +69,13 @@ public sealed class MageVisual:MonoBehaviour
    if(!mage || player==null || !player.hasStarted || current==null){if(visual!=null)RestoreNative();return;}
    if(visual==null || movement!=current)Bind(current);
    if(visual==null)return;
+   if(Time.unscaledTime-lastHideScan>1)
+   {
+    lastHideScan=Time.unscaledTime;NativeMapMarkers.Refresh(player,movement.transform);
+    for(int i=hidden.Count-1;i>=0;i--){var saved=hidden[i];if(saved.renderer!=null && NativeMapMarkers.IsProtected(saved.renderer.transform)){saved.renderer.enabled=saved.enabled;hidden.RemoveAt(i);}}
+    HideTree(movement.transform);NativeMapMarkers.Describe(hidden.Count(x=>x.renderer!=null && NativeMapMarkers.IsProtected(x.renderer.transform)));
+   }
    foreach(var saved in hidden)if(saved.renderer!=null)saved.renderer.enabled=false;
-   if(Time.unscaledTime-lastHideScan>1){lastHideScan=Time.unscaledTime;HideTree(movement.transform);}
    if(Time.time<nextFrame)return;
    nextFrame=Time.time+1f/24;
    var velocity=body!=null?body.velocity:Vector3.zero;
@@ -110,13 +121,14 @@ public sealed class MageVisual:MonoBehaviour
   var sb=data.Template.bounds;visual.transform.localPosition=target.transform.InverseTransformPoint(feet)-new Vector3(sb.center.x*scale,sb.min.y*scale,sb.center.z*scale);
   var forward=target.orientation!=null?target.orientation.forward:target.transform.forward;forward.y=0;visual.transform.rotation=forward.sqrMagnitude>.001f?Quaternion.LookRotation(forward):Quaternion.identity;
   filter=visual.AddComponent<MeshFilter>();filter.sharedMesh=data.Template;renderer=visual.AddComponent<MeshRenderer>();renderer.sharedMaterial=data.Material;
-  HideTree(target.transform);lastFrame=-1;clipName="";lastCast=(int)(bridge.GetProperty("CastCount")?.GetValue(null)??0);nextFrame=0;
+  NativeMapMarkers.Refresh(MyPlayer.Instance,target.transform);HideTree(target.transform);NativeMapMarkers.Describe(0);lastHideScan=Time.unscaledTime;lastFrame=-1;clipName="";lastCast=(int)(bridge.GetProperty("CastCount")?.GetValue(null)??0);nextFrame=0;
   MageVisualBridge.IsAttached=true;MageVisualBridge.SourceHeadClosed=data.HeadClosed;MageVisualBridge.SourceVertexCount=data.VertexCount;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Mage visual attached: original HumanMale M2, robe item 56/display 12647, {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched. Source head closed={data.HeadClosed}, vertices={data.VertexCount}.");
  }
  [HideFromIl2Cpp]
  private void HideTree(Transform node)
  {
   if(node==null || visual==null || node==visual.transform || node.name.StartsWith("Azeroth",StringComparison.Ordinal))return;
+  if(NativeMapMarkers.IsProtected(node))return;
   var r=node.GetComponent<Renderer>();
   if(r!=null && !hidden.Any(x=>x.renderer==r)){hidden.Add((r,r.enabled));r.enabled=false;}
   for(int i=0;i<node.childCount;i++)HideTree(node.GetChild(i));
@@ -126,6 +138,7 @@ public sealed class MageVisual:MonoBehaviour
  {
   foreach(var saved in hidden)if(saved.renderer!=null)saved.renderer.enabled=saved.enabled;hidden.Clear();
   if(visual!=null){visual.SetActive(false);Object.Destroy(visual);}visual=null;filter=null;renderer=null;movement=null;native=null;body=null;data=null;
+  NativeMapMarkers.Clear();MageVisualBridge.MapRenderersProtected=0;MageVisualBridge.MapRenderersEnabled=0;MageVisualBridge.MapRenderersHiddenByMage=0;MageVisualBridge.PlayerMapArrowVisible=false;MageVisualBridge.PlayerMapArrowPath="";MageVisualBridge.MapMarkersJson="{}";
   MageVisualBridge.IsAttached=false;MageVisualBridge.HandWorldPositions=Array.Empty<Vector3>();MageVisualBridge.CurrentClip="";
  }
  void OnDestroy(){RestoreNative();}

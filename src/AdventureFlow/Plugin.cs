@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text.Json;
 using AzerothAbilities;
 using Assets.Scripts.Actors.Enemies;
+using Assets.Scripts.Camera;
 using Assets.Scripts.Actors.Player;
 using Assets.Scripts.Inventory__Items__Pickups;
 using Assets.Scripts.Managers;
@@ -36,6 +37,7 @@ public sealed class Plugin:BasePlugin
         Directory.CreateDirectory(Path.GetDirectoryName(Report));
         File.WriteAllText(Report,DateTimeOffset.Now+" Native adventure enabled; map/tier visibility is temporary; no fake completion records.\n");
         harmony=new Harmony(Id);harmony.PatchAll(typeof(Plugin).Assembly);
+        AddComponent<NativeMapNavigation>();
         if(Smoke){AddComponent<AdventureSmokeRunner>();Log.LogInfo("Background adventure probe armed.");}
         Log.LogInfo("All native maps and tiers available in lab; test battle uses the full native stage route through FinalBossMap.");
     }
@@ -101,9 +103,10 @@ static class FinalStagePatch
 [HarmonyPatch(typeof(InteractableBossSpawner),"OnEnemyReleasedFromPool")]
 static class BossPortalPatch
 {
-    static void Postfix(InteractableBossSpawner __instance)
+    static void Prefix(InteractableBossSpawner __instance,Enemy enemy,ref bool __state){__state=__instance.bossEnemies!=null && __instance.bossEnemies.Contains(enemy);}
+    static void Postfix(InteractableBossSpawner __instance,bool __state)
     {
-        if(__instance.bossEnemies==null || __instance.bossEnemies.Count!=0 || __instance.numBossesDefeated<=0)return;
+        if(!__state || __instance.bossEnemies==null || __instance.bossEnemies.Count!=0 || __instance.numBossesDefeated<=0)return;
         var canAdvance=!MapController.IsLastStage() && MapController.GetStageIndex()<(MapController.runConfig?.mapTierIndex??0);
         if(canAdvance && __instance.portal!=null && !__instance.portal.activeSelf)
         {__instance.portal.SetActive(true);Plugin.Note("Restored native portal after all summoned bosses released.");}
@@ -111,13 +114,25 @@ static class BossPortalPatch
     }
 }
 
+// Native interaction can be raised before the minimap has had its first Update
+// after scene generation. Its callback dereferences bossSpawner unconditionally.
+[HarmonyPatch(typeof(MinimapCamera),"OnBossSpawnerInteract")]
+static class MinimapBossReferencePatch
+{
+    static bool Prefix(MinimapCamera __instance)
+    {
+        if(__instance.bossSpawner==null)__instance.TryFindBossSpawner();
+        return __instance.bossSpawner!=null;
+    }
+}
 public static class AdventureBridge
 {
+    static readonly HashSet<(int Stage,IntPtr Pointer,uint Id)> probeKilled=new();
     static bool ProbeAllowed=>Application.isBatchMode && Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")=="1";
     public static string Describe()
     {
         var map=MapController.currentMap;var p=MyPlayer.Instance;
-        return JsonSerializer.Serialize(new{map=map?.name,stage=MapController.currentStage?.name,stageIndex=MapController.GetStageIndex(),tierIndex=MapController.runConfig?.mapTierIndex,stages=map?.stages?.Length,finalArena=MapController.IsFinalBossStage(),inventory=p?.inventory?.Pointer.ToInt64(),mage=HudBridge.Active,spells=HudBridge.SpellIds,ranks=HudBridge.SpellRanks,books=InventoryUtility.GetNumAvailableTomeSlots(),portals=Object.FindObjectsOfType<InteractablePortal>().Count(x=>x.gameObject.activeInHierarchy),finalGates=Object.FindObjectsOfType<InteractableBossSpawnerFinal>().Count(x=>x.gameObject.activeInHierarchy),finalBosses=Object.FindObjectsOfType<Enemy>().Count(x=>x.IsFinalBoss() && !x.IsDeadOrDyingNextFrame())});
+        return JsonSerializer.Serialize(new{scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,map=map?.name,stage=MapController.currentStage?.name,stageIndex=MapController.GetStageIndex(),tierIndex=MapController.runConfig?.mapTierIndex,stages=map?.stages?.Length,finalArena=MapController.IsFinalBossStage(),inventory=p?.inventory?.Pointer.ToInt64(),mage=HudBridge.Active,spells=HudBridge.SpellIds,ranks=HudBridge.SpellRanks,books=InventoryUtility.GetNumAvailableTomeSlots(),portals=Object.FindObjectsOfType<InteractablePortal>().Count(x=>x.gameObject.activeInHierarchy),finalGates=Object.FindObjectsOfType<InteractableBossSpawnerFinal>().Count(x=>x.gameObject.activeInHierarchy),finalBosses=Object.FindObjectsOfType<Enemy>().Count(x=>x.IsFinalBoss() && !x.IsDeadOrDyingNextFrame())});
     }
     public static string DescribeMaps()
     {
@@ -129,12 +144,13 @@ public static class AdventureBridge
         if(!ProbeAllowed)return false;
         var spawner=Object.FindObjectsOfType<InteractableBossSpawner>().FirstOrDefault(x=>x.gameObject.activeInHierarchy && (x.bossEnemies==null || x.bossEnemies.Count==0) && x.numBossesDefeated==0);
         if(spawner==null)return false;
+        MyPlayer.Instance?.minimapCameraScript?.TryFindBossSpawner();
         var ok=spawner.Interact();Plugin.Note("Probe native boss spawner Interact="+ok);return ok;
     }
     public static int DefeatStageBossForProbe()
     {
         if(!ProbeAllowed)return 0;
-        var bosses=Object.FindObjectsOfType<Enemy>().Where(e=>e.IsStageBoss() && !e.IsDeadOrDyingNextFrame()).ToArray();
+        var bosses=Object.FindObjectsOfType<Enemy>().Where(e=>e.IsStageBoss() && !e.IsDeadOrDyingNextFrame() && probeKilled.Add((MapController.GetStageIndex(),e.Pointer,e.id))).ToArray();
         foreach(var e in bosses){Plugin.Note($"Probe native Kill: {e.enemyData?.name}; flagsStage={e.IsStageBoss()},flagsFinal={e.IsFinalBoss()},hp={e.hp}/{e.maxHp},height={e.GetHeight()}");e.MakeInvulnerable(false);e.Kill("AzerothLabAdventureProbe");}
         return bosses.Length;
     }
@@ -165,7 +181,7 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
             if(player==null || player.inventory==null || gm==null || MapGenerationController.isGenerating)return;
             if(!player.hasStarted){if(state==0)return;player.hasStarted=true;Plugin.Note("Probe native player start resumed after stage generation.");}
             if(gm.isGameOver)throw new InvalidOperationException("Native game ended before final arena");
-            if(!gm.IsPlaying())gm.StartPlaying();
+            if(!gm.IsPlaying()){if(state==0)return;gm.StartPlaying();next=Time.realtimeSinceStartup+2;return;}
             // Test-only survivability; native boss spawning, kill events, portal
             // activation and scene generation still execute unmodified.
             var health=player.inventory.playerHealth;health.hp=health.maxHp;

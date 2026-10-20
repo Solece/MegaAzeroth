@@ -26,3 +26,22 @@
 ## Scope
 
 Locations and final arena remain original Megabonk map assets and scene generation. This change opens their native routes; it does not replace their terrain with Azeroth maps or chain separate map families into an invented campaign.
+### First runtime probe repair
+
+- `reports/adventure-smoke.log` attempt1 reached the native Desert stage1 with tierIndex2, source Arcane Missiles rank2, Fireball rank1, four tome slots and 121 spent talent points. Every discovered map reported available/unlocked through the intended runtime getters.
+- The probe then revealed a native minimap race: `MinimapCamera.OnBossSpawnerInteract` unconditionally dereferences `bossSpawner` before the minimap's first gameplay Update has populated it. Added a narrow callback guard that calls the native `TryFindBossSpawner` first and skips only the minimap arrow callback if no target exists.
+- The initial probe now waits for normal test-battle `StartPlaying` readiness rather than starting the game early. Later native stages can resume the batch-only probe after generation without desktop input; a two-second wait lets their native scripts initialize.
+- Rebuilt AdventureFlow and abilities: 0 errors, 0 warnings. The coordinating agent is repeating the actual native travel probe.
+
+### Actual native progression PASS — 21:56:55 +05:00
+
+The coordinating agent's second background run completed the native route:
+
+1. Desert stage1: native Pharaoh1 spawned, defeated and released; its native stage portal became active and accepted interaction.
+2. Desert stage2: native Pharaoh2 spawned, defeated and released; its native stage portal accepted interaction.
+3. Desert stage3: native final-arena gate accepted interaction and invoked `MapController.LoadFinalStage`.
+4. Native final arena: live native Pharaoh3 observed with 6,133,366.5 health. Mage remained selected; Arcane Missiles rank2, Fireball rank1 and all existing starters survived; all four tome slots and 121 spent talent points remained.
+
+The same native PlayerInventory pointer (`1798615239648`) was retained across every transition. `reports/adventure-smoke.log` ends with PASS. The process exited itself; no visible desktop window, keyboard or mouse was used.
+
+The successful probe's printed `stage bosses killed=5` counted repeated calls while two bosses were still in their native death animations. Actual unique stage bosses were Pharaoh1 and Pharaoh2; the live final boss was Pharaoh3. Future probe bookkeeping now issues Kill only once per unique stage/pointer/id. This affects only batch-only probe bookkeeping. The callback logger now reports only an actual transition from a tracked summoned boss to the last released boss, avoiding duplicate messages for unrelated enemy releases. Snapshot diagnostics additionally include the active Unity scene name. Rebuild after these diagnostic corrections: 0 errors, 0 warnings; no additional gameplay change was made.

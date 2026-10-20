@@ -66,6 +66,12 @@ public sealed class BattleRunner:MonoBehaviour
     }
     void Update()
     {
+        if(stage==3 && navigationProbeRequested && navigationProbePhase<3)
+        {
+            try{CaptureNavigationForProbe();}
+            catch(Exception ex){Plugin.Note("ERROR navigation capture "+ex);Fail("Native navigation capture failed");return;}
+            if(navigationProbePhase<3)return;
+        }
         if(stage==4)return;
         if(Time.realtimeSinceStartup-began>100 && stage<3){Fail("Timed out waiting for native battle, stage="+stage);return;}
         if(Time.realtimeSinceStartup<next)return;
@@ -124,6 +130,22 @@ public sealed class BattleRunner:MonoBehaviour
                     Plugin.Note("HP frame probe current/max="+health.hp+"/"+health.maxHp);
                     var learn=bridge.GetMethod("LearnSpellForProbe");if(learn!=null)Plugin.Note("Learn IceBarrier for live shield row="+learn.Invoke(null,new object[]{"ice_barrier"}));
                 }
+                if(Environment.GetEnvironmentVariable("AZEROTH_LAB_NAV_PROBE")=="1")
+                {
+                    if(ticks==8)Plugin.Note("Navigation before gate discovery: "+NavigationBridgeType().GetMethod("Describe").Invoke(null,null));
+                    if(ticks==10)
+                    {
+                        if(!(bool)NavigationBridgeType().GetMethod("RevealGateForProbe").Invoke(null,null))throw new InvalidOperationException("Native fog-reveal gate probe failed");
+                        navigationOriginalPosition=MyPlayer.Instance.transform.position;
+                        var mini=MyPlayer.Instance.minimapCameraScript;
+                        var away=navigationOriginalPosition-mini.bossSpawner.position;away.y=0;if(away.sqrMagnitude<.01f)away=Vector3.right;away.Normalize();
+                        var far=mini.bossSpawner.position+away*(mini.minimapCamera.orthographicSize*2.5f+60);far.y=navigationOriginalPosition.y;
+                        MyPlayer.Instance.playerMovement.TeleportPlayer(far);
+                        Plugin.Note("Navigation test-only far position="+far+"; original="+navigationOriginalPosition);
+                    }
+                    if(ticks==12){CheckNavigationForProbe("after native far movement");navigationProbeRequested=true;}
+                    if(ticks==13)MyPlayer.Instance.playerMovement.TeleportPlayer(navigationOriginalPosition);
+                }
                 if(ticks==12 && bridge.GetMethod("LearnSpellForProbe") is MethodInfo learnAll)
                 {
                     foreach(var id in new[]{"fireball","frostbolt","arcane_missiles","frost_nova","arcane_explosion","blizzard","flamestrike","fire_blast","cone_of_cold","blast_wave","pyroblast","ice_barrier","polymorph"})learnAll.Invoke(null,new object[]{id});
@@ -151,6 +173,7 @@ public sealed class BattleRunner:MonoBehaviour
                 }
                 if(Time.realtimeSinceStartup-runBegan>=40)
                 {
+                    if(Environment.GetEnvironmentVariable("AZEROTH_LAB_NAV_PROBE")=="1" && navigationProbePhase!=3)throw new InvalidOperationException("Native minimap/full-map proof incomplete");
                     if(errors>0)throw new InvalidOperationException("Runtime probe recorded errors; refusing success");
                     if(!captured)throw new InvalidOperationException("No complete Azeroth HUD render captured");
                     if((int)bridge.GetProperty("HitCount").GetValue(null)<1)throw new InvalidOperationException("No Mage hits observed");
@@ -273,11 +296,13 @@ public sealed class BattleRunner:MonoBehaviour
     void CaptureCanvas(string fileName="mage-battle-canvas.ppm")
     {
         var hud=GameObject.Find("AzerothHudCanvas");
-        if(hud==null || !hud.activeInHierarchy)throw new InvalidOperationException("Azeroth gameplay HUD missing");
-        var hudImages=Object.FindObjectsOfType<RawImage>().Count(i=>i.transform.IsChildOf(hud.transform));
+        bool fullMapCapture=fileName.Contains("full-map");
+        if(fullMapCapture && hud==null)hud=Resources.FindObjectsOfTypeAll<Canvas>().FirstOrDefault(c=>c!=null && c.name=="AzerothHudCanvas" && c.gameObject.scene.IsValid())?.gameObject;
+        if(hud==null || (!hud.activeInHierarchy && !fullMapCapture))throw new InvalidOperationException("Azeroth gameplay HUD missing");
+        var hudImages=Resources.FindObjectsOfTypeAll<RawImage>().Count(i=>i.transform.IsChildOf(hud.transform));
         if(hudImages<12)throw new InvalidOperationException("Azeroth HUD incomplete; image nodes="+hudImages);
         Plugin.Note("Native Azeroth HUD active: imageNodes="+hudImages+" totalNodes="+hud.transform.childCount);
-        if(Environment.GetEnvironmentVariable("AZEROTH_LAB_UI_PROBE")=="1")
+        if(Environment.GetEnvironmentVariable("AZEROTH_LAB_UI_PROBE")=="1" && !fileName.Contains("full-map"))
         {
             var timer=hud.transform.Find("RunTime").GetComponent<TMPro.TextMeshProUGUI>();
             var plate=hud.transform.Find("ActionBarBackground").GetComponent<RawImage>();
@@ -311,13 +336,13 @@ public sealed class BattleRunner:MonoBehaviour
             if(spawned<1)throw new InvalidOperationException("Source Mage VFX not exercised");
         }
         var hudBridge=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothHud.HudDiagnostics",false)).FirstOrDefault(t=>t!=null);
-        if(hudBridge!=null)
+        if(hudBridge!=null && !fullMapCapture)
         {
             Plugin.Note("Native HUD graphic nodes masked="+hudBridge.GetProperty("NativeGraphicsHidden")?.GetValue(null));
             var world=hudBridge.GetProperty("PlayerWorldHealthGraphicsHidden");
             if(world!=null){int count=(int)world.GetValue(null);Plugin.Note("Native player world HP graphics hidden="+count);if(count<1)throw new InvalidOperationException("Native player world health bar still visible");}
         }
-        foreach(var inventory in Object.FindObjectsOfType<InventoryHud>())
+        foreach(var inventory in fullMapCapture?Array.Empty<InventoryHud>():Object.FindObjectsOfType<InventoryHud>())
         {
             foreach(var propName in new[]{"weaponParent","tomeParent"})
             {
@@ -335,6 +360,9 @@ public sealed class BattleRunner:MonoBehaviour
         var canvases=Object.FindObjectsOfType<Canvas>().Where(c=>c.isRootCanvas && c.isActiveAndEnabled).ToArray();
         var states=canvases.Select(c=>(Canvas:c,Mode:c.renderMode,Camera:c.worldCamera,Distance:c.planeDistance)).ToArray();
         var previousTarget=camera.targetTexture;var previousActive=RenderTexture.active;int previousMask=camera.cullingMask;
+        // Map markers are 3D meshes on a map-only layer. Including that layer for
+        // native Canvas graphics must not render those meshes in the combat view.
+        var mapOnlyRenderers=Resources.FindObjectsOfTypeAll<Renderer>().Where(r=>r!=null && r.gameObject.activeInHierarchy && r.enabled && !r.forceRenderingOff && (previousMask&(1<<r.gameObject.layer))==0).ToArray();
         const int width=960,height=540;
         var rt=new RenderTexture(width,height,24);rt.Create();
         Texture2D image=null;
@@ -347,6 +375,7 @@ public sealed class BattleRunner:MonoBehaviour
                 if(graphic!=null && graphic.gameObject.activeInHierarchy)camera.cullingMask|=1<<graphic.gameObject.layer;
             Plugin.Note($"Capture camera culling mask {previousMask}->{camera.cullingMask}");
             foreach(var canvas in canvases)if(canvas.renderMode==RenderMode.ScreenSpaceOverlay){canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=camera;canvas.planeDistance=1;}
+            foreach(var marker in mapOnlyRenderers)marker.forceRenderingOff=true;
             Canvas.ForceUpdateCanvases();camera.Render();RenderTexture.active=rt;
             if(fileName=="mage-battle-canvas.ppm")DescribeItems("capture-rendered");
             image=new Texture2D(width,height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,width,height),0,0);image.Apply();
@@ -361,6 +390,7 @@ public sealed class BattleRunner:MonoBehaviour
         finally
         {
             foreach(var state in states){state.Canvas.renderMode=state.Mode;state.Canvas.worldCamera=state.Camera;state.Canvas.planeDistance=state.Distance;}
+            foreach(var marker in mapOnlyRenderers)if(marker!=null)marker.forceRenderingOff=false;
             camera.cullingMask=previousMask;camera.targetTexture=previousTarget;RenderTexture.active=previousActive;rt.Release();Object.Destroy(rt);if(image!=null)Object.Destroy(image);
         }
     }
@@ -371,5 +401,150 @@ public sealed class BattleRunner:MonoBehaviour
         var description=type?.GetMethod("DescribeItems")?.Invoke(null,null) as string[];
         if(description!=null)foreach(var line in description)Plugin.Note("Items "+stage+": "+line);
     }
+
+    bool navigationProbeRequested;
+    Vector3 navigationOriginalPosition;
+    [HideFromIl2Cpp]
+    Type NavigationBridgeType()=>AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothMegabonk.AdventureFlow.NavigationBridge",false)).First(t=>t!=null);
+    [HideFromIl2Cpp]
+    void CheckNavigationForProbe(string phase)
+    {
+        var model=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothMegabonk.MageVisuals.MageVisualBridge",false)).First(t=>t!=null);
+        string markers=(string)model.GetProperty("MapMarkersJson").GetValue(null);
+        Plugin.Note("Navigation "+phase+" player markers: "+markers);
+        if(!(bool)model.GetProperty("PlayerMapArrowVisible").GetValue(null) || (int)model.GetProperty("MapRenderersHiddenByMage").GetValue(null)!=0)
+            throw new InvalidOperationException("Native player map marker still hidden by Mage visual");
+        var icon=MyPlayer.Instance.minimapCameraScript.playerIcon;var player=MyPlayer.Instance.transform;
+        var delta=icon.position-player.position;delta.y=0;
+        if(delta.sqrMagnitude>1)throw new InvalidOperationException("Native map player marker not following actual position");
+        string navigation=(string)NavigationBridgeType().GetMethod("Describe").Invoke(null,null);Plugin.Note("Navigation "+phase+" gate: "+navigation);
+        using var doc=System.Text.Json.JsonDocument.Parse(navigation);
+        if(!doc.RootElement.GetProperty("nativeArrowRegistered").GetBoolean())throw new InvalidOperationException("Discovered native gate has no navigation arrow");
+        var arrows=doc.RootElement.GetProperty("arrows");bool directional=false;
+        foreach(var arrow in arrows.EnumerateArray())if(arrow.GetProperty("active").GetBoolean() && arrow.GetProperty("rendererEnabled").GetBoolean() && arrow.GetProperty("cameraLayerVisible").GetBoolean() && arrow.GetProperty("directionDot").GetSingle()>.95f)directional=true;
+        if(!directional)throw new InvalidOperationException("Discovered far gate has no visible arrow in the correct direction");
+    }
+
+int navigationProbePhase;
+int navigationProbeReadyAtFrame;
+PauseUi navigationPause;
+
+[HideFromIl2Cpp]
+void CaptureNavigationForProbe()
+{
+    if(navigationProbePhase>=3)return;
+    if(navigationProbePhase==0)
+    {
+        navigationPause=UiManager.Instance?.pause;
+        if(navigationPause==null || navigationPause.gameObject.activeInHierarchy)
+            throw new InvalidOperationException("Navigation probe needs a fresh unpaused battle");
+        RenderNativeMapsForProbe();
+        // Save the camera target textures separately before main-camera retargeting.
+        // Existing capture writer can ReadPixels native RT to PPM; never replace native RT.
+        CheckNavigationForProbe("minimap");
+        SaveNavigationTargetForProbe(MyPlayer.Instance.minimapCamera,"mage-native-minimap.ppm");
+        CaptureCanvas("mage-navigation-minimap.ppm");
+        navigationPause.Pause();
+        if(!navigationPause.gameObject.activeInHierarchy)
+            throw new InvalidOperationException("Native Pause declined; wait until encounter/levelup windows close");
+        navigationPause.GoToMap();
+        navigationProbeReadyAtFrame=Time.frameCount+2;
+        navigationProbePhase=1;
+        return;
+    }
+    if(Time.frameCount<navigationProbeReadyAtFrame)return;
+    if(navigationProbePhase==1)
+    {
+        if(!navigationPause.gameObject.activeInHierarchy || navigationPause.map==null || !navigationPause.map.activeInHierarchy)
+            throw new InvalidOperationException("Native pause full-map UI is not open");
+        // FullMapUi.OnEnable has already fired A_Toggle(true) naturally.
+        RenderNativeMapsForProbe();
+        Canvas.ForceUpdateCanvases();
+        CheckNavigationForProbe("full-map");
+        var full=Resources.FindObjectsOfTypeAll<global::FullMap>().First(m=>m!=null && m.gameObject.scene.IsValid() && m.mapCamera!=null);
+        SaveNavigationTargetForProbe(full.mapCamera,"mage-native-full-map.ppm");
+        CaptureCanvas("mage-navigation-full-map.ppm");
+        navigationPause.Resume(); // Native SetActive(false), with OnDisable restoring pause.
+        // Do not manually invoke FullMapUi.A_Toggle(false): mapsOpen is a reference counter.
+        navigationProbeReadyAtFrame=Time.frameCount+2;
+        navigationProbePhase=2;
+        return;
+    }
+    if(navigationProbePhase==2)
+    {
+        if(navigationPause.gameObject.activeInHierarchy)
+            throw new InvalidOperationException("Navigation probe failed to restore native pause UI");
+        navigationProbePhase=3;
+        Plugin.Note("Native navigation capture finished; Pause/Map opened and closed without OS input");
+        if(Environment.GetEnvironmentVariable("AZEROTH_LAB_NAV_SHORT")=="1"){Plugin.Note("PASS: native minimap/full-map pixels, player marker follows position, discovered far-gate arrow active and correctly directed; HUD hidden on map; no desktop input.");stage=4;Application.Quit();}
+    }
+}
+
+[HideFromIl2Cpp]
+void RenderNativeMapsForProbe()
+{
+    var player=Assets.Scripts.Actors.Player.MyPlayer.Instance;
+    var mini=player?.minimapCamera;
+    if(mini==null || mini.targetTexture==null)
+        throw new InvalidOperationException("Native minimap camera/serialized target RT missing");
+    if(!mini.targetTexture.IsCreated())mini.targetTexture.Create();
+    mini.Render();
+    Plugin.Note($"Mini source: camera={mini.name},enabled={mini.enabled},active={mini.gameObject.activeInHierarchy},mask={mini.cullingMask},depth={mini.depth},RT={mini.targetTexture.name}#{mini.targetTexture.GetInstanceID()} {mini.targetTexture.width}x{mini.targetTexture.height}");
+    foreach(var full in Resources.FindObjectsOfTypeAll<global::FullMap>())
+    {
+        if(full==null || !full.gameObject.scene.IsValid() || full.mapCamera==null || full.mapCamera.targetTexture==null)continue;
+        var cam=full.mapCamera;
+        if(!cam.targetTexture.IsCreated())cam.targetTexture.Create();
+        cam.Render();
+        Plugin.Note($"Full source: camera={cam.name},enabled={cam.enabled},active={cam.gameObject.activeInHierarchy},mask={cam.cullingMask},RT={cam.targetTexture.name}#{cam.targetTexture.GetInstanceID()} {cam.targetTexture.width}x{cam.targetTexture.height}");
+    }
+    foreach(var raw in Resources.FindObjectsOfTypeAll<UnityEngine.UI.RawImage>())
+    {
+        if(raw==null || raw.texture==null)continue;
+        bool miniTarget=raw.texture.GetInstanceID()==mini.targetTexture.GetInstanceID();
+        bool fullTarget=Resources.FindObjectsOfTypeAll<global::FullMap>().Any(f=>f!=null && f.mapCamera!=null && f.mapCamera.targetTexture!=null && raw.texture.GetInstanceID()==f.mapCamera.targetTexture.GetInstanceID());
+        if(miniTarget || fullTarget)
+            Plugin.Note($"Map RT display: {raw.name},mini={miniTarget},full={fullTarget},enabled={raw.enabled},active={raw.gameObject.activeInHierarchy},alpha={raw.color.a},cull={raw.canvasRenderer.cull},inheritedAlpha={raw.canvasRenderer.GetInheritedAlpha()}");
+    }
+}
+
+
+[HideFromIl2Cpp]
+void SaveNavigationTargetForProbe(Camera camera,string fileName)
+{
+    if(camera==null || camera.targetTexture==null)throw new InvalidOperationException("Map source RT missing");
+    var rt=camera.targetTexture;
+    var previous=RenderTexture.active;
+    Texture2D readback=null;
+    try
+    {
+        camera.Render();
+        RenderTexture.active=rt;
+        readback=new Texture2D(rt.width,rt.height,TextureFormat.RGBA32,false);
+        readback.ReadPixels(new Rect(0,0,rt.width,rt.height),0,0);readback.Apply();
+        var path=Path.Combine(Path.GetDirectoryName(Plugin.Report),fileName);
+        float min=1,max=0,alphaMin=1,alphaMax=0;
+        var bins=new HashSet<int>();
+        using var stream=File.Create(path);
+        stream.Write(System.Text.Encoding.ASCII.GetBytes($"P6\n{rt.width} {rt.height}\n255\n"));
+        for(int y=rt.height-1;y>=0;y--)for(int x=0;x<rt.width;x++)
+        {
+            var p=readback.GetPixel(x,y);
+            int r=(int)Mathf.Clamp(p.r*255,0,255),g=(int)Mathf.Clamp(p.g*255,0,255),b=(int)Mathf.Clamp(p.b*255,0,255);
+            stream.WriteByte((byte)r);stream.WriteByte((byte)g);stream.WriteByte((byte)b);
+            float lum=(p.r+p.g+p.b)/3;
+            min=Mathf.Min(min,lum);max=Mathf.Max(max,lum);alphaMin=Mathf.Min(alphaMin,p.a);alphaMax=Mathf.Max(alphaMax,p.a);
+            if(bins.Count<4096)bins.Add((r>>4)<<8|(g>>4)<<4|(b>>4));
+        }
+        Plugin.Note($"Native map RT pixel proof: {path},lumaRange={min:F3}..{max:F3},alphaRange={alphaMin:F3}..{alphaMax:F3},quantizedRGBBins={bins.Count}");
+        if(max-min<.02f || bins.Count<3)throw new InvalidOperationException("Native map source RT is effectively a blank solid image");
+    }
+    finally
+    {
+        RenderTexture.active=previous;
+        if(readback!=null)Object.Destroy(readback);
+    }
+}
+
     void OnApplicationQuit(){Plugin.Note("Unity quit stage="+stage+" combatTicks="+ticks);}
 }
