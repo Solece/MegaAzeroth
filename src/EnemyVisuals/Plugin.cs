@@ -12,14 +12,16 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.EnemyVisuals;
 
-[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.0")]
+[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.1")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.azerothmegabonk.enemyvisuals";
     internal static ManualLogSource Logger = null!;
     internal static readonly Dictionary<string, Model> Models = new();
     internal static readonly HashSet<string> FailedModels = new();
-    internal static int Attached;
+    internal static int Attached,ModelLoads,Recoveries;
+    internal static readonly string[] ModelKeys={"boar","skeleton","murloc","wolf","kobold","gnoll","tarantula","ogre","infernal","lich","bonegolem"};
+    private static readonly Dictionary<string,float> RetryAt=new(),NextFailureLog=new();
     private Harmony harmony;
     public override void Load()
     {
@@ -30,21 +32,31 @@ public sealed class Plugin : BasePlugin
         // Do not make graphics calls until the game has initialized its device.
         Log.LogInfo("Enemy visual module ready; models load on first native enemy spawn.");
     }
-    internal static Model GetModel(string key)
+    internal static Model GetModel(string key,bool verifyFrames=false)
     {
-        if (Models.TryGetValue(key, out var found)) return found;
-        if (FailedModels.Contains(key)) return null;
-        string folder = Path.Combine(Paths.GameRootPath, "AzerothAssets", key);
-        if (!File.Exists(Path.Combine(folder,"model.json"))) return null;
-        try { var model = Model.Load(folder); Models[key] = model; return model; }
-        catch(Exception ex) { FailedModels.Add(key);Logger.LogError($"Model {key} disabled after load failure; native appearance remains available: {ex}");return null; }
+        if (Models.TryGetValue(key,out var found) && found.IsUsable(verifyFrames))return found;
+        if(RetryAt.TryGetValue(key,out var retry) && Time.unscaledTime<retry)return null;
+        string folder=Path.Combine(Paths.GameRootPath,"AzerothAssets",key);
+        if(!File.Exists(Path.Combine(folder,"model.json")))return null;
+        try
+        {
+            found?.Release();Models.Remove(key);
+            var model=Model.Load(folder);Models[key]=model;ModelLoads++;FailedModels.Remove(key);RetryAt.Remove(key);return model;
+        }
+        catch(Exception ex)
+        {
+            FailedModels.Add(key);RetryAt[key]=Time.unscaledTime+1;
+            if(!NextFailureLog.TryGetValue(key,out var next) || Time.unscaledTime>=next)
+            {NextFailureLog[key]=Time.unscaledTime+5;Logger.LogWarning($"Model {key} will retry after load/native-asset failure; native appearance remains available: {ex}");}
+            return null;
+        }
     }
     public override bool Unload()
     {
         harmony?.UnpatchSelf();
         foreach(var visual in Object.FindObjectsOfType<AzerothVisual>(true)) visual.RestoreNative();
         foreach(var model in Models.Values) model.Release();
-        Models.Clear();FailedModels.Clear();return true;
+        Models.Clear();FailedModels.Clear();RetryAt.Clear();NextFailureLog.Clear();return true;
     }
 }
 
@@ -87,7 +99,7 @@ internal sealed class Clip
 {
     public string Name = ""; public float Duration; public int Count; public Mesh[] Meshes = null!;
 }
-internal sealed class Model
+internal sealed partial class Model
 {
     public string Name = "";
     public Mesh Template = null!;
@@ -103,16 +115,16 @@ internal sealed class Model
         int count = j.GetProperty("vertexCount").GetInt32();
         var verts = new Vector3[count]; var normals = new Vector3[count]; var uvs = new Vector2[count];
         for(int i=0;i<count;i++) { verts[i]=new(p[i*3],p[i*3+1],p[i*3+2]); normals[i]=new(n[i*3],n[i*3+1],n[i*3+2]); uvs[i]=new(uv[i*2],uv[i*2+1]); }
-        var model = new Model { Name=j.GetProperty("name").GetString() ?? "Azeroth creature" };
+        var model = new Model { Name=j.GetProperty("name").GetString() ?? "Azeroth creature",Key=Path.GetFileName(folder),VertexCount=count };
         try
         {
-        model.Template = new Mesh { name="Azeroth_"+model.Name };
+        model.Template = Retain(new Mesh { name="Azeroth_"+model.Name });
         model.Template.vertices = verts; model.Template.normals=normals; model.Template.uv=uvs;
         model.Template.triangles=j.GetProperty("triangles").EnumerateArray().Select(x=>x.GetInt32()).ToArray();
         model.Template.RecalculateBounds();
         using var tm = JsonDocument.Parse(File.ReadAllText(Path.Combine(folder,"texture.rgba.json")));
         int tw=tm.RootElement.GetProperty("width").GetInt32(), th=tm.RootElement.GetProperty("height").GetInt32();
-        var texture = model.Texture = new Texture2D(tw,th,TextureFormat.RGBA32,false);
+        var texture = model.Texture = Retain(new Texture2D(tw,th,TextureFormat.RGBA32,false));
         byte[] raw=File.ReadAllBytes(Path.Combine(folder,"texture.rgba"));
         if(raw.Length!=tw*th*4) throw new InvalidDataException("RGBA texture size mismatch");
         var pin=GCHandle.Alloc(raw,GCHandleType.Pinned);
@@ -120,7 +132,7 @@ internal sealed class Model
         texture.filterMode=FilterMode.Bilinear; texture.wrapMode=TextureWrapMode.Repeat;
         var shader = Shader.Find("Unlit/Transparent Cutout") ?? Shader.Find("Standard") ?? Shader.Find("Sprites/Default");
         if(shader==null) throw new InvalidOperationException("No cutout-compatible shader available");
-        model.Material = new Material(shader) { mainTexture=texture, color=Color.white, enableInstancing=true };
+        model.Material = Retain(new Material(shader) { mainTexture=texture, color=Color.white, enableInstancing=true });
         if(model.Material.HasProperty("_Cutoff")) model.Material.SetFloat("_Cutoff",0.5f);
         model.Material.SetFloat("_Mode",1); model.Material.EnableKeyword("_ALPHATEST_ON"); model.Material.renderQueue=2450;
         foreach(var c in j.GetProperty("animations").EnumerateArray())
@@ -135,7 +147,7 @@ internal sealed class Model
             {
                 var frameVerts=new Vector3[count];
                 for(int i=0;i<count;i++) frameVerts[i]=new(reader.ReadSingle(),reader.ReadSingle(),reader.ReadSingle());
-                var frameMesh=Object.Instantiate(model.Template); frameMesh.name=$"{model.Name}_{clip.Name}_{f}";
+                var frameMesh=Retain(Object.Instantiate(model.Template)); frameMesh.name=$"{model.Name}_{clip.Name}_{f}";
                 frameMesh.vertices=frameVerts; frameMesh.RecalculateNormals(); frameMesh.RecalculateBounds();
                 clip.Meshes[f]=frameMesh;
             }
@@ -173,10 +185,13 @@ public sealed class AzerothVisual : MonoBehaviour
     private Bounds nativeRendererBounds, nativeColliderBounds;
     private float sourceHeight, referenceHeight, sizeMultiplier;
     private string scaleReference="";
+    private float nativeFeetY,nativeGroundCheckY,groundY,groundSampleFeetY,floorCorrectionY,templateMinY,frameMinY,frameMaxY,nextGroundSample,retryAt,nextFailureLog;
+    private bool groundFound,needsRebind;
+    private float baseScale,nextAssetCheck;
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     internal void Bind(Enemy target,Model data,bool boss)
     {
-        enemy=target; original=target.renderer; model=data; isBoss=boss;
+        enabled=true;enemy=target; original=target.renderer; model=data; isBoss=boss;retryAt=0;needsRebind=false;nextGroundSample=0;groundFound=false;nextAssetCheck=Time.unscaledTime+1;
         if(visual!=null) { visual.SetActive(false);Object.Destroy(visual); }
         visual=new GameObject("AzerothCreature_"+data.Name);
         visual.layer=original.gameObject.layer;
@@ -204,45 +219,80 @@ public sealed class AzerothVisual : MonoBehaviour
         referenceHeight=Math.Max(.01f,nativeBounds.size.y);
         sizeMultiplier=boss ? 1f : 2f/3f;
         float desired=referenceHeight*sizeMultiplier/parentScale;
-        var feetWorld=nativeBounds.center-Vector3.up*(nativeBounds.size.y*.5f);
+        var feetWorld=EnemyVisualGround.NativeFeet(target,out nativeGroundCheckY);nativeFeetY=feetWorld.y;
         sourceHeight=Math.Max(.01f,mesh.bounds.size.y);
-        float scale=desired/sourceHeight;
+        float scale=desired/sourceHeight;baseScale=scale;templateMinY=mesh.bounds.min.y;
         visual.transform.localScale=Vector3.one*scale;
         visual.transform.localPosition=target.transform.InverseTransformPoint(feetWorld)-new Vector3(mesh.bounds.center.x*scale,mesh.bounds.min.y*scale,mesh.bounds.center.z*scale);
         filter=visual.AddComponent<MeshFilter>(); filter.sharedMesh=mesh;
         replacement=visual.AddComponent<MeshRenderer>(); replacement.sharedMaterial=data.Material;
+        PlaceAboveNativeFloor(mesh,true);
         if(Plugin.Attached<3 || boss) Plugin.Logger.LogInfo($"Visual scale evidence: boss={boss}, reference={scaleReference}, nativeRendererHeight={nativeRendererBounds.size.y}, nativeColliderHeight={nativeColliderBounds.size.y}, ratio={sizeMultiplier}, sourceHeight={sourceHeight}, localScale={scale}, visualBounds={replacement.bounds.size}, position={replacement.bounds.center}");
         original.enabled=false;
         startTime=Time.time; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
     }
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
+    private void PlaceAboveNativeFloor(Mesh mesh,bool forceGround=false)
+    {
+        var feet=EnemyVisualGround.NativeFeet(enemy,out nativeGroundCheckY);nativeFeetY=feet.y;
+        bool useTerrain=isBoss || model.Name.Equals("Tarantula",StringComparison.OrdinalIgnoreCase);
+        if(useTerrain && (forceGround || Time.unscaledTime>=nextGroundSample))
+        {
+            nextGroundSample=Time.unscaledTime+(isBoss?.15f:.3f);groundSampleFeetY=feet.y;
+            groundFound=EnemyVisualGround.TryGround(feet,out groundY);
+        }
+        // Do not reuse a terrain sample from the former side of a drop/step.
+        if(groundFound && Math.Abs(feet.y-groundSampleFeetY)>2f)groundFound=false;
+        if(!groundFound)groundY=feet.y;
+        var bounds=mesh.bounds;frameMinY=bounds.min.y;frameMaxY=bounds.max.y;
+        visual.transform.localPosition=enemy.transform.InverseTransformPoint(feet)-new Vector3(model.Template.bounds.center.x*baseScale,templateMinY*baseScale,model.Template.bounds.center.z*baseScale);
+        float minY=replacement.bounds.min.y;
+        float floor=groundFound?groundY:feet.y;floorCorrectionY=Math.Max(0,floor-minY);
+        if(floorCorrectionY>0)visual.transform.position+=Vector3.up*floorCorrectionY;
+    }
     void LateUpdate()
     {
-        if(enemy==null || original==null || replacement==null || filter==null || model==null) return;
-        original.enabled=false;
-        if(enemy.hp<=0) { replacement.enabled=false; return; }
-        replacement.enabled=true;
-        if(Time.time<nextFrame) return;
-        nextFrame=Time.time+1f/24;
-        var position=enemy.transform.position;
-        if(enemy.rb!=null)
+        if(enemy==null || model==null || Time.unscaledTime<retryAt)return;
+        try
         {
-            var velocity=enemy.rb.velocity;velocity.y=0;
-            if(velocity.sqrMagnitude>.001f) visual.transform.rotation=Quaternion.LookRotation(velocity);
+            bool checkAssets=Time.unscaledTime>=nextAssetCheck;if(checkAssets)nextAssetCheck=Time.unscaledTime+1;
+            if(needsRebind || original==null || visual==null || replacement==null || filter==null || (checkAssets && !model.IsUsable(false)))
+            {
+                var live=Plugin.GetModel(model.Key,needsRebind);if(live==null)return;Bind(enemy,live,isBoss);
+            }
+            original.enabled=false;
+            if(enemy.hp<=0){replacement.enabled=false;return;}
+            replacement.enabled=true;
+            if(Time.time<nextFrame)return;nextFrame=Time.time+1f/24;
+            var position=enemy.transform.position;
+            if(enemy.rb!=null)
+            {
+                var velocity=enemy.rb.velocity;velocity.y=0;
+                if(velocity.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(velocity);
+            }
+            string name=(position-previous).sqrMagnitude>.00001f?"run":"idle";
+            if(model.Name.Equals("Tarantula",StringComparison.OrdinalIgnoreCase) && name=="run")name="walk";
+            previous=position;
+            if(!model.Clips.TryGetValue(name,out var clip))return;
+            if(clipName!=name){clipName=name;lastFrame=-1;startTime=Time.time;}
+            int frame=(int)(((Time.time-startTime)%clip.Duration)/clip.Duration*(clip.Count-1));
+            var mesh=clip.Meshes[frame];if(mesh==null)throw new InvalidOperationException("Original enemy animation frame was unloaded: "+model.Key+"/"+name+"/"+frame);
+            if(frame!=lastFrame){lastFrame=frame;filter.sharedMesh=mesh;}
+            PlaceAboveNativeFloor(mesh);
         }
-        string name=(position-previous).sqrMagnitude>.00001f?"run":"idle";
-        if(model.Name.Equals("Tarantula",StringComparison.OrdinalIgnoreCase) && name=="run") name="walk";
-        previous=position;
-        if(!model.Clips.TryGetValue(name,out var clip)) return;
-        if(clipName!=name){clipName=name;lastFrame=-1;startTime=Time.time;}
-        int frame=(int)(((Time.time-startTime)%clip.Duration)/clip.Duration*(clip.Count-1));
-        if(frame==lastFrame) return;
-        lastFrame=frame;
-        filter.sharedMesh=clip.Meshes[frame];
+        catch(Exception ex)
+        {
+            needsRebind=true;retryAt=Time.unscaledTime+1;Plugin.Recoveries++;
+            if(original!=null)original.enabled=true;if(replacement!=null)replacement.enabled=false;
+            if(Time.unscaledTime>=nextFailureLog){nextFailureLog=Time.unscaledTime+5;Plugin.Logger.LogWarning("Enemy source visual will retry after native scene/asset change: "+ex);}
+        }
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     public string Describe()
     {
         float renderedHeight=replacement!=null ? replacement.bounds.size.y : 0;
+        var bounds=replacement!=null?replacement.bounds:new Bounds();
+        var camera=Camera.main;bool canVisible=EnemyVisualGround.CameraVisible(camera,replacement,out var viewport);
         return JsonSerializer.Serialize(new {
             enemyName=enemy?.enemyData?.enemyName.ToString(),
             enemyId=enemy!=null ? enemy.id : 0,
@@ -252,7 +302,11 @@ public sealed class AzerothVisual : MonoBehaviour
             nativeColliderHeight=nativeColliderBounds.size.y,
             referenceHeight, sizeMultiplier, sourceHeight,
             expectedInitialHeight=referenceHeight*sizeMultiplier,
-            renderedHeight, currentLocalScale=visual!=null ? visual.transform.localScale.y : 0,
+            renderedHeight,nativeFeetY,nativeGroundCheckY,nativeBottomY=enemy!=null?enemy.GetBottomPosition().y:0,groundLayerMask=EnemyVisualGround.GroundLayerMask,nativeRendererFeetY=nativeRendererBounds.min.y,nativeColliderFeetY=nativeColliderBounds.min.y,
+            visualMinY=bounds.min.y,visualMaxY=bounds.max.y,groundY,groundFound,groundSampleFeetY,floorCorrectionY,templateMinY,frameMinY,frameMaxY,
+            groundClearance=bounds.min.y-groundY,cameraViewport=new[]{viewport.x,viewport.y,viewport.z},canVisible,
+            cameraName=camera!=null?camera.name:"",currentClip=clipName,currentFrame=lastFrame,modelAssetsValid=model!=null && model.IsUsable(false),
+            currentLocalScale=visual!=null ? visual.transform.localScale.y : 0,
             nativeRendererHidden=original!=null && !original.enabled,
             visualActive=visual!=null && visual.activeInHierarchy,
             colliderEnabled=enemy?.collider!=null && enemy.collider.enabled
@@ -274,6 +328,14 @@ public sealed class AzerothVisual : MonoBehaviour
 /// <summary>Read-only runtime evidence for native spawn and size checks.</summary>
 public static class EnemyVisualBridge
 {
+    public static bool AllCachedAssetsValid=>Plugin.Models.Count>0 && Plugin.Models.Values.All(m=>m.IsUsable());
+    public static string AssetDiagnostics()=>JsonSerializer.Serialize(new{allValid=AllCachedAssetsValid,sourceCount=Plugin.Models.Count,expectedSourceCount=Plugin.ModelKeys.Length,allElevenPrimed=Plugin.Models.Count==Plugin.ModelKeys.Length && AllCachedAssetsValid,modelLoads=Plugin.ModelLoads,recoveries=Plugin.Recoveries,models=Plugin.Models.Select(x=>new{key=x.Key,health=x.Value.Inspect()}).ToArray(),failedKeys=Plugin.FailedModels.ToArray()});
+    public static bool PrimeAllModelsForProbe()
+    {
+        if(!Application.isBatchMode || Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")!="1")return false;
+        foreach(var key in Plugin.ModelKeys)if(Plugin.GetModel(key)==null)return false;
+        return Plugin.Models.Count==Plugin.ModelKeys.Length && AllCachedAssetsValid;
+    }
     public const float OrdinarySizeMultiplier=2f/3f;
     public const float BossSizeMultiplier=1f;
     public static string Describe(Enemy enemy)

@@ -17,7 +17,7 @@ using UObject=UnityEngine.Object;
 
 namespace AzerothAbilities;
 
-[BepInPlugin(Id,"Azeroth Mage Abilities","0.3.0")]
+[BepInPlugin(Id,"Azeroth Mage Abilities","0.3.1")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id="local.azerothmegabonk.abilities";
@@ -345,7 +345,7 @@ public sealed class AbilityBehaviour : MonoBehaviour
     private bool failed;
     private void Update()
     {
-        try{AbilityRuntime.Tick();}catch(Exception ex){if(!failed){failed=true;Plugin.Current?.Log.LogError("Ability tick failed; returning to native weapons: "+ex);Plugin.Current.SelectedClass.Value="none";AbilityRuntime.Clear();}}
+        try{AbilityRuntime.Tick();}catch(Exception ex){if(!failed){failed=true;Plugin.Current?.Log.LogError("Azeroth spell tick failed; Mage selection, learned ranks and native weapon suppression retained: "+ex);}}
     }
     internal static GameObject Orb(Vector3 position,string school)
     {
@@ -369,7 +369,7 @@ public sealed class AbilityBehaviour : MonoBehaviour
 [HarmonyPatch(typeof(WeaponBase),nameof(WeaponBase.Use))]
 internal static class NativeWeaponsPatch
 {
-    private static bool Prefix()=>!AbilityRuntime.Active;
+    private static bool Prefix()=>NativeWeaponPolicy.AllowNativeUse();
 }
 [HarmonyPatch(typeof(MyPlayer),nameof(MyPlayer.StartPlayer))]
 internal static class StartRunPatch

@@ -4,6 +4,7 @@ using Assets.Scripts.Camera;
 using Assets.Scripts.Managers;
 using Assets.Scripts.UI.InGame.FullMap;
 using Il2CppInterop.Runtime.Attributes;
+using HarmonyLib;
 using UnityEngine;
 using Object=UnityEngine.Object;
 using NativeArrow=Assets.Scripts.Camera.MinimapArrow;
@@ -102,7 +103,7 @@ public static class NavigationBridge
             var sample=gate==null?default:NativeMapNavigation.Fog(map,gate.position);
             maps.Add(new{name=map.name,worldSize=map.worldSize,textureSize=map.textureSize,gatePixel=sample,gateRevealed=sample.Revealed,cameraEnabled=map.mapCamera?.enabled,cameraMask=map.mapCamera?.cullingMask,mapsOpen=map.mapsOpen});
         }
-        return JsonSerializer.Serialize(new{scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,stage=MapController.GetStageIndex(),playerIcon=NativeMapNavigation.Path(mini?.playerIcon),playerIconActive=mini?.playerIcon?.gameObject.activeInHierarchy,miniCameraEnabled=mini?.minimapCamera?.enabled,miniCameraMask=mini?.minimapCamera?.cullingMask,gate=NativeMapNavigation.Path(gate),gateDistance=gate!=null && player!=null?Vector3.Distance(gate.position,player.transform.position):-1,nativeBossSpotted=mini?.bossSpotted,nativeArrowRegistered=gate!=null && mini.arrowDict!=null && mini.arrowDict.ContainsKey(gate),arrows,maps});
+        return JsonSerializer.Serialize(new{scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,stage=MapController.GetStageIndex(),playerIcon=NativeMapNavigation.Path(mini?.playerIcon),playerIconActive=mini?.playerIcon?.gameObject.activeInHierarchy,miniCameraEnabled=mini?.minimapCamera?.enabled,miniCameraMask=mini?.minimapCamera?.cullingMask,gate=NativeMapNavigation.Path(gate),gateDistance=gate!=null && player!=null?Vector3.Distance(gate.position,player.transform.position):-1,nativeBossSpotted=mini?.bossSpotted,nativeArrowRegistered=gate!=null && mini.arrowDict!=null && mini.arrowDict.ContainsKey(gate),nativeArrowReuses=NativeArrowReusePatch.ReusedArrows,nativeArrowDeadReplacements=NativeArrowReusePatch.ReplacedDeadArrows,arrows,maps});
     }
     // Reveal one normal native110-world-unit fog circle around the gate. This is
     // a batch-only diagnostic, not a global reveal or a gameplay discovery override.
@@ -132,5 +133,30 @@ public static class NavigationBridge
         var pause=UiManager.Instance?.pause;if(pause==null)return false;
         if(visible){if(!pause.IsPaused())pause.Pause();pause.GoToMap();}else pause.Resume();
         return pause.map!=null && pause.map.activeInHierarchy==visible;
+    }
+}
+// Fog navigation and the original boss-completed callback can discover the same
+// portal in adjacent native update phases. Reuse that native indicator instead
+// of letting AddArrow instantiate a second object and Dictionary.Add the same key.
+[HarmonyPatch(typeof(MinimapCamera),nameof(MinimapCamera.AddArrow))]
+internal static class NativeArrowReusePatch
+{
+    internal static int ReusedArrows,ReplacedDeadArrows;
+    private static bool Prefix(MinimapCamera __instance,Transform target,Color color)
+    {
+        if(target==null || __instance.arrowDict==null || !__instance.arrowDict.ContainsKey(target))return true;
+        NativeArrow arrow=__instance.arrowDict[target];
+        if(arrow==null || arrow.arrowRenderer==null)
+        {
+            __instance.arrowDict.Remove(target);
+            if(arrow!=null)Object.Destroy(arrow.gameObject);
+            ReplacedDeadArrows++;return true;
+        }
+        // This is Assets.Scripts.Camera.MinimapArrow.Set, the same native method
+        // whose target/material-color assignment is inlined by native AddArrow.
+        // Preserve OnBossSpawnerCompleted and its portal color transition.
+        arrow.Set(target,color);
+        arrow.gameObject.SetActive(true);
+        ReusedArrows++;return false;
     }
 }

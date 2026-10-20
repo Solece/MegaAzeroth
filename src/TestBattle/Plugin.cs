@@ -23,6 +23,7 @@ public sealed class Plugin:BasePlugin
 {
     internal static string Report;
     internal static bool Smoke;
+    internal static BattleRunner Runner;
     public override void Load()
     {
         var args=Environment.GetCommandLineArgs();
@@ -59,6 +60,7 @@ public sealed class BattleRunner:MonoBehaviour
     Type bridge;
     void Start()
     {
+        Plugin.Runner=this;
         began=Time.realtimeSinceStartup;
         next=began+8;
         Plugin.Note("Unity batch="+Application.isBatchMode+" graphics="+SystemInfo.graphicsDeviceType);
@@ -546,5 +548,8 @@ void SaveNavigationTargetForProbe(Camera camera,string fileName)
     }
 }
 
+    [HideFromIl2Cpp]
+    public void CaptureFromProbe(string name)=>CaptureCanvas(name);
     void OnApplicationQuit(){Plugin.Note("Unity quit stage="+stage+" combatTicks="+ticks);}
 }
+public static class CaptureBridge { public static bool Capture(string name) { if(!Application.isBatchMode || Plugin.Runner==null)return false;Plugin.Runner.CaptureFromProbe(name);return true; } }

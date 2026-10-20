@@ -168,7 +168,7 @@ public static class AdventureBridge
 public sealed class AdventureSmokeRunner:MonoBehaviour
 {
     public AdventureSmokeRunner(IntPtr pointer):base(pointer){}
-    float began,next,deadline;int state,fromStage=-1,stagesVerified,bossesKilled,errors;bool seeded;
+    float began,next,deadline;int state,fromStage=-1,stagesVerified,bossesKilled,errors,upgradeProbeAttempts;bool seeded;
     string[] expectedIds;int[] expectedRanks;long expectedInventory;
     void Start(){began=Time.realtimeSinceStartup;next=began+1;Application.runInBackground=true;Application.targetFrameRate=30;QualitySettings.vSyncCount=0;}
     void Update()
@@ -181,12 +181,18 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
             if(player==null || player.inventory==null || gm==null || MapGenerationController.isGenerating)return;
             if(!player.hasStarted){if(state==0)return;player.hasStarted=true;Plugin.Note("Probe native player start resumed after stage generation.");}
             if(gm.isGameOver)throw new InvalidOperationException("Native game ended before final arena");
+            if(LevelupScreen.isLevelingUp)
+            {
+                var choice=Object.FindObjectsOfType<UpgradeButton>().Where(b=>b.gameObject.activeInHierarchy)
+                    .OrderByDescending(b=>!b.isItem && b.upgradable!=null && b.upgradable.TryCast<WeaponData>()!=null).FirstOrDefault();
+                if(choice!=null)choice.SelectUpgrade();return;
+            }
             if(!gm.IsPlaying()){if(state==0)return;gm.StartPlaying();next=Time.realtimeSinceStartup+2;return;}
             // Test-only survivability; native boss spawning, kill events, portal
             // activation and scene generation still execute unmodified.
             var health=player.inventory.playerHealth;health.hp=health.maxHp;
-            if(LevelupScreen.isLevelingUp)
-            {var choice=Object.FindObjectsOfType<UpgradeButton>().FirstOrDefault(b=>b.gameObject.activeInHierarchy);if(choice!=null)choice.SelectUpgrade();return;}
+
+            if(!VisualTransitionProbe.StageReady())return;
             if(state==0)
             {
                 if(!seeded)
@@ -195,12 +201,22 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
                     expectedIds=HudBridge.SpellIds;expectedRanks=HudBridge.SpellRanks;expectedInventory=player.inventory.Pointer.ToInt64();seeded=true;
                     Plugin.Note("Probe map availability: "+AdventureBridge.DescribeMaps());
                 }
+                if(VisualTransitionProbe.Enabled)
+                {
+                    using var weaponPolicy=JsonDocument.Parse(NativeWeaponDiagnostics.SnapshotJson);
+                    if(weaponPolicy.RootElement.GetProperty("SourceCardsSelected").GetInt32()==0)
+                    {
+                        if(++upgradeProbeAttempts>8)throw new InvalidOperationException("Native levelup did not offer/select an Azeroth source spell");
+                        player.inventory.AddLevel();Plugin.Note("Probe real native levelup requested; prefer a source-spell card; attempt="+upgradeProbeAttempts);return;
+                    }
+                }
                 Verify();fromStage=MapController.GetStageIndex();state=1;deadline=Time.realtimeSinceStartup+15;
             }
             if(MapController.IsFinalBossStage())
             {
                 Verify();var final=Object.FindObjectsOfType<Enemy>().FirstOrDefault(e=>e.IsFinalBoss() && !e.IsDeadOrDyingNextFrame());
                 if(final==null){if(deadline==0)deadline=Time.realtimeSinceStartup+45;if(Time.realtimeSinceStartup>deadline)throw new InvalidOperationException("Final arena loaded but no native final boss spawned");return;}
+                if(!VisualTransitionProbe.BossReady(final))return;
                 Plugin.Note($"PASS: native stages verified={stagesVerified}; stage bosses killed={bossesKilled}; FinalBossMap loaded, live final boss={final.enemyData?.name} hp={final.hp}/{final.maxHp}; Mage spell ranks/talents/books retained; no OS input.");
                 state=9;Application.Quit();return;
             }
@@ -213,6 +229,8 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
             }
             if(state==2)
             {
+                var visualBoss=Object.FindObjectsOfType<Enemy>().FirstOrDefault(e=>e.IsStageBoss()&&!e.IsDeadOrDyingNextFrame());
+                if(VisualTransitionProbe.Enabled && visualBoss!=null && !VisualTransitionProbe.BossReady(visualBoss))return;
                 int killed=AdventureBridge.DefeatStageBossForProbe();if(killed>0)bossesKilled+=killed;
                 var ready=Object.FindObjectsOfType<InteractablePortal>().Any(x=>x.gameObject.activeInHierarchy && !x.done);
                 if(!ready){if(Time.realtimeSinceStartup>deadline)throw new InvalidOperationException("Boss defeat did not activate native stage portal");return;}
@@ -221,6 +239,15 @@ public sealed class AdventureSmokeRunner:MonoBehaviour
             if(state==4)
             {
                 if(MapController.GetStageIndex()==fromStage){if(Time.realtimeSinceStartup>deadline)throw new InvalidOperationException("Portal did not advance to next native stage");return;}
+                if(VisualTransitionProbe.Enabled)
+                {
+                    using var weaponPolicy=JsonDocument.Parse(NativeWeaponDiagnostics.SnapshotJson);
+                    if(weaponPolicy.RootElement.GetProperty("SourceCardsSelected").GetInt32()==0)
+                    {
+                        if(++upgradeProbeAttempts>8)throw new InvalidOperationException("Native levelup did not offer/select an Azeroth source spell");
+                        player.inventory.AddLevel();Plugin.Note("Probe real native levelup requested; prefer a source-spell card; attempt="+upgradeProbeAttempts);return;
+                    }
+                }
                 Verify();fromStage=MapController.GetStageIndex();state=1;deadline=Time.realtimeSinceStartup+15;
             }
         }

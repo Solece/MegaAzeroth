@@ -16,7 +16,19 @@ internal static class AbilityOffers
     internal static readonly Dictionary<IntPtr,AbilityChoice> Bound=new();
     private static readonly HashSet<string> Used=new();
     private static readonly Dictionary<string,Texture2D> Icons=new();
-    internal static void Begin(){Bound.Clear();Used.Clear();}
+    internal static readonly HashSet<IntPtr> NativeWeaponCards=new();
+    private static readonly HashSet<IntPtr> HiddenWeaponCards=new();
+    internal static void Begin(){Bound.Clear();Used.Clear();NativeWeaponCards.Clear();}
+    internal static void ResetCard(UpgradeButton button)
+    {
+        Bound.Remove(button.Pointer);NativeWeaponCards.Remove(button.Pointer);
+        if(HiddenWeaponCards.Remove(button.Pointer))button.gameObject.SetActive(true);
+    }
+    internal static void HideNativeCard(UpgradeButton button)
+    {
+        Bound.Remove(button.Pointer);HiddenWeaponCards.Add(button.Pointer);
+        button.gameObject.SetActive(false);NativeWeaponPolicy.UnboundCardsHidden++;
+    }
     internal static AbilityChoice Bind(IntPtr button,int rarity)
     {
         var choices=AbilityRuntime.Choices(rarity);if(choices.Count==0)return null;
@@ -25,7 +37,11 @@ internal static class AbilityOffers
     }
     internal static Texture2D Icon(SpellDefinition spell)
     {
-        if(Icons.TryGetValue(spell.Id,out var cached))return cached;
+        if(Icons.TryGetValue(spell.Id,out var cached))
+        {
+            if(SpellVfx.Alive(cached))return cached;
+            Icons.Remove(spell.Id);
+        }
         Texture2D texture=null;
         try
         {
@@ -44,18 +60,18 @@ internal static class AbilityOffers
 
             // The generated LoadImage(byte[]) wrapper reaches unsupported IL2CPP Span constructors.
             // These offline RGBA assets have the bottom row first; pin only during the native upload.
-            texture=new Texture2D(width,height,TextureFormat.RGBA32,false);
+            texture=SpellVfx.Keep(new Texture2D(width,height,TextureFormat.RGBA32,false){name="AzerothSpellOfferIcon_"+spell.Id});
             var pinned=GCHandle.Alloc(pixels,GCHandleType.Pinned);
             try { texture.LoadRawTextureData(pinned.AddrOfPinnedObject(),pixels.Length);texture.Apply(false,true); }
             finally { pinned.Free(); }
         }
         catch(Exception ex)
         {
-            if(texture!=null)UnityEngine.Object.Destroy(texture);
+            if(SpellVfx.Alive(texture))UnityEngine.Object.Destroy(texture);
             texture=null;
             Plugin.Current?.Log.LogError($"Spell icon {spell.Id} could not be loaded: {ex.Message}");
         }
-        // RawImage consumes this texture directly. Retain it for the plugin lifetime and reuse it on cards.
+        // RawImage cards disappear between stages. Keep the cached native texture alive independently of scene renderers.
         Icons[spell.Id]=texture;return texture;
     }
     internal static void ReplaceWeaponsWithBooks(NativeList offers)
@@ -95,18 +111,30 @@ internal static class OfferCardPatch
 {
     private static void Postfix(UpgradeButton __instance,IUpgradable upgradable)
     {
-        AbilityOffers.Bound.Remove(__instance.Pointer);
+        AbilityOffers.ResetCard(__instance);
         if(!AbilityRuntime.Active || upgradable==null || upgradable.TryCast<WeaponData>()==null)return;
-        var sourceRarity=__instance.rarity;
-        if(sourceRarity==ERarity.New)sourceRarity=Rarity.GetUpgradeOfferRarity(PlayerStats.GetStat(EStat.Luck));
-        var choice=AbilityOffers.Bind(__instance.Pointer,Math.Clamp((int)sourceRarity-1,0,4));if(choice==null)return;
-        __instance.t_name.text=choice.Upgrade==null?choice.Spell.Name:choice.Label;
-        __instance.t_description.text=choice.Description;
-        __instance.t_level.text=choice.Upgrade==null?"New spell · Rank 1":"Spell upgrade";
-        __instance.t_rarity.text=choice.Upgrade==null?"Azeroth":sourceRarity.ToString();
-        var icon=AbilityOffers.Icon(choice.Spell);
-        __instance.icon.texture=icon;
-        Plugin.Current?.Log.LogInfo($"Azeroth offer bound: {choice.Label}; native tome cards unchanged");
+        AbilityOffers.NativeWeaponCards.Add(__instance.Pointer);
+        try
+        {
+            var sourceRarity=__instance.rarity;
+            if(sourceRarity==ERarity.New)sourceRarity=Rarity.GetUpgradeOfferRarity(PlayerStats.GetStat(EStat.Luck));
+            var choice=AbilityOffers.Bind(__instance.Pointer,Math.Clamp((int)sourceRarity-1,0,4));
+            if(choice==null){AbilityOffers.HideNativeCard(__instance);return;}
+            // WeaponData is only an engine-owned card template. Selection applies
+            // this independent source spell, never the native weapon/its upgrades.
+            __instance.t_name.text=choice.Upgrade==null?choice.Spell.Name:choice.Label;
+            __instance.t_description.text=choice.Description;
+            __instance.t_level.text=choice.Upgrade==null?"New spell · Rank 1":"Spell upgrade";
+            __instance.t_rarity.text=choice.Upgrade==null?"Azeroth":sourceRarity.ToString();
+            __instance.icon.texture=AbilityOffers.Icon(choice.Spell);
+            NativeWeaponPolicy.SourceCardsBound++;
+            Plugin.Current?.Log.LogInfo($"Azeroth offer bound: {choice.Label}; native tome cards unchanged");
+        }
+        catch(Exception ex)
+        {
+            AbilityOffers.HideNativeCard(__instance);
+            Plugin.Current?.Log.LogWarning("Native weapon card suppressed because source spell binding failed: "+ex.Message);
+        }
     }
 }
 
@@ -115,12 +143,33 @@ internal static class OfferSelectionPatch
 {
     private static bool Prefix(UpgradeButton __instance)
     {
-        if(!AbilityRuntime.Active || !AbilityOffers.Bound.TryGetValue(__instance.Pointer,out var choice))return true;
-        AbilityRuntime.Apply(choice);
-        AbilityOffers.Bound.Remove(__instance.Pointer);
-        __instance.upgradePicker.levelupScreen.CloseLevelupScreen();
-        return false;
+        if(!AbilityRuntime.Active)return true;
+        if(AbilityOffers.Bound.TryGetValue(__instance.Pointer,out var choice))
+        {
+            AbilityRuntime.Apply(choice);NativeWeaponPolicy.SourceCardsSelected++;
+            AbilityOffers.Bound.Remove(__instance.Pointer);
+            __instance.upgradePicker.levelupScreen.CloseLevelupScreen();
+            return false;
+        }
+        // A rerolled/reused button must never fall through to native AddWeapon.
+        if(AbilityOffers.NativeWeaponCards.Contains(__instance.Pointer) || (!__instance.isItem && __instance.upgradable!=null && __instance.upgradable.TryCast<WeaponData>()!=null))
+        {
+            NativeWeaponPolicy.NativeSelectionsBlocked++;AbilityOffers.HideNativeCard(__instance);return false;
+        }
+        return true;
     }
 }
 
 
+
+
+[HarmonyPatch(typeof(UpgradeButton),nameof(UpgradeButton.SetItem))]
+internal static class ItemCardResetPatch
+{
+    private static void Postfix(UpgradeButton __instance)=>AbilityOffers.ResetCard(__instance);
+}
+[HarmonyPatch(typeof(UpgradeButton),nameof(UpgradeButton.SetItemPriced))]
+internal static class PricedItemCardResetPatch
+{
+    private static void Postfix(UpgradeButton __instance)=>AbilityOffers.ResetCard(__instance);
+}

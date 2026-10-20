@@ -23,21 +23,28 @@ public static class CreatureVisualBridge
   if(!registered){ClassInjector.RegisterTypeInIl2Cpp<MageCompanionVisual>();ClassInjector.RegisterTypeInIl2Cpp<MageSheepTracker>();registered=true;}
   if(tracker==null){tracker=new GameObject("AzerothCreatureVisualTracker");Object.DontDestroyOnLoad(tracker);tracker.AddComponent<MageSheepTracker>();}
  }
- public static GameObject Create(string key,Vector3 position,float height=1.6f)
+ internal static bool AllCachedAssetsValid=>Models.Values.All(m=>m.IsUsable());
+ internal static object AssetHealth()=>Models.Select(x=>new{key=x.Key,health=x.Value.Inspect()}).ToArray();
+ internal static Model GetModel(string key)
  {
-  Initialize();key=key.ToLowerInvariant();if(key!="sheep" && key!="waterelemental")throw new ArgumentException("Unknown original Mage creature pack",nameof(key));
-  if(!Models.TryGetValue(key,out var model))
+  if(!Models.TryGetValue(key,out var model) || !model.IsUsable())
   {
-   model=Model.Load(Path.Combine(Paths.GameRootPath,"AzerothMageAssets",key));
+   model?.Release();model=Model.Load(Path.Combine(Paths.GameRootPath,"AzerothMageAssets",key));
    if(key=="waterelemental")
    {
     // The source creature contains translucent water surfaces. Keep its source
     // RGBA alpha; do not turn transparent water strips into opaque polygons.
     var shader=Shader.Find("Standard");
-    if(shader!=null){Object.Destroy(model.Material);model.Material=new Material(shader){mainTexture=model.Texture,color=Color.white};model.Material.SetFloat("_Mode",3);model.Material.SetInt("_SrcBlend",1);model.Material.SetInt("_DstBlend",10);model.Material.SetInt("_ZWrite",0);model.Material.EnableKeyword("_ALPHAPREMULTIPLY_ON");model.Material.renderQueue=3000;}
+    if(shader!=null){Object.Destroy(model.Material);model.Material=Model.Retain(new Material(shader){mainTexture=model.Texture,color=Color.white});model.Material.SetFloat("_Mode",3);model.Material.SetInt("_SrcBlend",1);model.Material.SetInt("_DstBlend",10);model.Material.SetInt("_ZWrite",0);model.Material.EnableKeyword("_ALPHAPREMULTIPLY_ON");model.Material.renderQueue=3000;}
    }
    Models[key]=model;
   }
+  return model;
+ }
+ public static GameObject Create(string key,Vector3 position,float height=1.6f)
+ {
+  Initialize();key=key.ToLowerInvariant();if(key!="sheep" && key!="waterelemental")throw new ArgumentException("Unknown original Mage creature pack",nameof(key));
+  var model=GetModel(key);
   var go=new GameObject("AzerothCompanion_"+key);go.transform.position=position;
   var visual=go.AddComponent<MageCompanionVisual>();visual.Bind(model,height);Created++;
   Plugin.Logger.LogInfo($"Original Mage creature visual created: {key}; height={height}; source model and animation pack; no collider/AI created.");return go;
@@ -57,18 +64,29 @@ public static class CreatureVisualBridge
 public sealed class MageCompanionVisual:MonoBehaviour
 {
  public MageCompanionVisual(IntPtr p):base(p){}
- private Model model;private MeshFilter filter;private string clip="idle";private float start,nextFrame;private int last=-1;
+ private Model model;private MeshFilter filter;private MeshRenderer renderer;private GameObject meshObject;private string clip="idle";private float start,nextFrame,height,retryAt,nextFailureLog;private int last=-1;
  [HideFromIl2Cpp]
  internal void Bind(Model value,float height)
  {
-  model=value;var child=new GameObject("AzerothOriginalCreatureMesh");child.transform.SetParent(transform,false);var bounds=value.Template.bounds;float scale=Math.Max(.05f,height)/Math.Max(.01f,bounds.size.y);child.transform.localScale=Vector3.one*scale;child.transform.localPosition=-new Vector3(bounds.center.x,bounds.min.y,bounds.center.z)*scale;
-  filter=child.AddComponent<MeshFilter>();filter.sharedMesh=model.Template;child.AddComponent<MeshRenderer>().sharedMaterial=model.Material;start=Time.time;
+  if(meshObject!=null)Object.Destroy(meshObject);model=value;this.height=height;last=-1;var child=new GameObject("AzerothOriginalCreatureMesh");meshObject=child;child.transform.SetParent(transform,false);var bounds=value.Template.bounds;float scale=Math.Max(.05f,height)/Math.Max(.01f,bounds.size.y);child.transform.localScale=Vector3.one*scale;child.transform.localPosition=-new Vector3(bounds.center.x,bounds.min.y,bounds.center.z)*scale;
+  filter=child.AddComponent<MeshFilter>();filter.sharedMesh=model.Template;renderer=child.AddComponent<MeshRenderer>();renderer.sharedMaterial=model.Material;start=Time.time;
  }
  [HideFromIl2Cpp]
  internal void Play(string name){if(model==null || !model.Clips.ContainsKey(name))return;if(clip!=name || !model.Clips[name].Loop){clip=name;start=Time.time;last=-1;}}
  void LateUpdate()
  {
-  if(model==null || filter==null || Time.time<nextFrame)return;nextFrame=Time.time+1f/24;if(!model.Clips.TryGetValue(clip,out var c))return;float elapsed=Time.time-start;if(!c.Loop && elapsed>=c.Duration && clip!="death"){Play("idle");return;}float t=c.Loop?elapsed%c.Duration:Math.Min(elapsed,c.Duration);int frame=Math.Clamp((int)(t/c.Duration*(c.Count-1)),0,c.Count-1);if(frame!=last){last=frame;filter.sharedMesh=c.Meshes[frame];}
+  if(model==null || Time.time<nextFrame || Time.unscaledTime<retryAt)return;
+  try
+  {
+   nextFrame=Time.time+1f/24;
+   if(filter==null || renderer==null || !model.IsUsable(false))Bind(CreatureVisualBridge.GetModel(Path.GetFileName(model.SourceFolder)),height);
+   if(!model.Clips.TryGetValue(clip,out var c))return;
+   float elapsed=Time.time-start;if(!c.Loop && elapsed>=c.Duration && clip!="death"){Play("idle");return;}
+   float t=c.Loop?elapsed%c.Duration:Math.Min(elapsed,c.Duration);int frame=Math.Clamp((int)(t/c.Duration*(c.Count-1)),0,c.Count-1);
+   if(c.Meshes[frame]==null){Bind(CreatureVisualBridge.GetModel(Path.GetFileName(model.SourceFolder)),height);return;}
+   if(frame!=last){last=frame;filter.sharedMesh=c.Meshes[frame];}
+  }
+  catch(Exception ex){retryAt=Time.unscaledTime+1;if(Time.unscaledTime>=nextFailureLog){nextFailureLog=Time.unscaledTime+5;Plugin.Logger.LogWarning("Original Mage companion visual will retry after native scene/asset change: "+ex);}}
  }
 }
 
@@ -82,10 +100,10 @@ public sealed class MageSheepTracker:MonoBehaviour
   internal readonly List<(GameObject go,bool active)> CreatureObjects=new();
  }
  private readonly Dictionary<IntPtr,Swap> swaps=new();
- private MethodInfo isSheep;private float nextScan;private bool failed;
+ private MethodInfo isSheep;private float nextScan;private float retryAt,nextFailureLog;
  void LateUpdate()
  {
-  if(failed)return;
+  if(Time.unscaledTime<retryAt)return;
   try
   {
    if(isSheep==null && Time.unscaledTime>=nextScan)
@@ -112,7 +130,7 @@ public sealed class MageSheepTracker:MonoBehaviour
     s.Sheep=CreatureVisualBridge.Create("sheep",s.Previous,height);Capture(enemy.transform,s);swaps[enemy.Pointer]=s;Plugin.Logger.LogInfo($"Polymorph source Sheep display856 attached to native enemy {enemy.id}; native collider/AI retained.");
    }
   }
-  catch(Exception ex){failed=true;RestoreAll();Plugin.Logger.LogError("Polymorph visual tracker disabled; native visuals restored: "+ex);}
+  catch(Exception ex){retryAt=Time.unscaledTime+1;RestoreAll();if(Time.unscaledTime>=nextFailureLog){nextFailureLog=Time.unscaledTime+5;Plugin.Logger.LogWarning("Polymorph visual tracker will retry after native scene/asset change: "+ex);}}
  }
  [HideFromIl2Cpp]
  private static Vector3 Feet(Enemy enemy)

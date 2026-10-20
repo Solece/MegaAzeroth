@@ -19,8 +19,54 @@ internal static class SpellVfx
     private static readonly Dictionary<string,(int Width,int Height)> sizes=new();
     private static readonly List<SourceSpellEffect> active=new();
     private static readonly HashSet<string> failed=new();
-    internal static int Spawned;
-    internal static int Live=>active.Count;
+    private static readonly List<Material> instanceMaterials=new();
+    internal static int Spawned,RecoveredTextures,RecoveredGeometry;
+    internal static int Live{get{active.RemoveAll(fx=>!Alive(fx));return active.Count;}}
+    // CLR dictionaries are not native Unity roots. The map loader calls
+    // UnloadUnusedAssets between stages while no renderer uses these caches.
+    internal static bool Alive(Object value)
+    {
+        try{return value!=null;}catch{return false;}
+    }
+    internal static T Keep<T>(T value) where T:Object
+    {
+        value.hideFlags|=HideFlags.DontUnloadUnusedAsset;return value;
+    }
+    internal static void DestroyMaterial(Material material)
+    {
+        instanceMaterials.Remove(material);if(Alive(material))Object.Destroy(material);
+    }
+    internal static void EnsureGeometry(EffectAsset asset)
+    {
+        if(asset.NativeGeometryValid)return;
+        asset.Bake(root);RecoveredGeometry++;
+    }
+    internal static string ResourceSnapshot()
+    {
+        var meshes=new List<Mesh>();
+        foreach(var effect in assets.Values)if(effect.Geometry!=null)foreach(var node in effect.Geometry.Nodes)if(node.Frames!=null)meshes.AddRange(node.Frames);
+        var cachedTextures=textures.Values.ToArray();var materials=instanceMaterials.ToArray();
+        bool Pinned(Object value)=>Alive(value) && (value.hideFlags&HideFlags.DontUnloadUnusedAsset)!=0;
+        return JsonSerializer.Serialize(new{
+            CachedEffects=assets.Count,CachedTextures=cachedTextures.Length,CachedMeshes=meshes.Count,
+            InvalidTextures=cachedTextures.Count(t=>!Alive(t)),InvalidMeshes=meshes.Count(m=>!Alive(m)),
+            PinnedTextures=cachedTextures.Count(t=>Pinned(t)),PinnedMeshes=meshes.Count(m=>Pinned(m)),
+            ActiveMaterials=materials.Length,InvalidMaterials=materials.Count(m=>!Alive(m)),PinnedMaterials=materials.Count(m=>Pinned(m)),
+            FailedEffects=failed.Count,ActiveEffects=Live,Spawned,RecoveredTextures,RecoveredGeometry});
+    }
+    internal static void PrimeAllAssets()
+    {
+        var keys=new HashSet<string>();
+        foreach(var stages in map.Values)foreach(var stage in stages.Values)foreach(var key in stage)keys.Add(key);
+        foreach(var key in keys)
+        {
+            var effect=Asset(key);var names=new HashSet<string>();
+            foreach(var emitter in effect.Emitters)names.Add(emitter.Texture);
+            foreach(var ribbon in effect.Ribbons)names.Add(ribbon.Texture);
+            if(effect.Geometry!=null)foreach(var node in effect.Geometry.Nodes)names.Add(node.Texture);
+            foreach(var name in names)Texture(name);
+        }
+    }
     internal static void Initialize()
     {
         root=Path.Combine(Paths.PluginPath,"AzerothAbilities","vfx");
@@ -43,16 +89,20 @@ internal static class SpellVfx
     }
     internal static Texture2D Texture(string key)
     {
-        if(textures.TryGetValue(key,out var found))return found;
+        if(textures.TryGetValue(key,out var found))
+        {
+            if(Alive(found))return found;
+            textures.Remove(key);RecoveredTextures++;
+        }
         var s=sizes[key];var bytes=File.ReadAllBytes(Path.Combine(root,key+".rgba"));
         if(bytes.Length!=s.Width*s.Height*4)throw new InvalidDataException("VFX RGBA size mismatch");
-        var texture=new Texture2D(s.Width,s.Height,TextureFormat.RGBA32,false);var pin=GCHandle.Alloc(bytes,GCHandleType.Pinned);
+        var texture=Keep(new Texture2D(s.Width,s.Height,TextureFormat.RGBA32,false){name="AzerothVfxTexture_"+key});var pin=GCHandle.Alloc(bytes,GCHandleType.Pinned);
         try{texture.LoadRawTextureData(pin.AddrOfPinnedObject(),bytes.Length);texture.Apply(false,true);}finally{pin.Free();}
         texture.filterMode=FilterMode.Bilinear;texture.wrapMode=TextureWrapMode.Clamp;textures[key]=texture;return texture;
     }
     internal static EffectAsset Asset(string key)
     {
-        if(assets.TryGetValue(key,out var found))return found;
+        if(assets.TryGetValue(key,out var found)){EnsureGeometry(found);return found;}
         found=JsonSerializer.Deserialize<EffectAsset>(File.ReadAllText(Path.Combine(root,key+".json")),JsonOptions);
         found.Bake(root);assets[key]=found;return found;
     }
@@ -60,12 +110,12 @@ internal static class SpellVfx
     {
         var shader=Shader.Find("Particles/Standard Unlit")??Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply")??Shader.Find("Sprites/Default");
         if(shader==null)throw new InvalidOperationException("Native particle shader unavailable");
-        var m=new Material(shader){mainTexture=Texture(texture),color=Color.white,renderQueue=3000};
+        var m=Keep(new Material(shader){name="AzerothVfxMaterial_"+texture,mainTexture=Texture(texture),color=Color.white,renderQueue=3000});
         m.SetFloat("_Mode",blend==4?1:2);m.SetFloat("_ZWrite",0);m.SetFloat("_Cull",0);
         m.SetFloat("_SrcBlend",(float)UnityEngine.Rendering.BlendMode.SrcAlpha);
         m.SetFloat("_DstBlend",(float)(blend==4?UnityEngine.Rendering.BlendMode.One:UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
         m.EnableKeyword("_ALPHABLEND_ON");m.DisableKeyword("_ALPHATEST_ON");m.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        return m;
+        instanceMaterials.Add(m);return m;
     }
     internal static void Play(string id,string stage,Vector3 position,float scale=1,float duration=0)
     {
@@ -75,7 +125,7 @@ internal static class SpellVfx
     internal static GameObject Projectile(string id,Vector3 position)=>Spawn(id,"missile",position,1,0,true);
     private static GameObject Spawn(string id,string stage,Vector3 position,float scale,float life,bool loop)
     {
-        if(!map.TryGetValue(id,out var stages) || active.Count>=64)return null;
+        if(!map.TryGetValue(id,out var stages) || Live>=64)return null;
         if(!stages.TryGetValue(stage,out var keys))
         {
             var fallback=stage is "area" or "areaKit"?new[]{"areaKit","impact","cast"}:stage=="aura"?new[]{"cast","impact"}:new[]{"impact","cast"};
@@ -103,7 +153,29 @@ internal static class SpellVfx
         var effect=go.GetComponent<SourceSpellEffect>();if(effect!=null)effect.Stop();else Object.Destroy(go);
     }
     internal static void Removed(SourceSpellEffect effect)=>active.Remove(effect);
-    internal static void Clear(){foreach(var fx in active.ToArray())if(fx!=null)Object.Destroy(fx.gameObject);active.Clear();}
+    internal static void Clear()
+    {
+        // Clear scene instances only. Baked meshes and uploaded textures belong
+        // to the plugin and remain available for the next native map stage.
+        foreach(var fx in active.ToArray())if(Alive(fx))Object.Destroy(fx.gameObject);
+        active.Clear();failed.Clear();
+    }
+}
+
+public static class SpellVfxDiagnostics
+{
+    // Read on the Unity thread; these properties inspect native resource state.
+    public static string SnapshotJson=>SpellVfx.ResourceSnapshot();
+    public static bool PrimeAllAssetsForProbe()
+    {
+        if(!Application.isBatchMode || Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")!="1")return false;
+        SpellVfx.PrimeAllAssets();return true;
+    }
+    public static bool PlayForProbe(string id,string stage,Vector3 position,float scale=1)
+    {
+        if(!Application.isBatchMode || Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")!="1")return false;
+        int count=SpellVfx.Spawned;SpellVfx.Play(id,stage,position,scale,1);return SpellVfx.Spawned>count;
+    }
 }
 
 internal sealed class Curve
@@ -136,9 +208,11 @@ internal sealed class EffectAsset
 {
     public string Source;public float Duration;public int StartMs;public int[] Globals=Array.Empty<int>();public List<EmitterAsset> Emitters=new();public GeometryAsset Geometry;
     public List<RibbonAsset> Ribbons=new();
+    internal bool NativeGeometryValid=>Geometry==null || Geometry.Nodes.All(node=>node.Frames!=null && node.Frames.Length==Geometry.FrameCount && node.Frames.All(mesh=>SpellVfx.Alive(mesh)));
     internal void Bake(string root)
     {
         if(Geometry==null)return;
+        foreach(var node in Geometry.Nodes)if(node.Frames!=null)foreach(var frame in node.Frames)if(SpellVfx.Alive(frame))Object.Destroy(frame);
         var g=Geometry;var bytes=System.IO.File.ReadAllBytes(Path.Combine(root,g.File));
         if(bytes.Length!=g.VertexCount*g.FrameCount*12)throw new InvalidDataException("VFX frame size mismatch");
         var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);
@@ -149,7 +223,7 @@ internal sealed class EffectAsset
             for(int f=0;f<g.FrameCount;f++)
             {
                 var verts=new Vector3[g.VertexCount];for(int j=0;j<verts.Length;j++){int p=(f*g.VertexCount+j)*3;verts[j]=new(values[p],values[p+1],values[p+2]);}
-                var mesh=new Mesh{name="AzerothSourceVfx_"+Source};mesh.vertices=verts;mesh.uv=uv;mesh.triangles=node.Triangles;mesh.RecalculateBounds();node.Frames[f]=mesh;
+                var mesh=SpellVfx.Keep(new Mesh{name="AzerothSourceVfx_"+Source});mesh.vertices=verts;mesh.uv=uv;mesh.triangles=node.Triangles;mesh.RecalculateBounds();node.Frames[f]=mesh;
             }
         }
     }
@@ -202,7 +276,7 @@ internal sealed class RibbonLayer
     internal RibbonLayer(Transform parent,RibbonAsset ribbon,EffectAsset model)
     {
         owner=parent;source=ribbon;asset=model;go=new GameObject("OriginalM2Ribbon");go.transform.SetParent(parent,false);
-        mesh=new Mesh{name="OriginalM2RibbonTrail"};mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;
+        mesh=SpellVfx.Keep(new Mesh{name="OriginalM2RibbonTrail"});mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;
         material=SpellVfx.Material(ribbon.Texture,ribbon.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
     }
     internal void Tick(float elapsed,float animation,bool emitting)
@@ -228,7 +302,7 @@ internal sealed class RibbonLayer
         }
         mesh.Clear();mesh.vertices=vertices;mesh.uv=uv;mesh.colors=colors;mesh.triangles=triangles;mesh.RecalculateBounds();
     }
-    internal void Dispose(){Object.Destroy(mesh);Object.Destroy(material);Object.Destroy(go);}
+    internal void Dispose(){if(SpellVfx.Alive(mesh))Object.Destroy(mesh);SpellVfx.DestroyMaterial(material);if(SpellVfx.Alive(go))Object.Destroy(go);}
 }
 
 internal sealed class GeometryLayer
@@ -241,11 +315,17 @@ internal sealed class GeometryLayer
     }
     internal void Tick(float time,float fade)
     {
-        int index=Mathf.Clamp((int)(time/Math.Max(.1f,asset.Geometry.Duration)*(source.Frames.Length-1)),0,source.Frames.Length-1);filter.sharedMesh=source.Frames[index];
+        // Normal rendering checks only the selected frame. Deep validation of
+        // all cached animation meshes belongs to load/recovery and probes.
+        if(source.Frames==null || source.Frames.Length!=asset.Geometry.FrameCount)SpellVfx.EnsureGeometry(asset);
+        if(source.Frames==null || source.Frames.Length==0)return;
+        int index=Mathf.Clamp((int)(time/Math.Max(.1f,asset.Geometry.Duration)*(source.Frames.Length-1)),0,source.Frames.Length-1);
+        if(!SpellVfx.Alive(source.Frames[index]))SpellVfx.EnsureGeometry(asset);
+        filter.sharedMesh=source.Frames[index];
         float alpha=(source.Alpha?.At(asset.Millis(time,source.Alpha),32767)??32767)/32767*(source.Weight?.At(asset.Millis(time,source.Weight),32767)??32767)/32767*fade;
         material.color=new Color(source.Color?.At(asset.Millis(time,source.Color),1,0)??1,source.Color?.At(asset.Millis(time,source.Color),1,1)??1,source.Color?.At(asset.Millis(time,source.Color),1,2)??1,Mathf.Clamp01(alpha));
     }
-    internal void Dispose(){Object.Destroy(material);Object.Destroy(go);}
+    internal void Dispose(){SpellVfx.DestroyMaterial(material);if(SpellVfx.Alive(go))Object.Destroy(go);}
 }
 internal sealed class ParticleLayer
 {
@@ -256,7 +336,7 @@ internal sealed class ParticleLayer
     internal ParticleLayer(Transform parent,EmitterAsset emitter,EffectAsset model)
     {
         owner=parent;source=emitter;asset=model;go=new GameObject("OriginalM2Emitter");go.transform.SetParent(parent,false);
-        mesh=new Mesh{name="OriginalM2ParticleBillboards"};mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;material=SpellVfx.Material(emitter.Texture,emitter.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
+        mesh=SpellVfx.Keep(new Mesh{name="OriginalM2ParticleBillboards"});mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;material=SpellVfx.Material(emitter.Texture,emitter.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
     }
     float Random()=> (float)random.NextDouble();
     float Parameter(string key,float time,float fallback=0)=>source.Tracks.TryGetValue(key,out var curve)?curve.At(asset.Millis(time,curve),fallback):fallback;
@@ -294,5 +374,5 @@ internal sealed class ParticleLayer
         }
         mesh.Clear();mesh.vertices=vertices;mesh.uv=uv;mesh.colors=colors;mesh.triangles=triangles;mesh.RecalculateBounds();
     }
-    internal void Dispose(){Object.Destroy(mesh);Object.Destroy(material);Object.Destroy(go);}
+    internal void Dispose(){if(SpellVfx.Alive(mesh))Object.Destroy(mesh);SpellVfx.DestroyMaterial(material);if(SpellVfx.Alive(go))Object.Destroy(go);}
 }

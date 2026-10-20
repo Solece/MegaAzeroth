@@ -43,3 +43,17 @@
 - Final native map proof: moved the player beyond the minimap, confirmed matching player/icon XZ, far gate arrow active/rendered in map layer14, directionDot~1, hiddenByMage0. Original minimap256x256 and full-map1024x1024 RTs contained real pixels. Native Pause -> Map -> Resume completed; player marker and gate/arrow verified visually on both maps. Final proof reports/mage-battle-smoke.log; earlier near-target and capture-helper attempts preserved.
 - HUD0.5.1 hides while native Pause/Map is open, then restores in battle. The capture helper temporarily suppresses map-only 3D meshes when adding native UI render layers to the main offscreen camera. This removes the giant blue player-map marker from combat proof images; real gameplay camera keeps its original layer mask.
 - Source, logs and launchers are checkpointed in Solece/MegaAzeroth. Original game installations/progression are unchanged. Test launch retains999points/all39max,121spent878free and4books.
+
+## 2026-10-20 — idempotent native portal-arrow registration
+
+- Isolated the last BepInEx startup of the22:54:56/PID31668 visual-transition run from the append-only log. That specific startup contains two native `ArgumentException: An item with the same key has already been added` failures for `BossSpawner(Clone)`, on stage0 and stage1, in `MinimapCamera.OnBossSpawnerCompleted` → `Dictionary.Add`. These are current-run findings, not older archived failures.
+- Cause: normal fog/navigation refresh can register the already-active portal before the original completed callback performs its own native `AddArrow`. Both paths legitimately refer to the same native Transform.
+- Added a narrow prefix to `MinimapCamera.AddArrow` in `NativeMapNavigation.cs`. With a live existing indicator, it calls the exact namespaced native `Assets.Scripts.Camera.MinimapArrow.Set(target,color)` and activates that object, then skips creating a duplicate. This preserves the native boss-to-portal color transition and subsequent native visibility/direction updates. If the existing dictionary value or renderer was destroyed, it removes that stale entry and allows normal native recreation.
+- `OnBossSpawnerCompleted`, boss events, portal activation and native stage-loading methods remain unchanged. No broad exception suppression was added.
+- Native disassembly checked: `MinimapArrow.Set` RVA0x4B1650 performs the same target/material-color assignment that is inlined in native `AddArrow` RVA0x4B16F0; normal AddArrow also activates the created object before inserting its dictionary entry.
+- Diagnostics now include `nativeArrowReuses` and `nativeArrowDeadReplacements` in `NavigationBridge.Describe()`.
+- Release build completed with0 errors and0 warnings. DLL SHA256: `11032032686B84E6B7D9063780A0579C109A881F282783188F9AA1B9F635A055`. The running third probe was not modified, the DLL was not deployed, and no game/process action or Git state mutation was performed by this subtask. Runtime verification of this new prefix remains for the coordinating agent's next controlled run.
+
+### Coordinator final route PASS
+
+The rebuilt idempotent native AddArrow guard was deployed for the final run ending23:01:02+05:00. Both native stage boss-completed callbacks activated their actual portals and the route reached live Pharaoh3. The latest BepInEx startup slice contains no duplicate-key/native adapter exceptions; prior appended errors remain preserved in earlier run sections. Native completion/color behavior was retained.
