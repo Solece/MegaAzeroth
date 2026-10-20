@@ -15,7 +15,7 @@ using XpUtility = Inventory__Items__Pickups.XpUtility;
 
 namespace AzerothHud;
 
-[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.8.0")]
+[BepInPlugin("local.azerothmegabonk.hud", "Azeroth HUD", "0.8.1")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Current;
@@ -32,7 +32,7 @@ public sealed class Plugin : BasePlugin
         AssetRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "assets");
         harmony=new Harmony("local.azerothmegabonk.hud");harmony.PatchAll(typeof(Plugin).Assembly);
         AddComponent<HudBehaviour>();
-        Log.LogInfo("Azeroth HUD 0.8.0 loaded for all source classes; native gold/timer retained, native XP strip decorations masked, source player frame below native top row.");
+        Log.LogInfo("Azeroth HUD 0.8.1 loaded for all source classes; native gold/timer retained, native XP strip decorations masked, source player frame below native top row.");
     }
 }
 

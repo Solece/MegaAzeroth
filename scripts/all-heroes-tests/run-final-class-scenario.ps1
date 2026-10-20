@@ -1,4 +1,4 @@
-param([ValidateSet('class','vitals','menu','adventure')][string]$Mode='class',[ValidateSet('warrior','paladin','hunter','rogue','priest','shaman','mage','warlock','druid')][string]$Class='warrior',[switch]$GenericMage,[ValidateSet('all-heroes-test-runtime','all-heroes-route-runtime','all-heroes-playable')][string]$RuntimeName='all-heroes-test-runtime')
+param([ValidateSet('class','vitals','menu','adventure','feature')][string]$Mode='class',[ValidateSet('warrior','paladin','hunter','rogue','priest','shaman','mage','warlock','druid')][string]$Class='warrior',[switch]$GenericMage,[ValidateSet('all-heroes-test-runtime','all-heroes-route-runtime','all-heroes-playable')][string]$RuntimeName='all-heroes-test-runtime')
 $ErrorActionPreference='Stop'
 $labRoot='D:\Games\Saitan\AzerothMegabonkLab'
 $parent=if($RuntimeName -eq 'all-heroes-playable'){Join-Path $labRoot 'builds\all-heroes-v3'}else{Join-Path $labRoot ('private-assets\'+$RuntimeName)}
@@ -25,6 +25,7 @@ else{
   if($Mode -eq 'class'){$arguments+='-azeroth-hero-class-smoke'}
   elseif($Mode -eq 'vitals'){$arguments+='-azeroth-vitals-smoke'}
   elseif($Mode -eq 'adventure'){$arguments+=@('-azeroth-adventure-smoke','-azeroth-visual-smoke')}
+  elseif($Mode -eq 'feature'){$arguments+='-azeroth-feature-smoke'}
 }
 if($GenericMage){$arguments+='-azeroth-generic-mage-probe'}
 $owned=Start-Process -FilePath $executable -WorkingDirectory $runtime -ArgumentList $arguments -WindowStyle Hidden -PassThru

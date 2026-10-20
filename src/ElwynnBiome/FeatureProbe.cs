@@ -521,6 +521,8 @@ public sealed class FeatureProbe : MonoBehaviour
         Require((bool)Read("AzerothHud.PostCombatDiagnostics","Visible"),"Source post-combat adapter is not visible");
         Require((bool)Read("AzerothHud.PostCombatDiagnostics","CombatHudHidden"),"In-run source HUD was not hidden at native end-run");
         Require((bool)Read("AzerothHud.PostCombatDiagnostics","SourcePortraitShown"),"Native result screen still lacks the source Mage portrait");
+        var summaries=Resources.FindObjectsOfTypeAll<DeathStatsUi>().Where(ui=>ui!=null && ui.gameObject.activeInHierarchy).ToArray();
+        Require(summaries.Length>0 && summaries.All(ui=>ui.i_character!=null && ui.i_character.texture!=null && ui.i_character.texture.name=="AzerothPortrait_mage"),"Native result screen is not showing the persistent original Mage portrait texture");
         var sourceRows=rows.Where(r=>r.StartsWith("source=Azeroth:") || r.StartsWith("source=AzerothTalent:")).ToArray();
         Require(sourceRows.Length>0,"No actual source spell damage rows reached the native result table");
         foreach(var id in new[]{"AzerothTalent:ignite","AzerothTalent:presence_of_mind","AzerothTalent:splitting_ice","Azeroth:water_elemental"})

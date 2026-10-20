@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace MageTalents;
 
-[BepInPlugin(Id,"Azeroth Class Talents","0.2.1")]
+[BepInPlugin(Id,"Azeroth Class Talents","0.2.2")]
 [BepInDependency("local.azerothmegabonk.abilities")]
 public sealed class Plugin:BasePlugin
 {

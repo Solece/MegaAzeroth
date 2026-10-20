@@ -56,7 +56,7 @@ public sealed class TalentPanel:MonoBehaviour
                 }
                 if(font!=null)Build();
             }
-            if(root==null)return;hint.gameObject.SetActive(AbilityRuntime.Active&&!opened);if(opened)Refresh();
+            if(root==null)return;hint.gameObject.SetActive(AbilityRuntime.Active&&!opened&&GameManager.Instance!=null&&!GameManager.Instance.isGameOver&&GameManager.Instance.IsPlaying());if(opened)Refresh();
         }
         catch(Exception ex){Close();failed=true;Plugin.Current.Log.LogError("Source talent tree UI disabled: "+ex);}
     }

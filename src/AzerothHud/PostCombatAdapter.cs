@@ -147,7 +147,11 @@ sealed class PostCombatAdapter
     {
         if(!mage){Restore();return;}
         RefreshSources(ids,ranks,names,descriptions,icons,loader);
-        if(retainedPortrait!=null&&retainedClass==SourcePresentation.ClassId)portrait=retainedPortrait;
+        // Results outlive the live portrait camera and dying actor. Prefer the
+        // source class's static head portrait only for this summary presentation.
+        var staticPortrait=SourcePresentation.StaticPortrait;
+        if(staticPortrait!=null)portrait=staticPortrait;
+        else if(retainedPortrait!=null&&retainedClass==SourcePresentation.ClassId)portrait=retainedPortrait;
         PostCombatDiagnostics.Visible=true;PostCombatDiagnostics.CombatHudHidden=true;
         foreach(var ui in Resources.FindObjectsOfTypeAll<DeathStatsUi>())
         {
