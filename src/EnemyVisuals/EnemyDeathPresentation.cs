@@ -102,7 +102,7 @@ public sealed partial class AzerothVisual
             root.transform.rotation=visual.transform.rotation;
             root.transform.localScale=visual.transform.lossyScale;
             var corpse=root.AddComponent<AzerothCorpseVisual>();
-            corpse.Bind(enemy.id,enemy.Pointer.ToInt64(),model,isBoss,death,groundFound?groundY:nativeFeetY,damage,GhostTint);
+            corpse.Bind(enemy.id,enemy.Pointer.ToInt64(),model,isBoss,death,groundFound?groundY:nativeFeetY,damage,GhostTint,Mathf.Max(0,EnemyAnimationClock.Now-sourceMaterialBoundAt));
             replacement.enabled=false;
             EnemyDeathPresentation.Add(corpse);
         }
@@ -121,15 +121,16 @@ public sealed class AzerothCorpseVisual:MonoBehaviour
     Vector3 deathPosition;string damageSource="",element="",releaseReason="";
     float killingDamage;bool killingCrit;
     Color nativeTint;MaterialPropertyBlock[] sourceBlocks;Material[] chosenMaterials;
+    MaterialPropertyBlock[] genericSourceBlocks;Material[] genericChosenMaterials;SourceEnvironmentInstance sourceEnvironment;float sourceAgeAtDeath;
     [HideFromIl2Cpp]
-    internal void Bind(uint id,long pointer,Model source,bool isBoss,Clip death,float floor,DamageContainer damage,Color ghostTint)
+    internal void Bind(uint id,long pointer,Model source,bool isBoss,Clip death,float floor,DamageContainer damage,Color ghostTint,float sourceGlobalAge=0)
     {
         enemyId=id;enemyPointer=pointer;model=source;boss=isBoss;clip=death;floorY=floor;
         deathPosition=transform.position;start=EnemyAnimationClock.Now;
         damageSource=damage?.damageSource??"";element=damage!=null?damage.element.ToString():"";
         killingDamage=damage?.damage??0;killingCrit=damage?.crit??false;
         filter=gameObject.AddComponent<MeshFilter>();renderer=gameObject.AddComponent<MeshRenderer>();
-        nativeTint=ghostTint;renderer.sharedMaterials=model.RenderMaterials;ApplyFrame(0);
+        nativeTint=ghostTint;sourceAgeAtDeath=sourceGlobalAge;renderer.sharedMaterials=model.RenderMaterials;ApplyFrame(0);
     }
     [HideFromIl2Cpp]
     void ApplyFrame(int value)
@@ -138,10 +139,12 @@ public sealed class AzerothCorpseVisual:MonoBehaviour
         var mesh=clip.Meshes[value];if(mesh==null)throw new InvalidOperationException("Missing original death frame "+model.Key+"/"+value);
         frame=value;filter.sharedMesh=mesh;transform.position=deathPosition;
         model.ApplyGhostColors(renderer,clip.Name,frame,nativeTint,ref sourceBlocks,ref chosenMaterials);
+        model.ApplySourceColors(renderer,clip.Name,frame,sourceAgeAtDeath+age,ref genericSourceBlocks,ref genericChosenMaterials);
         // Same native-floor presentation guard as the living source body.
         // Source pose/rotation/scale remain unchanged; only penetration is raised.
         float lift=Mathf.Max(0,floorY-renderer.bounds.min.y);
         if(lift>0)transform.position+=Vector3.up*lift;
+        if(model.SourceProfile!=null){sourceEnvironment??=new SourceEnvironmentInstance();filter.sharedMesh=sourceEnvironment.Apply(model,mesh,transform);}
     }
     void LateUpdate()
     {
@@ -172,16 +175,19 @@ public sealed class AzerothCorpseVisual:MonoBehaviour
         HasCollider=GetComponent<Collider>()!=null,HasRigidbody=GetComponent<Rigidbody>()!=null,
         NativeActorChild=transform.parent!=null,DamageSource=damageSource,Element=element,
         KillingDamage=killingDamage,KillingCrit=killingCrit,ReleaseReason=releaseReason
+        ,SourceDisplayId=model?.SourceProfile?.SourceDisplayId??0,SourceMaterials=model?.SourceMaterialSnapshot(renderer,filter?.sharedMesh,clip?.Name,frame,sourceAgeAtDeath+age)
     };
     [HideFromIl2Cpp]
     internal void Release(string reason)
     {
         if(released)return;releaseReason=reason;
         var snapshot=Snapshot();released=true;gameObject.SetActive(false);
+        sourceEnvironment?.Release();
         EnemyDeathPresentation.Removed(this,reason,snapshot);Object.Destroy(gameObject);
     }
     void OnDestroy()
     {
+        sourceEnvironment?.Release();
         if(released)return;released=true;
         EnemyDeathPresentation.Removed(this,"scene-destroy",new{EnemyId=enemyId,ModelKey=model?.Key,Age=age});
     }

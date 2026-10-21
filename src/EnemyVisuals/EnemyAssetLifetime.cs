@@ -50,7 +50,8 @@ internal sealed partial class Model
         bool textureAlive=false,materialAlive=false;
         try{textureAlive=Texture!=null && Texture.width>0 && Texture.height>0;if(!textureAlive)errors.Add("texture:destroyed");else if((Texture.hideFlags&HideFlags.DontUnloadUnusedAsset)==0)errors.Add("texture:not-retained");}catch(Exception ex){errors.Add("texture:"+ex.GetType().Name);}
         try{materialAlive=Material!=null && Material.shader!=null && Material.mainTexture==Texture;if(!materialAlive)errors.Add("material:destroyed-or-unbound");else if((Material.hideFlags&HideFlags.DontUnloadUnusedAsset)==0)errors.Add("material:not-retained");}catch(Exception ex){errors.Add("material:"+ex.GetType().Name);}
-        if(SourceMaterials!=null)
+        if(SourceProfile!=null)InspectSourceMaterials(errors);
+        else if(SourceMaterials!=null)
         {
             foreach(var material in SourceMaterials.Append(GhostHiddenMaterial))
                 if(material==null || material.shader==null || material.mainTexture!=Texture || (material.hideFlags&HideFlags.DontUnloadUnusedAsset)==0)errors.Add("source-material:destroyed-unbound-or-not-retained");

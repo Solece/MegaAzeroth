@@ -13,7 +13,7 @@ using Object=UnityEngine.Object;
 
 namespace AzerothMegabonk.MageVisuals;
 
-[BepInPlugin(Id,"Azeroth Megabonk - Hero Visuals","0.2.2")]
+[BepInPlugin(Id,"Azeroth Megabonk - Hero Visuals","0.2.3")]
 public sealed class Plugin:BasePlugin
 {
  public const string Id="local.azerothmegabonk.magevisuals";
@@ -136,7 +136,7 @@ public sealed class MageVisual:MonoBehaviour
   var feet=bounds.center-Vector3.up*bounds.size.y*.5f;
   var sb=data.Template.bounds;visual.transform.localPosition=target.transform.InverseTransformPoint(feet)-new Vector3(sb.center.x*scale,sb.min.y*scale,sb.center.z*scale);
   var forward=target.orientation!=null?target.orientation.forward:target.transform.forward;forward.y=0;visual.transform.rotation=forward.sqrMagnitude>.001f?Quaternion.LookRotation(forward):Quaternion.identity;
-  filter=visual.AddComponent<MeshFilter>();filter.sharedMesh=data.Template;renderer=visual.AddComponent<MeshRenderer>();renderer.sharedMaterial=data.Material;
+  filter=visual.AddComponent<MeshFilter>();filter.sharedMesh=data.Template;renderer=visual.AddComponent<MeshRenderer>();renderer.sharedMaterials=data.RenderMaterials;
   if(HeroAppearance.CurrentFormSpellId==0)SourceMageWeapon.Bind(visual);
   NativeMapMarkers.Refresh(MyPlayer.Instance,target.transform);NativePlayerEffects.Refresh(target.transform);HideTree(target.transform);NativeMapMarkers.Describe(0);lastHideScan=Time.unscaledTime;lastFrame=-1;clipName="";nextFrame=0;
   MageVisualBridge.IsAttached=true;MageVisualBridge.SourceHeadClosed=data.HeadClosed;MageVisualBridge.SourceVertexCount=data.VertexCount;MageVisualBridge.BindCount++;Plugin.Logger.LogInfo($"Original {HeroAppearance.CurrentClassId} visual attached: {data.Clips.Count} source clips; native renderers hidden={hidden.Count}, source height={sb.size.y}, target height={bounds.size.y}, scale={scale}. Native movement/camera/collider untouched. Source head closed={data.HeadClosed}, vertices={data.VertexCount}.");
@@ -193,6 +193,7 @@ internal sealed partial class Model
    bool cutout=j.TryGetProperty("materialMode",out var mode) && mode.GetString()=="cutout";
    var shader=(cutout?Shader.Find("Unlit/Transparent Cutout"):Shader.Find("Unlit/Texture"))??Shader.Find("Standard")??Shader.Find("Sprites/Default");if(shader==null)throw new InvalidOperationException("No texture shader");model.Material=Retain(new Material(shader){mainTexture=model.Texture,color=Color.white});
    if(cutout){if(model.Material.HasProperty("_Cutoff"))model.Material.SetFloat("_Cutoff",.5f);if(model.Material.HasProperty("_Mode"))model.Material.SetFloat("_Mode",1);model.Material.EnableKeyword("_ALPHATEST_ON");model.Material.renderQueue=2450;}
+   model.LoadSourceMaterials(folder,j);
    foreach(var c in j.GetProperty("animations").EnumerateArray())
    {
     var clip=new Clip{Name=c.GetProperty("name").GetString(),AnimationId=c.GetProperty("animationId").GetInt32(),Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32(),Loop=c.GetProperty("loop").GetBoolean()};clip.Meshes=new Mesh[clip.Count];model.Clips[clip.Name]=clip;
@@ -205,7 +206,7 @@ internal sealed partial class Model
   }
   catch{model.Release();throw;}
  }
- public void Release(){foreach(var c in Clips.Values)if(c.Meshes!=null)foreach(var m in c.Meshes)if(m!=null)Object.Destroy(m);if(Template!=null)Object.Destroy(Template);if(Material!=null)Object.Destroy(Material);if(Texture!=null)Object.Destroy(Texture);Clips.Clear();}
+ public void Release(){foreach(var c in Clips.Values)if(c.Meshes!=null)foreach(var m in c.Meshes)if(m!=null)Object.Destroy(m);if(Template!=null)Object.Destroy(Template);if(SourceMaterials!=null)foreach(var m in SourceMaterials)if(m!=null&&m!=Material)Object.Destroy(m);if(Material!=null)Object.Destroy(Material);if(Texture!=null)Object.Destroy(Texture);Clips.Clear();}
 }
 
 

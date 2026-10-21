@@ -161,8 +161,15 @@ internal static class SpellVfx
         if(!AbilityBehaviour.RenderVisuals || !Plugin.Current.SpellVisuals.Value)return;
         Spawn(id,stage,position,scale,duration>0?duration:.65f,false);
     }
+    internal static void PlaySourceOneShot(string id,string stage,Vector3 position,float scale=1)
+    {
+        if(!AbilityBehaviour.RenderVisuals || !Plugin.Current.SpellVisuals.Value)return;
+        // Source clips can differ within one stage. For example Consecration's
+        // base burst is1.067s while its hand model is1s; no generic cast cutoff.
+        Spawn(id,stage,position,scale,0,false,true);
+    }
     internal static GameObject Projectile(string id,Vector3 position,float scale=1)=>Spawn(id,"missile",position,scale,0,true);
-    private static GameObject Spawn(string id,string stage,Vector3 position,float scale,float life,bool loop)
+    private static GameObject Spawn(string id,string stage,Vector3 position,float scale,float life,bool loop,bool originalOneShotDuration=false)
     {
         string request=id+"/"+stage;Count(requests,request);
         if(!map.TryGetValue(id,out var stages)){Count(drops,"unmapped-spell:"+request);return null;}
@@ -181,9 +188,17 @@ internal static class SpellVfx
             {position=hit.point+Vector3.up*.02f;anchor="native-ground-mask:"+mask;}
             else anchor="native-ground-query-missed";
         }
+        // Consecration's original dynamicobject uses the actual radius/8;
+        // the generic visual cap would diverge again above gameplay radius80.
+        float effectScale=Mathf.Clamp(scale,.1f,10);
+        if(id=="consecration"&&stage=="area")
+        {
+            if(!float.IsFinite(scale)||scale<=0){Count(drops,"invalid-consecration-area-scale:"+request);return null;}
+            effectScale=scale;
+        }
         GameObject first=null;
         var group=loop?new GameObject("AzerothProjectileVfx_"+id):null;
-        if(group!=null){group.transform.position=position;group.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);}
+        if(group!=null){group.transform.position=position;group.transform.localScale=Vector3.one*effectScale;}
         foreach(var key in keys)
         {
             if(failed.Contains(key)){Count(drops,"previous-asset-error:"+request);continue;}
@@ -192,8 +207,8 @@ internal static class SpellVfx
             {
                 var asset=Asset(key);var go=new GameObject("AzerothVfx_"+id+"_"+stage);
                 if(group!=null)go.transform.SetParent(group.transform,false);
-                else{go.transform.position=position;go.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);}
-                var fx=go.AddComponent<SourceSpellEffect>();fx.Init(asset,life,loop,id,stage,key,requestedPosition,anchor,injectingBudgetProbe);active.Add(fx);peakActive=Math.Max(peakActive,active.Count);Spawned++;Count(spawnedStages,request);
+                else{go.transform.position=position;go.transform.localScale=Vector3.one*effectScale;}
+                var fx=go.AddComponent<SourceSpellEffect>();fx.Init(asset,originalOneShotDuration?asset.Duration:life,loop,id,stage,key,requestedPosition,anchor,injectingBudgetProbe,originalOneShotDuration);active.Add(fx);peakActive=Math.Max(peakActive,active.Count);Spawned++;Count(spawnedStages,request);
                 first??=go;
             }
             catch(Exception ex){Count(drops,"asset-error:"+request);failed.Add(key);Plugin.Current.Log.LogError("Source spell VFX failed "+id+"/"+stage+": "+ex);}
@@ -364,7 +379,7 @@ internal sealed class BonePoseAsset
 public sealed class SourceSpellEffect:MonoBehaviour
 {
     public SourceSpellEffect(IntPtr pointer):base(pointer){}
-    private EffectAsset asset;private float began,life,stopAt=-1,next,lastAnimation;private bool loop,syntheticBudgetLoad;private string sourceId,sourceStage,sourceKey,anchor;private Vector3 requestedPosition;
+    private EffectAsset asset;private float began,life,stopAt=-1,next,lastAnimation;private bool loop,syntheticBudgetLoad,originalOneShotDuration;private string sourceId,sourceStage,sourceKey,anchor;private Vector3 requestedPosition;
     public float Age=>Mathf.Max(0,CombatSimulation.Time-began);
     internal bool IsArea=>sourceStage is "area" or "areaKit";
     internal bool PureTransient=>!loop&&sourceStage is "cast" or "impact" or "precast";
@@ -373,9 +388,9 @@ public sealed class SourceSpellEffect:MonoBehaviour
     private readonly List<ParticleLayer> particles=new();private readonly List<GeometryLayer> geometry=new();
     private readonly List<RibbonLayer> ribbons=new();
     [HideFromIl2Cpp]
-    internal void Init(EffectAsset source,float duration,bool repeat,string id,string stage,string key,Vector3 requested,string anchoring,bool synthetic)
+    internal void Init(EffectAsset source,float duration,bool repeat,string id,string stage,string key,Vector3 requested,string anchoring,bool synthetic,bool sourceDuration=false)
     {
-        asset=source;began=CombatSimulation.Time;life=duration;loop=repeat;sourceId=id;sourceStage=stage;sourceKey=key;requestedPosition=requested;anchor=anchoring;syntheticBudgetLoad=synthetic;
+        asset=source;began=CombatSimulation.Time;life=duration;loop=repeat;sourceId=id;sourceStage=stage;sourceKey=key;requestedPosition=requested;anchor=anchoring;syntheticBudgetLoad=synthetic;originalOneShotDuration=sourceDuration;
         foreach(var e in asset.Emitters)particles.Add(new ParticleLayer(transform,e,asset));
         foreach(var r in asset.Ribbons)ribbons.Add(new RibbonLayer(transform,r,asset));
         if(asset.Geometry!=null)foreach(var m in asset.Geometry.Nodes)geometry.Add(new GeometryLayer(transform,m,asset));
@@ -387,7 +402,9 @@ public sealed class SourceSpellEffect:MonoBehaviour
     {
         var renderers=GetComponentsInChildren<MeshRenderer>(true);
         var position=transform.position;
+        var localScale=transform.localScale;var worldScale=transform.lossyScale;
         return new{Id=sourceId,Stage=sourceStage,Key=sourceKey,Source=asset?.Source,Age,AnimationTime=lastAnimation,Stopped=stopAt>=0,SyntheticBudgetLoad=syntheticBudgetLoad,Anchor=anchor,RequestedPosition=new[]{requestedPosition.x,requestedPosition.y,requestedPosition.z},Position=new[]{position.x,position.y,position.z},
+            LifeSeconds=life,SourceDurationSeconds=asset?.Duration??0,OriginalOneShotDuration=originalOneShotDuration,LocalScale=new[]{localScale.x,localScale.y,localScale.z},WorldScale=new[]{worldScale.x,worldScale.y,worldScale.z},
             BoneAttachments=asset?.BonePoses?.Bones.Length??0,ParticleLayers=particles.Select(p=>p.Snapshot()).ToArray(),
             RibbonLayers=ribbons.Select(r=>r.Snapshot()).ToArray(),
             Renderers=renderers.Select(r=>{
@@ -485,29 +502,54 @@ internal sealed class ParticleLayer
 {
     sealed class Particle{internal Vector3 Position,Velocity;internal float Age,Life,Spin,Size;}
     readonly Transform owner;readonly EmitterAsset source;readonly EffectAsset asset;readonly GameObject go;readonly Mesh mesh;readonly Material material;
-    readonly List<Particle> live=new();readonly System.Random random=new();float budget,clockElapsed;Vector3 lastEmitter;
-    const int Capacity=192;
+    readonly List<Particle> live=new();readonly System.Random random=new();OriginalParticleEmission emission;float clockElapsed;Vector3 lastEmitter;
+    int Capacity=>(source.Flags&0x8000)!=0?256:192;
     internal ParticleLayer(Transform parent,EmitterAsset emitter,EffectAsset model)
     {
         owner=parent;source=emitter;asset=model;go=new GameObject("OriginalM2Emitter");go.transform.SetParent(parent,false);
         mesh=SpellVfx.Keep(new Mesh{name="OriginalM2ParticleBillboards"});mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;material=SpellVfx.Material(emitter.Texture,emitter.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
     }
-    internal object Snapshot()=>new{source.Bone,source.Blend,Flags=source.Flags,LiveParticles=live.Count,LastEmitterPosition=new[]{lastEmitter.x,lastEmitter.y,lastEmitter.z},ParticlePositions=live.Take(12).Select(p=>new[]{p.Position.x,p.Position.y,p.Position.z}).ToArray()};
+    internal object Snapshot()
+    {
+        var min=lastEmitter;var max=lastEmitter;float sumY=0,maxVertical=0;
+        if(live.Count>0){min=live[0].Position;max=min;foreach(var p in live){min=Vector3.Min(min,p.Position);max=Vector3.Max(max,p.Position);sumY+=p.Position.y;maxVertical=Mathf.Max(maxVertical,Mathf.Abs(p.Position.y-lastEmitter.y));}}
+        return new{source.Bone,source.Blend,source.Shape,Flags=source.Flags,LiveParticles=live.Count,Capacity,
+            LastEmitterPosition=new[]{lastEmitter.x,lastEmitter.y,lastEmitter.z},
+            ParticlePositions=live.Take(12).Select(p=>new[]{p.Position.x,p.Position.y,p.Position.z}).ToArray(),
+            AllParticleCentersMinimum=new[]{min.x,min.y,min.z},AllParticleCentersMaximum=new[]{max.x,max.y,max.z},
+            MeanParticleCenterY=live.Count>0?sumY/live.Count:lastEmitter.y,MaxParticleCenterVerticalOffset=maxVertical,
+            TotalSpawned=emission.TotalSpawned,EmissionBursts=emission.Bursts,ClippedParticles=emission.Clipped,
+            LastRequested=emission.LastRequested,LastAdmitted=emission.LastAdmitted,LastClipped=emission.LastClipped,
+            BurstLatched=emission.BurstLatched};
+    }
     float Random()=> (float)random.NextDouble();
     float Parameter(string key,float time,float fallback=0)=>source.Tracks.TryGetValue(key,out var curve)?curve.At(asset.Millis(time,curve,clockElapsed),fallback):fallback;
     internal void Tick(float dt,float elapsed,float animation,bool emitting)
     {
         clockElapsed=elapsed;
         float rate=Mathf.Clamp(Parameter("rate",animation),0,1600),gravity=Parameter("gravity",animation);
-        if(emitting && (source.Enabled==null || source.Enabled.Values.ValueKind!=JsonValueKind.Array || source.Enabled.Values.GetArrayLength()==0 || source.Enabled.At(asset.Millis(animation,source.Enabled,elapsed),1)>0))budget+=rate*dt;
-        int born=Math.Min(Capacity-live.Count,(int)budget);budget=Math.Min(1,budget-born);
+        bool enabled=emitting && (source.Enabled==null || source.Enabled.Values.ValueKind!=JsonValueKind.Array || source.Enabled.Values.GetArrayLength()==0 || source.Enabled.At(asset.Millis(animation,source.Enabled,elapsed),1)>0);
+        int born=emission.Take(enabled?rate:0,dt,(source.Flags&0x8000)!=0,live.Count,Capacity);
         var basePosition=new Vector3(source.Position[0],source.Position[1],source.Position[2]);
         var attachment=asset.Attachment(source.Bone,animation);lastEmitter=owner.TransformPoint(attachment.MultiplyPoint3x4(basePosition));
         for(int i=0;i<born;i++)
         {
-            float angle=Random()*Mathf.PI*2,polar=Random()*Parameter("vertical",animation,Mathf.PI),horizontal=Parameter("horizontal",animation,Mathf.PI*2);
-            var direction=source.Shape==2?new Vector3(Mathf.Cos(angle)*Mathf.Sin(polar),Mathf.Cos(polar),Mathf.Sin(angle)*Mathf.Sin(polar)):new Vector3(Mathf.Sin(polar)*Mathf.Cos(horizontal*(Random()-.5f)),Mathf.Cos(polar),Mathf.Sin(polar)*Mathf.Sin(horizontal*(Random()-.5f)));
-            var offset=new Vector3((Random()-.5f)*Parameter("width",animation),0,(Random()-.5f)*Parameter("length",animation));
+            Vector3 direction,offset;
+            if(source.Shape==2)
+            {
+                OriginalParticleMath.Sphere(Parameter("vertical",animation,Mathf.PI),Parameter("horizontal",animation,Mathf.PI*2),Random(),Random(),out float x,out float y,out float z);
+                direction=new Vector3(x,y,z);
+                offset=direction*OriginalParticleMath.SphereRadius(Parameter("length",animation),Parameter("width",animation),Random());
+                OriginalParticleMath.SphereVelocity(x,y,z,offset.x,offset.y,offset.z,Parameter("zSource",animation),source.Flags,out x,out y,out z);
+                direction=new Vector3(x,y,z);
+            }
+            else
+            {
+                // Preserve the existing plane-emitter path; the native proof here is spherical only.
+                float angle=Random()*Mathf.PI*2,polar=Random()*Parameter("vertical",animation,Mathf.PI),horizontal=Parameter("horizontal",animation,Mathf.PI*2);
+                direction=new Vector3(Mathf.Sin(polar)*Mathf.Cos(horizontal*(Random()-.5f)),Mathf.Cos(polar),Mathf.Sin(polar)*Mathf.Sin(horizontal*(Random()-.5f)));
+                offset=new Vector3((Random()-.5f)*Parameter("width",animation),0,(Random()-.5f)*Parameter("length",animation));
+            }
             float speed=Parameter("speed",animation)*(1+(Random()*2-1)*Parameter("variation",animation));
             live.Add(new Particle{Position=owner.TransformPoint(attachment.MultiplyPoint3x4(basePosition+offset)),Velocity=owner.TransformDirection(direction)*speed*owner.lossyScale.x,Age=0,Life=Mathf.Clamp(Parameter("life",animation,.4f),.03f,3),Spin=Random()*Mathf.PI*2,Size=.8f+Random()*.4f});
         }
@@ -533,3 +575,62 @@ internal sealed class ParticleLayer
     }
     internal void Dispose(){if(SpellVfx.Alive(mesh))Object.Destroy(mesh);SpellVfx.DestroyMaterial(material);if(SpellVfx.Alive(go))Object.Destroy(go);}
 }
+
+// SOURCE_PARTICLE_MATH_BEGIN: compiled unchanged by the isolated managed checks.
+internal static class OriginalParticleMath
+{
+    // Original sphere helper, followed by the exporter's M2 -> Unity axes [-y,z,x].
+    internal static void Sphere(float vertical,float horizontal,float verticalRandom,float horizontalRandom,out float x,out float y,out float z)
+    {
+        float v=(verticalRandom*2-1)*vertical,h=(horizontalRandom*2-1)*horizontal;
+        float cv=MathF.Cos(v);x=-MathF.Cos(h)*cv;y=MathF.Sin(v);z=-MathF.Sin(h)*cv;
+    }
+    internal static float SphereRadius(float length,float width,float random)=>length+random*MathF.Max(0,width-length);
+    internal static void SphereVelocity(float radialX,float radialY,float radialZ,float offsetX,float offsetY,float offsetZ,float zSource,uint flags,out float x,out float y,out float z)
+    {
+        x=radialX;y=radialY;z=radialZ;
+        if(zSource!=0)
+        {
+            x=offsetX;y=offsetY-zSource;z=offsetZ;
+            float squared=x*x+y*y+z*z;
+            float inverse=squared>0?1/MathF.Sqrt(squared):float.PositiveInfinity;
+            if(inverse>0&&float.IsFinite(inverse)){x*=inverse;y*=inverse;z*=inverse;return;}
+            // Original normalization fallback is positive source Z, i.e. Unity up.
+            x=0;y=1;z=0;
+        }
+        else if((flags&0x100)!=0){x=0;y=1;z=0;}
+    }
+}
+internal struct OriginalParticleEmission
+{
+    internal float Budget;
+    internal bool BurstLatched;
+    internal long TotalSpawned,Clipped;
+    internal int Bursts,LastRequested,LastAdmitted,LastClipped;
+    internal int Take(float effectiveRate,float dt,bool burst,int live,int capacity)
+    {
+        LastRequested=LastAdmitted=LastClipped=0;
+        if(dt<=0)return 0;
+        if(burst)
+        {
+            // A zero/disabled source rate rearms the original positive-rate edge latch.
+            if(effectiveRate<=0){BurstLatched=false;Budget=0;return 0;}
+            if(BurstLatched)return 0;
+            BurstLatched=true;Bursts++;
+            LastRequested=(int)MathF.Truncate(effectiveRate);
+            LastAdmitted=Math.Min(Math.Max(0,capacity-live),LastRequested);
+            LastClipped=LastRequested-LastAdmitted;
+            Clipped+=LastClipped;TotalSpawned+=LastAdmitted;
+            return LastAdmitted;
+        }
+        // Preserve the prior bounded continuous-emission budget, including its one-particle carry.
+        Budget+=effectiveRate*dt;
+        LastRequested=(int)Budget;
+        LastAdmitted=Math.Min(Math.Max(0,capacity-live),LastRequested);
+        Budget=Math.Min(1,Budget-LastAdmitted);
+        LastClipped=Math.Max(0,LastRequested-LastAdmitted-(int)Budget);
+        Clipped+=LastClipped;TotalSpawned+=LastAdmitted;
+        return LastAdmitted;
+    }
+}
+// SOURCE_PARTICLE_MATH_END

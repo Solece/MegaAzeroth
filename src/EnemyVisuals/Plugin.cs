@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.EnemyVisuals;
 
-[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.7")]
+[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.8")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.azerothmegabonk.enemyvisuals";
@@ -20,7 +20,7 @@ public sealed class Plugin : BasePlugin
     internal static readonly Dictionary<string, Model> Models = new();
     internal static readonly HashSet<string> FailedModels = new();
     internal static int Attached,ModelLoads,Recoveries;
-    internal static readonly string[] ModelKeys={"boar","skeleton","murloc","wolf","kobold","gnoll","tarantula","ogre","infernal","lich","bonegolem","ghost"};
+    internal static readonly string[] ModelKeys={"boar","skeleton","murloc","wolf","kobold","gnoll","tarantula","ogre","infernal","lich","bonegolem","ghost","ghoul","zombie","scorpion","silithidwasp","ent","fleshgolem","doomguard","dragonspawncaster"};
     private static readonly Dictionary<string,float> RetryAt=new(),NextFailureLog=new();
     private Harmony harmony;
     public override void Load()
@@ -81,9 +81,12 @@ internal static class EnemyInitPatch
             if (__instance.renderer == null || __instance.enemyData == null) return;
             bool boss = __instance.IsBoss() || __instance.IsStageBoss() || __instance.IsFinalBoss();
             string original = __instance.enemyData.enemyName.ToString().ToLowerInvariant();
-            string key = EndlessGhostPresentation.Matches(__instance) ? "ghost" : boss ? BossModel(original) : original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar";
-            var model = Plugin.GetModel(key) ?? (key=="ghost"?null:Plugin.GetModel(boss ? "ogre" : "boar"));
-            if (model == null) return;
+            string selected=EnemyVarietySelection.Resolve(__instance,boss);
+            string key = EndlessGhostPresentation.Matches(__instance) ? "ghost" : selected ?? (boss ? BossModel(original) : original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar");
+            // New source packs fail visibly to the retained native body instead
+            // of silently converting an explicit species choice into Boar/Ogre.
+            var model = Plugin.GetModel(key) ?? (key=="ghost"||selected!=null?null:Plugin.GetModel(boss ? "ogre" : "boar"));
+            if (model == null){EnemyVisualOwnership.Find(__instance)?.RestoreNative();return;}
             var visual = EnemyVisualOwnership.Find(__instance) ?? __instance.gameObject.GetComponent<AzerothVisual>() ?? __instance.gameObject.AddComponent<AzerothVisual>();
             visual.Bind(__instance, model, boss);
             if (++Plugin.Attached <= 8 || boss) Plugin.Logger.LogInfo($"Visual attached to native enemy {original}; hp={__instance.hp}, model={model.Name}, boss={boss}; collider and spawner retained. {visual.Describe()}");
@@ -140,6 +143,7 @@ internal sealed partial class Model
         if(model.Material.HasProperty("_Cutoff")) model.Material.SetFloat("_Cutoff",0.5f);
         model.Material.SetFloat("_Mode",1); model.Material.EnableKeyword("_ALPHATEST_ON"); model.Material.renderQueue=2450;
         model.LoadGhostProfile(folder);
+        model.LoadSourceProfile(folder,j);
         foreach(var c in j.GetProperty("animations").EnumerateArray())
         {
             var clip = new Clip { Name=c.GetProperty("name").GetString()!,Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32(),AnimationId=c.GetProperty("animationId").GetInt32(),SequenceIndex=c.GetProperty("sequenceIndex").GetInt32() };
@@ -171,6 +175,7 @@ internal sealed partial class Model
         if(Template!=null) Object.Destroy(Template);
         if(SourceMaterials!=null)foreach(var material in SourceMaterials)if(material!=null && material!=Material)Object.Destroy(material);
         if(GhostHiddenMaterial!=null)Object.Destroy(GhostHiddenMaterial);
+        ReleaseSourceResources();
         if(Material!=null) Object.Destroy(Material);
         if(Texture!=null) Object.Destroy(Texture);
     }
@@ -202,6 +207,8 @@ public sealed partial class AzerothVisual : MonoBehaviour
         RegisterOwnership(target);
         deathCaptured=false;
         ResetGhostPalette();
+        ResetSourcePresentation();
+        sourceMaterialBoundAt=EnemyAnimationClock.Now;
         enabled=true;enemy=target; original=target.renderer; model=data; isBoss=boss;retryAt=0;needsRebind=false;nextGroundSample=0;groundFound=false;nextAssetCheck=Time.unscaledTime+1;
         if(visual!=null) { visual.SetActive(false);Object.Destroy(visual); }
         visual=new GameObject("AzerothCreature_"+data.Name);
@@ -242,6 +249,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
         SuppressNativeBodies();
         startTime=EnemyAnimationClock.Now; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
         SyncGhostPalette();
+        SetSourceRenderFrame(mesh);
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void PlaceAboveNativeFloor(Mesh mesh,bool forceGround=false)
@@ -277,6 +285,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
             if(enemy.hp<=0){replacement.enabled=false;return;}
             replacement.enabled=true;
             SyncGhostPalette();
+            SyncSourceMaterials();
             float animationNow=EnemyAnimationClock.Now;
             if(!EnemyAnimationClock.CanAnimate){if(filter.sharedMesh!=null)PlaceAboveNativeFloor(filter.sharedMesh);return;}
             if(animationNow<nextFrame)return;nextFrame=animationNow+1f/24;
@@ -295,6 +304,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
             var mesh=clip.Meshes[frame];if(mesh==null)throw new InvalidOperationException("Original enemy animation frame was unloaded: "+model.Key+"/"+name+"/"+frame);
             if(frame!=lastFrame){lastFrame=frame;filter.sharedMesh=mesh;}
             PlaceAboveNativeFloor(mesh);
+            SetSourceRenderFrame(mesh);
             SyncGhostPalette();
         }
         catch(Exception ex)
@@ -333,12 +343,13 @@ public sealed partial class AzerothVisual : MonoBehaviour
     public void RestoreNative()
     {
         enabled=false;
+        ResetSourcePresentation();
         ReleaseOwnership();
         if(original!=null) original.enabled=true;
         if(visual!=null){visual.SetActive(false);Object.Destroy(visual);}
         original=null;enemy=null;filter=null;replacement=null;visual=null;
     }
-    void OnDestroy() { ReleaseOwnership();if(visual!=null)Object.Destroy(visual); }
+    void OnDestroy() { ResetSourcePresentation();ReleaseOwnership();if(visual!=null)Object.Destroy(visual); }
 }
 
 

@@ -1,0 +1,351 @@
+{
+  "format": "azeroth-consecration-critical-vfx-contract-v2",
+  "sourceExecutableSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceCatalogSha256": "d3852bd1f9401a204833bd5cf5e8380d2593082d6574802089f176c8c170d821",
+  "spellId": "consecration",
+  "sourceSpellId": 26573,
+  "sourceVisualId": 5600,
+  "initialCast": {
+    "requiredStage": "cast",
+    "sourceKitId": 165,
+    "requiredBurstKey": "ce08f23a5004322c",
+    "sourceAttachmentSlots": [
+      {
+        "slot": 5,
+        "effectId": 211,
+        "key": "ce08f23a5004322c"
+      },
+      {
+        "slot": 6,
+        "effectId": 131,
+        "key": "5c0ed9a6c8d8d885"
+      },
+      {
+        "slot": 7,
+        "effectId": 131,
+        "key": "5c0ed9a6c8d8d885"
+      }
+    ],
+    "sourceAttachmentCount": 3,
+    "uniqueAssetKeys": 2,
+    "requiredOncePerSuccessfulGroundCast": true,
+    "timeOrigin": "Normalize source clip startMs to elapsed0; 3333ms is a source animation offset, not a3.333s cast delay.",
+    "lifetimePolicy": "Use each original asset.Duration for one-shot emission, retain particle tails separately; source burst1.067s and hand1s. Do not truncate to a generic0.3s cast budget.",
+    "criticalSampleSeconds": [
+      0.1,
+      0.333,
+      0.65,
+      1.0
+    ]
+  },
+  "persistentField": {
+    "requiredStage": "area",
+    "sourceEffectId": 2542,
+    "key": "d02bc71a978e2379",
+    "sourceBaseRadius": 8.0,
+    "visualScale": "actualEffectiveGameplayRadius / 8.0",
+    "sourceClipSeconds": 12.0,
+    "rank1UnmodifiedCombatDurationSeconds": 11.2,
+    "sourceCombatDurationFormula": "baseDuration8 * sourceDurationScale1.4 * learnedDurationFactor * talentDurationFactor * tomeDurationFactor",
+    "firstGameplayTickDelaySeconds": 0.25,
+    "rank1UnmodifiedTickCount": 11,
+    "rank1UnmodifiedTickIntervalSeconds": 1.018181818181818,
+    "sourceGroundNodeFacts": {
+      "initialOpacity": 0,
+      "opacityAtHalfSecond": 1,
+      "pulseLowOpacity": 0.4,
+      "pulseHighOpacity": 1,
+      "alternatingPulseMilestonesSeconds": [
+        1.5,
+        2.5,
+        3.5,
+        4.5,
+        5.5,
+        6.5,
+        7.5
+      ],
+      "geometryOpacityZeroFromSeconds": 8.5,
+      "note": "The original geometry fade and particle emission are different tracks. Initial zeroalpha or late zeroalpha alone is not evidence of a missing field."
+    },
+    "areaKitId695ContainsNoModelAttachments": true,
+    "sourceFieldParticleLifeSeconds": 1.2,
+    "criticalSampleSeconds": [
+      0.5,
+      1.5,
+      2.5,
+      6.5,
+      8.5,
+      11.2
+    ],
+    "sourceGroundParticleContract": {
+      "sourceFlags": 32777,
+      "sourceFlagsHex": "0x8009",
+      "sourceEmitterShape": 2,
+      "parserVariant": 1,
+      "sourceVerticalRange": 0,
+      "sourceHorizontalRange": "PI",
+      "sourceSpeed": 8.333333,
+      "sourceBirthRadius": 0.833333,
+      "particleLifeSeconds": 1.2,
+      "rateGate": {
+        "zeroRateAtMs": 0,
+        "firstPositiveRateAtMs": 67,
+        "baseEffectiveCount": 200,
+        "interpolation": "step"
+      },
+      "emission": "One positive-rate edge burst; truncate effectivecount once then latch. Effective zero-rate rearms. Not a continuous200particles/second emitter.",
+      "integerQuantizer": "truncf",
+      "quantizerEvidence": "actualIAT145BA8267 ->145D49398 ->CRTtruncf",
+      "latchEvidence": "1415CAC70 tests0x8000;1415CACC0..CACED positivegate+latch436;zero-rate1415CADE0..CADE3",
+      "positiveFractionBelowOne": "Emits0andstilllatches",
+      "sphereDirectionUnity": "(-cos(h)*cos(v),sin(v),-sin(h)*cos(v))",
+      "sphereAngles": "v=(2*random-1)*verticalRange;h=(2*random-1)*horizontalRange",
+      "sphereEvidence": "Parser145ABA100..125 raw2->variant1;helper1418D21E0 branch1418D2395..2495",
+      "portBurstCapacity": 256,
+      "sourceBurstCapacity": 1024,
+      "capacityIsAdapterLimit": true,
+      "singleCastExpectedTelemetry": {
+        "TotalSpawned": 200,
+        "EmissionBursts": 1,
+        "ClippedParticles": 0
+      },
+      "earlyParticleSampleSeconds": [
+        0.2,
+        0.9
+      ],
+      "earlyMaximumParticleCenterYDriftForFixture": 0.2,
+      "lateExpiredParticleSampleSeconds": [
+        1.5,
+        2.0
+      ],
+      "lateExpectedLiveParticles": 0,
+      "lateGroundGeometryWindowSeconds": [
+        6.2,
+        7.7
+      ],
+      "lateGroundGeometryRequiresLiveParticles": false,
+      "fixtureAssumption": "One actual cast with automatic recasts suppressed and noadditionalemissioncountfactor."
+    }
+  },
+  "perTargetImpact": {
+    "stage": "impact",
+    "sourceKitId": 121,
+    "sourceEffectId": 129,
+    "key": "cbcc8fb3198dc5a4",
+    "geometryRequired": false,
+    "emitterCount": 10,
+    "sourceClipSeconds": 0.934,
+    "note": "Zero source mesh vertices is correct for this particle-only impact."
+  },
+  "models": [
+    {
+      "key": "ce08f23a5004322c",
+      "sourcePath": "Spells\\Holy_Precast_Uber_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "d9c00c3d6e37b7f2ee580e5ed5dacab27b5c83799e55cf2fbb90c8db7f1c5957",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4400,
+      "sourceClipDurationSeconds": 1.067,
+      "vertexCount": 96,
+      "frameCount": 26,
+      "geometryNodeCount": 4,
+      "nodeIndexCounts": [
+        6,
+        6,
+        120,
+        120
+      ],
+      "nodeBlendModes": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 6,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "5c0ed9a6c8d8d885",
+      "sourcePath": "Spells\\Holy_Precast_High_Hand.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "f85d47839d058960d1030b5739838cb37abbf92c5e67325edcace3c6c462426e",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4333,
+      "sourceClipDurationSeconds": 1.0,
+      "vertexCount": 12,
+      "frameCount": 25,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        12,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 1,
+      "ribbonCount": 3,
+      "animatedEffectBoneIds": [
+        10,
+        14,
+        15,
+        16
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "d02bc71a978e2379",
+      "sourcePath": "spells\\consecration_impact_base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "273a562539cff1cb1bfadc6ee8747afd615faa3e0606a1c6caa2cf92f4138a65",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 0,
+      "sourceClipEndMs": 12000,
+      "sourceClipDurationSeconds": 12.0,
+      "vertexCount": 8,
+      "frameCount": 289,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        6,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 1,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        2
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "cbcc8fb3198dc5a4",
+      "sourcePath": "Spells\\Holy_ImpactDD_Low_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "45c28f82541a09ee107563e0af9d41dbfc5b5c7ef0a197ae44a9b40cd40aff45",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4267,
+      "sourceClipDurationSeconds": 0.934,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 10,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "nestedParticleModelNames": []
+    }
+  ],
+  "confirmedBugsBeforeFix": [
+    "GroundAoe AddArea requests area only; original initial cast visual packet and mapped cast kit are omitted.",
+    "Current area visual scale omits talent spell-radius multiplier and source radius softcap; source uses actualRadius/8."
+  ],
+  "knownLimitsNotFixedByDispatchOnly": [
+    "Current map loader deduplicates same key in slots6/7 and does not preserve source hand/base attachment anchors.",
+    "A source binding and nonzero geometry do not prove particles, colors, animation, timing, camera coverage, budget, or gameplay equivalence.",
+    "Source client dynamicobject visual lifetime behavior beyond available M2 tracks was not extracted here; do not assert a constant ground opacity for11.2s.",
+    "Original-client lighting, bonevelocity, parenttransform branches and specialized0x1000particle quadbasis are not established by PSF2; do not advertise all-source VFX equivalence."
+  ],
+  "acceptanceRequirements": [
+    "A real Consecration cast creates exactly one initial requiredBurstKey ce08f23a5004322c event; area key cannot satisfy this check.",
+    "Native frames around0.1/0.333/0.65s show the initial cast model actual live geometry/particles and source colors; key presence alone is insufficient.",
+    "Persistent area key d02bc71a978e2379 uses actualRadius/8. Its source ground geometry follows the original opacity track including initial0andfade0from8.5s.",
+    "For one field cast without recasts, the0x8000 emitter admits one200-particle burst at its first positive-rate sample; actualcounters TotalSpawned200/EmissionBursts1/Clipped0. Early0.2..0.9 centers stay flat; liveparticles mustbe0at1.5..2s.",
+    "At6.2..7.7s the field may have visible ground geometry while particles have expired. Late liveparticles are not required and their continued emission would violate the source burst contract.",
+    "Actual native enemy HP decreases on multiple separated field ticks at fixed fixture position; no direct fake invocation of talent or damage callbacks.",
+    "Pause freezes gameplay and VFX time; resume continues, expiry removes field emission, and no critical effect is budget-dropped/evicted. Capture native pixels against the original A/B reference; geometry counts/counters alone cannot establish appearance equivalence."
+  ],
+  "sourceEvidence": [
+    {
+      "file": "source-ground-cast.txt",
+      "fact": "CastKind3 dispatch reaches VA0x14595E990.",
+      "sha256": "df8d561eccade07d643148681d4a8bdfa36026df9d9decad8d7d8711db09e129"
+    },
+    {
+      "file": "source-ground-self-position.txt",
+      "fact": "Range0 ground cast branches to VA0x145960F52 after checking eligible nearby targets.",
+      "sha256": "2c4ea17f987285a9a53d1787be9f3439e76918eacff600b2732d820b0ad04c74"
+    },
+    {
+      "file": "source-ground-visual-event.txt",
+      "fact": "VA0x145960FB3..14596100E prepares sourceSpellId and target position, calls1458C4750; groundobject call145964CE0 follows at1459610F8. Initial ground tick is currentTime+0.25 at14596114D..156.",
+      "sha256": "f80820aa168be4285bbeb9772fca0cf2abda12ef611200a10b34d016727a82b3"
+    },
+    {
+      "file": "source-spell-visual-packet.txt",
+      "fact": "Helper1458C4750 writes opcode0x132 at1458C47A6. This proves a distinct initial spell visual event, without claiming a client implementation not extracted here.",
+      "sha256": "a76f0ae761280504eecef2d9582c67c2103dbd29db61e657409f3722b035010b"
+    },
+    {
+      "file": "source-ground-object.txt",
+      "fact": "VA0x145964D30 calls source area size lookup, then145964D43..D46 divides effective radius by returned source base radius.",
+      "sha256": "91f8a7ded6e792747a9d4f8800527b17128d7373a8752357f921d04e0c9cdf5a"
+    },
+    {
+      "file": "source-area-size-lookup.txt",
+      "fact": "Lookup145966950 compares spell26573 at1459669DD and returns8.0f at145966A29.",
+      "sha256": "01ddd954de2a436057405afd22e7f39fdb9dc9c0fc789a99a1edb66c1422a33c"
+    }
+  ],
+  "runtimeSourceAtAudit": [
+    {
+      "path": "src/AzerothAbilities/ClassSpellBehaviors.cs",
+      "sha256": "229d058ede99caf55cb43c1e90a7b40448d55ce86a6bd3aebc1545bae6074d2a"
+    },
+    {
+      "path": "src/AzerothAbilities/SpellVfx.cs",
+      "sha256": "3289acb2947b7ea693eb028a5d45e4fd235a12e7c120c500a87030d56ca36376"
+    },
+    {
+      "path": "src/AzerothAbilities/Plugin.cs",
+      "sha256": "3f840d89fc1df8f567bf04f53ca432af85ef32a847d7c0ac50ec90d23f252bf2"
+    },
+    {
+      "path": "src/AzerothAbilities/ClassPassives.cs",
+      "sha256": "50ee1c9a71d45ba1c7e0ea257b26f9e9067b496701e9c160ab044c3e130b412d"
+    }
+  ],
+  "containsAssetBinaryOrGeometryPayload": false,
+  "previousContractSha256": "e78fefc5d398f8a810f8bbfe9f073f945c6e23d95e24a6595756f58d83870c08",
+  "particleSourceEvidence": {
+    "document": "docs/NATIVE_PARTICLE_PROOF.md",
+    "sha256": "3212599f75a646c907d7c620ab5a76644243ee28a64061e63cd211fcd8d60c42",
+    "sourceSpellVfxSha256": "4044c68a0471775672dbce5986b97401683320fd5ba58d420844ed51ebe11d43",
+    "scope": "PSF2 sourceproof; no native pixel-equivalence claim. Bonevelocity, sourceflag0x1000 and unverified parenttransform behavior are outside this correction."
+  },
+  "strictProbeContract": {
+    "sha256": "0bfa7283dbc7235d12b0353b80a10145972fd54e7d273a31b113a89620977e29",
+    "revision": "v4",
+    "scope": "Original criticalstage roles and source-aligned early/late windows. Source-helper and native rendering acceptance remain separate."
+  }
+}

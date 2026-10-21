@@ -1,0 +1,13 @@
+{
+  "Spell": "consecration",
+  "Scope": "Original Consecration critical cast/field/impact roles, native mechanical evidence; source-client appearance requires a separate original A/B clip",
+  "SourceEvidence": "docs/source-contracts/consecration-critical-vfx.json SHA256 390c536ff80862d4709444b478b89959330d797b252e5b5d7f8ec62bcb0fc9b1; original spell26573 Visual5600; VA14596100E initial opcode0x132 before persistent ground object1459610F8. Source3333ms animation start is normalized offset, not cast delay.",
+  "UnverifiedRequirements": [],
+  "Requirements": [
+    {"Label":"Initial UberBase burst","Stage":"cast","Key":"ce08f23a5004322c","Source":"Spells/Holy_Precast_Uber_Base.m2","FromSeconds":0.03,"ToSeconds":1.15,"RequireLiveParticles":true,"RequireVisibleGeometry":true,"RequireStagePixels":true,"ExpectedOriginalLifeSeconds":1.067,"RequireOriginalOneShotDuration":true},
+    {"Label":"Initial hand effect (deduplicated unique asset, attachment parity unverified)","Stage":"cast","Key":"5c0ed9a6c8d8d885","Source":"Spells/Holy_Precast_High_Hand.m2","FromSeconds":0.03,"ToSeconds":1.05,"RequireLiveParticles":true,"RequireVisibleGeometry":true,"RequireStagePixels":true,"ExpectedOriginalLifeSeconds":1.0,"RequireOriginalOneShotDuration":true},
+    {"Label":"Persistent field after initial zero-opacity","Stage":"area","Key":"d02bc71a978e2379","Source":"spells/consecration_impact_base.m2","FromSeconds":0.45,"ToSeconds":1.3,"RequireLiveParticles":true,"RequireVisibleGeometry":true,"RequireStagePixels":true},
+    {"Label":"Field geometry persists after the original one-shot particles expire","Stage":"area","Key":"d02bc71a978e2379","Source":"spells/consecration_impact_base.m2","FromSeconds":6.2,"ToSeconds":7.7,"RequireLiveParticles":false,"RequireVisibleGeometry":true,"RequireStagePixels":true},
+    {"Label":"Actual periodic target impact, particle-only source model","Stage":"impact","Key":"cbcc8fb3198dc5a4","Source":"Spells/Holy_ImpactDD_Low_Chest.m2","FromSeconds":0.25,"ToSeconds":3.0,"RequireLiveParticles":true,"RequireVisibleGeometry":false,"RequireStagePixels":true}
+  ]
+}

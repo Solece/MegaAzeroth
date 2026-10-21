@@ -462,26 +462,28 @@ internal sealed class AbilityChoice
 internal sealed class SpellProjectile
 {
     private readonly LearnedSpell spell;private Enemy target;private uint enemyId;
-    private readonly float damage,speed,range,size,launchAt;private readonly int castToken;
+    private readonly float damage,speed,range,size,launchAt,createdAt;private readonly int castToken;
     private readonly bool appliesDot;
     private readonly VolleyPlan volley;private readonly int projectileIndex,projectileId;private bool ownsClaim;
-    private Vector3 dotLegOrigin;private float dotLegStarted,dotLegDue,dotLegDistance,dotDistanceBefore;
+    private Vector3 dotLegOrigin;private float dotLegStarted,dotLegDue,dotLegDistance;
     private readonly HashSet<uint> hitEnemies=new();
     private int bounces;
-    private Vector3 pos;private float distance;private GameObject visual;
+    private Vector3 pos,destination;private float distance;private GameObject visual;
+    private bool destinationOnly,finished,disposed;private string finishReason;
     internal SpellProjectile(LearnedSpell spell,Enemy target,Vector3 position,float damage,float speedOverride=0,float rangeOverride=0,float launchDelay=0,int castToken=0,VolleyPlan volley=null,int projectileIndex=-1)
     {
-        this.castToken=castToken;this.spell=spell;this.target=target;enemyId=target.id;pos=position;this.damage=damage;
+        this.castToken=castToken;this.spell=spell;this.target=target;enemyId=target.id;pos=position;destination=position;this.damage=damage;createdAt=CombatSimulation.Time;
         this.volley=volley;this.projectileIndex=projectileIndex;projectileId=TargetAcquisition.NewProjectile();
         if(volley!=null){volley.Claim(enemyId);ownsClaim=true;}
-        speed=(speedOverride>0?speedOverride:spell.Definition.ProjectileSpeed)*TomeCompatibility.ProjectileSpeed;
+        float probeSpeed=TomeCompatibilityDiagnostics.CastProjectileSpeedOverride;
+        speed=(probeSpeed>0?probeSpeed:speedOverride>0?speedOverride:spell.Definition.ProjectileSpeed)*TomeCompatibility.ProjectileSpeed;
         float sourceRange=rangeOverride>0?rangeOverride:AbilityRuntime.OverrideCastRange>0?AbilityRuntime.OverrideCastRange:spell.Definition.Range;
         range=TargetAcquisition.DetectionRange(sourceRange)*TomeCompatibility.Duration;
         size=TomeCompatibility.Size;bounces=TomeCompatibility.ExtraBounces;launchAt=CombatSimulation.Time+Mathf.Max(0,launchDelay);
         appliesDot=ClassCombat.GenericActive&&spell.Definition.Kind=="damageOverTime";
-        if(appliesDot)BeginDotLeg(launchAt);
+        RefreshDestination();if(appliesDot)BeginDotLeg(launchAt);
         TomeCompatibilityDiagnostics.ProjectileCreated();
-        TargetAcquisition.ProjectileEvent("created",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,0,enemyId,pos,range,range,targetDistance:Vector3.Distance(pos,target.transform.position));
+        Event("created",0,enemyId);
         if(launchDelay<=0)EnsureVisual();
     }
     private void EnsureVisual()
@@ -491,18 +493,48 @@ internal sealed class SpellProjectile
     }
     private void BeginDotLeg(float started)
     {
-        dotLegOrigin=pos;dotLegStarted=started;dotDistanceBefore=distance;
-        var delta=target.transform.position-pos;delta.y=0;dotLegDistance=delta.magnitude;
+        dotLegOrigin=pos;dotLegStarted=started;
+        var delta=destination-pos;delta.y=0;dotLegDistance=delta.magnitude;
         dotLegDue=started+dotLegDistance/Mathf.Max(.0001f,speed);
     }
-    internal object Snapshot()=>new{Spell=spell.Definition.Id,Enemy=enemyId,ProjectileId=projectileId,ProjectileIndex=projectileIndex,VolleyId=volley?.VolleyId??0,CastToken=castToken,SourceRange=volley?.SourceRange,DetectionRange=volley!=null?TargetAcquisition.DetectionRange(volley.SourceRange):(float?)null,TargetDistance=ValidTarget()?Vector3.Distance(pos,target.transform.position):-1,X=pos.x,Y=pos.y,Z=pos.z,Distance=distance,Range=range,Speed=speed,Size=size,Bounces=bounces,LaunchRemaining=Mathf.Max(0,launchAt-CombatSimulation.Time),AppliesDamageOverTime=appliesDot,DotDeliveryRemaining=appliesDot?Mathf.Max(0,dotLegDue-CombatSimulation.Time):0,HasVisual=visual!=null};
+    internal object Snapshot()=>new{Spell=spell.Definition.Id,Enemy=enemyId,ProjectileId=projectileId,ProjectileIndex=projectileIndex,VolleyId=volley?.VolleyId??0,CastToken=castToken,SourceRange=volley?.SourceRange,DetectionRange=volley!=null?TargetAcquisition.DetectionRange(volley.SourceRange):(float?)null,TargetDistance=Vector3.Distance(pos,destination),X=pos.x,Y=pos.y,Z=pos.z,Distance=distance,Range=range,RemainingRange=Mathf.Max(0,range-distance),Speed=speed,Size=size,Bounces=bounces,LaunchRemaining=Mathf.Max(0,launchAt-CombatSimulation.Time),AppliesDamageOverTime=appliesDot,DotDeliveryRemaining=appliesDot&&!destinationOnly?Mathf.Max(0,dotLegDue-CombatSimulation.Time):0,HasVisual=visual!=null,VisualActive=VisualActive(),VisualPosition=VisualPosition(),Destination=new[]{destination.x,destination.y,destination.z},LastValidDestination=new[]{destination.x,destination.y,destination.z},TargetAlive=ValidTarget(),DestinationOnly=destinationOnly,Age=Mathf.Max(0,CombatSimulation.Time-createdAt),Finished=finished,FinishReason=finishReason};
     private bool ValidTarget()
     {try{return target!=null&&target.id==enemyId&&!target.IsDeadOrDyingNextFrame();}catch{return false;}}
+    private bool RefreshDestination()
+    {
+        try
+        {
+            var point=target.collider!=null?target.collider.bounds.center:target.transform.position+Vector3.up;
+            if(!float.IsFinite(point.x)||!float.IsFinite(point.y)||!float.IsFinite(point.z))return false;
+            destination=point;return true;
+        }
+        catch{return false;}
+    }
+    private bool VisualActive(){try{return visual!=null&&visual.activeInHierarchy;}catch{return false;}}
+    private float[] VisualPosition(){try{if(visual!=null){var p=visual.transform.position;return new[]{p.x,p.y,p.z};}}catch{}return null;}
+    private void SyncVisual()
+    {
+        if(visual==null)return;visual.transform.position=pos;
+        var direction=destination-pos;if(direction.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(direction);
+    }
+    private void Event(string kind,uint oldEnemy,uint newEnemy,IEnumerable<Enemy> eligible=null,bool appliesDamage=false,string outcome=null)
+        =>TargetAcquisition.ProjectileEvent(kind,projectileId,projectileIndex,volley,spell.Definition.Id,castToken,oldEnemy,newEnemy,pos,range,Mathf.Max(0,range-distance),eligible,Vector3.Distance(pos,destination),destination,Mathf.Max(0,CombatSimulation.Time-createdAt),ValidTarget(),appliesDamage,outcome,VisualActive(),VisualPosition());
+    private bool Finish(string reason)
+    {finished=true;finishReason=reason;Event(reason=="range-expired"?"expired-range":"finished",enemyId,enemyId,outcome:reason);return false;}
+    private bool MoveTowards(Vector3 endpoint,float step)
+    {
+        float remaining=Mathf.Max(0,range-distance),travel=Mathf.Min(Mathf.Max(0,step),remaining);
+        var previous=pos;pos=Vector3.MoveTowards(pos,endpoint,travel);
+        distance=Mathf.Min(range,distance+Vector3.Distance(previous,pos));
+        bool arrived=pos.x==endpoint.x&&pos.y==endpoint.y&&pos.z==endpoint.z;
+        if(!arrived&&travel>0&&travel>=remaining)distance=range;
+        SyncVisual();return arrived;
+    }
     private void ReplaceTarget(Enemy replacement)
     {
         if(ownsClaim){volley.Release(enemyId);ownsClaim=false;}
         target=replacement;enemyId=replacement.id;
-        if(volley!=null){volley.Claim(enemyId);ownsClaim=true;}
+        if(volley!=null){volley.Claim(enemyId);ownsClaim=true;}RefreshDestination();
     }
     private bool RetargetDead()
     {
@@ -510,47 +542,68 @@ internal sealed class SpellProjectile
         var candidates=TargetAcquisition.DistinctNearest(AbilityRuntime.Targets(pos,Mathf.Max(0,range-distance),false).Where(e=>!hitEnemies.Contains(e.id)&&(!appliesDot||!ClassSpellBehaviors.HasDot(e,spell.Definition.Id))),pos);
         var replacement=volley?.Replacement(candidates)??candidates.FirstOrDefault();
         if(replacement==null)
-        {TargetAcquisition.ProjectileEvent("dead-target-no-replacement",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,old,0,pos,range,range-distance,candidates);return false;}
+        {Event("dead-target-no-replacement",old,0,candidates);return false;}
         ReplaceTarget(replacement);if(appliesDot)BeginDotLeg(CombatSimulation.Time);
-        TargetAcquisition.ProjectileEvent("retarget-dead",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,old,enemyId,pos,range,range-distance,candidates,Vector3.Distance(pos,target.transform.position));return true;
+        Event("retarget-dead",old,enemyId,candidates);return true;
     }
     internal bool Tick(float dt)
     {
+        if(finished)return false;
         if(!CombatSimulation.CanSimulate)return true;
         if(CombatSimulation.Time<launchAt)return true;
-        if(distance>range)return false;
-        if(!ValidTarget()&&!RetargetDead())return false;
+        if(distance>range)return Finish("range-expired");
+        if(!destinationOnly&&(!ValidTarget()||!RefreshDestination()))
+        {
+            Event("target-lost",enemyId,0);
+            if(!RetargetDead())
+            {
+                // Keep a value-type world point: a pooled/dead Enemy transform
+                // can move or be rebound before this projectile reaches it.
+                destinationOnly=true;target=null;Event("ballistic-destination",enemyId,0);
+            }
+        }
         EnsureVisual();
-        var endpoint=target.collider!=null?target.collider.bounds.center:target.transform.position+Vector3.up;
+        var endpoint=destination;
+        if(destinationOnly)
+        {
+            if(MoveTowards(endpoint,speed*dt))
+            {
+                Event("arrival-impact",enemyId,0,outcome:"last-destination-no-damage");
+                SpellVfx.Play(spell.Definition.Id,"impact",pos,1,.2f);return Finish("last-destination-no-damage");
+            }
+            return distance>=range?Finish("range-expired"):true;
+        }
         if(appliesDot)
         {
             float progress=Mathf.Clamp01((CombatSimulation.Time-dotLegStarted)/Mathf.Max(.0001f,dotLegDue-dotLegStarted));
-            pos=Vector3.Lerp(dotLegOrigin,endpoint,progress);distance=dotDistanceBefore+dotLegDistance*progress;
-            if(visual!=null){visual.transform.position=pos;var facing=endpoint-pos;if(facing.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(facing);}
-            if(CombatSimulation.Time<dotLegDue)return true;
+            var nextPosition=Vector3.Lerp(dotLegOrigin,endpoint,progress);MoveTowards(nextPosition,Vector3.Distance(pos,nextPosition));
+            if((pos-endpoint).sqrMagnitude>0||CombatSimulation.Time<dotLegDue)return distance>=range?Finish("range-expired"):true;
             hitEnemies.Add(enemyId);pos=endpoint;
+            Event("arrival-impact",enemyId,enemyId,appliesDamage:true,outcome:"apply-dot");
             ClassSpellBehaviors.ApplySpellDot(spell,target,damage,castToken);TomeCompatibilityDiagnostics.ProjectileHit();
-            TargetAcquisition.ProjectileEvent("hit-dot",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,enemyId,enemyId,pos,range,range-distance);
-            if(bounces<=0)return false;
+            Event("hit-dot",enemyId,enemyId);
+            if(bounces<=0)return Finish("hit-dot");
             var nextDot=AbilityRuntime.Targets(endpoint,Mathf.Max(0,range-distance),false).FirstOrDefault(e=>!hitEnemies.Contains(e.id));
-            if(nextDot==null)return false;
-            uint oldDot=enemyId;bounces--;ReplaceTarget(nextDot);BeginDotLeg(CombatSimulation.Time);TomeCompatibilityDiagnostics.ProjectileBounced();TargetAcquisition.ProjectileEvent("bounce",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,oldDot,enemyId,pos,range,range-distance);return true;
+            if(nextDot==null)return Finish("hit-dot-no-bounce");
+            uint oldDot=enemyId;bounces--;ReplaceTarget(nextDot);BeginDotLeg(CombatSimulation.Time);TomeCompatibilityDiagnostics.ProjectileBounced();Event("bounce",oldDot,enemyId);return true;
         }
-        var step=speed*dt;
-        if((endpoint-pos).sqrMagnitude<=Mathf.Max(0.2f*size,step)*Mathf.Max(0.2f*size,step))
+        var from=pos;
+        // A large Size tome must not turn the arrival threshold into an early
+        // damage radius. Move the real visual first, then resolve the arrival.
+        if(MoveTowards(endpoint,speed*dt))
         {
-            var from=pos;hitEnemies.Add(enemyId);pos=endpoint;
+            hitEnemies.Add(enemyId);Event("arrival-impact",enemyId,enemyId,appliesDamage:true,outcome:"direct-hit");
             AbilityRuntime.Hit(spell,target,damage,from,castToken);TomeCompatibilityDiagnostics.ProjectileHit();
-            TargetAcquisition.ProjectileEvent("hit",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,enemyId,enemyId,pos,range,range-distance);
-            if(bounces<=0)return false;
+            Event("hit",enemyId,enemyId);
+            if(bounces<=0)return Finish("hit");
             var next=AbilityRuntime.Targets(endpoint,Mathf.Max(0,range-distance),false).FirstOrDefault(e=>!hitEnemies.Contains(e.id));
-            if(next==null)return false;
-            uint old=enemyId;bounces--;ReplaceTarget(next);TomeCompatibilityDiagnostics.ProjectileBounced();TargetAcquisition.ProjectileEvent("bounce",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,old,enemyId,pos,range,range-distance);
+            if(next==null)return Finish("hit-no-bounce");
+            uint old=enemyId;bounces--;ReplaceTarget(next);TomeCompatibilityDiagnostics.ProjectileBounced();Event("bounce",old,enemyId);
             return true;
         }
-        pos=Vector3.MoveTowards(pos,endpoint,step);distance+=step;if(visual!=null){visual.transform.position=pos;var direction=endpoint-pos;if(direction.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(direction);}return true;
+        return distance>=range?Finish("range-expired"):true;
     }
-    internal void Dispose(){if(ownsClaim){volley.Release(enemyId);ownsClaim=false;}SpellVfx.Release(visual);visual=null;}
+    internal void Dispose(){if(disposed)return;disposed=true;if(ownsClaim){volley.Release(enemyId);ownsClaim=false;}Event("disposed",enemyId,enemyId,outcome:finishReason??"external-clear");SpellVfx.Release(visual);visual=null;}
 }
 
 public sealed class AbilityBehaviour : MonoBehaviour

@@ -29,10 +29,12 @@ internal static class TargetAcquisition
     internal static int NewProjectile()=>++nextProjectile;
     internal static void Record(object value)
     {events.Enqueue(value);while(events.Count>512)events.Dequeue();}
-    internal static void ProjectileEvent(string kind,int projectile,int index,VolleyPlan plan,string spell,int castToken,uint oldEnemy,uint newEnemy,Vector3 position,float range,float remaining,IEnumerable<Enemy> eligible=null,float targetDistance=-1)
+    internal static void ProjectileEvent(string kind,int projectile,int index,VolleyPlan plan,string spell,int castToken,uint oldEnemy,uint newEnemy,Vector3 position,float range,float remaining,IEnumerable<Enemy> eligible=null,float targetDistance=-1,Vector3? destination=null,float age=0,bool targetAlive=false,bool appliesDamage=false,string outcome=null,bool visualActive=false,float[] visualPosition=null)
         =>Record(new{Kind=kind,Time=CombatSimulation.Time,ProjectileId=projectile,ProjectileIndex=index,VolleyId=plan?.VolleyId??0,CastToken=castToken,Spell=spell,
             OldEnemy=oldEnemy,NewEnemy=newEnemy,Position=new[]{position.x,position.y,position.z},SourceRange=plan?.SourceRange,DetectionRange=plan!=null?DetectionRange(plan.SourceRange):(float?)null,
-            TravelRange=range,RemainingRange=remaining,TargetDistance=targetDistance,EligibleIds=eligible?.Select(e=>e.id).ToArray()??Array.Empty<uint>()});
+            TravelRange=range,RemainingRange=remaining,Distance=range-remaining,TargetDistance=targetDistance,EligibleIds=eligible?.Select(e=>e.id).ToArray()??Array.Empty<uint>(),
+            Destination=destination.HasValue?new[]{destination.Value.x,destination.Value.y,destination.Value.z}:null,Age=age,TargetAlive=targetAlive,AppliesDamage=appliesDamage,Outcome=outcome,VisualActive=visualActive,VisualPosition=visualPosition,
+            ArrivalProjectilePosition=kind=="arrival-impact"?new[]{position.x,position.y,position.z}:null});
     internal static string LastVolleyJson=>JsonSerializer.Serialize(lastVolley);
     internal static string EventsJson=>JsonSerializer.Serialize(events.ToArray());
     internal static string SnapshotJson=>JsonSerializer.Serialize(new{DetectionMultiplier,LastVolley=lastVolley,RecentEvents=events.ToArray(),LiveProjectiles=AbilityRuntime.Projectiles.Select(p=>p.Snapshot()).ToArray()});
@@ -60,7 +62,7 @@ internal sealed class VolleyPlan
 public static class TargetAcquisitionDiagnostics
 {
     public static string PolicyJson=>JsonSerializer.Serialize(new{Origin="user-requested arena adaptation",DetectionMultiplier=TargetAcquisition.DetectionMultiplier,
-        VolleyOrder="nearest distance, then stable native enemy ID; distinct before round-robin",DeadTarget="nearest unclaimed per volley, then nearest available; remaining travel range only",
+        VolleyOrder="nearest distance, then stable native enemy ID; distinct before round-robin",DeadTarget="nearest unclaimed per volley, then nearest available; if none, last valid world destination without dead-target damage; remaining travel range only",Arrival="move visual to destination before damage and impact; Size does not enlarge arrival distance",
         GroundArea="initial target acquisition +20%; damage radius unchanged",Totems="activation scan +20%; damage/attack radius unchanged",
         Chain="initial acquisition +20%; hop radius unchanged",SelfArea="activation scan +20%; hit radius unchanged",Pets="pet AI acquisition unchanged",SourceAutoWeapons="unchanged"});
     public static string LastVolleyJson=>TargetAcquisition.LastVolleyJson;

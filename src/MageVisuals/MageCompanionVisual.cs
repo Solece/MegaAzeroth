@@ -86,7 +86,7 @@ public sealed class MageCompanionVisual:MonoBehaviour
  internal void Bind(Model value,float height)
  {
   if(meshObject!=null)Object.Destroy(meshObject);model=value;this.height=height;last=-1;var child=new GameObject("AzerothOriginalCreatureMesh");meshObject=child;child.transform.SetParent(transform,false);var bounds=value.Template.bounds;float scale=Math.Max(.05f,height)/Math.Max(.01f,bounds.size.y);child.transform.localScale=Vector3.one*scale;child.transform.localPosition=-new Vector3(bounds.center.x,bounds.min.y,bounds.center.z)*scale;
-  filter=child.AddComponent<MeshFilter>();filter.sharedMesh=model.Template;renderer=child.AddComponent<MeshRenderer>();renderer.sharedMaterial=model.Material;start=MageAnimationClock.Now;
+  filter=child.AddComponent<MeshFilter>();filter.sharedMesh=model.Template;renderer=child.AddComponent<MeshRenderer>();renderer.sharedMaterials=model.RenderMaterials;start=MageAnimationClock.Now;
  }
  [HideFromIl2Cpp]
  internal void Play(string name){if(model==null || !model.Clips.ContainsKey(name))return;if(!MageAnimationClock.CanAnimate){pendingClip=name;return;}if(clip!=name || !model.Clips[name].Loop){clip=name;start=MageAnimationClock.Now;last=-1;}}

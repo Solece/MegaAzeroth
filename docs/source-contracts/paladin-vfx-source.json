@@ -1,0 +1,1315 @@
+{
+  "format": "azeroth-paladin-vfx-source-audit-v1",
+  "sourceExecutableSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceCatalogSha256": "d3852bd1f9401a204833bd5cf5e8380d2593082d6574802089f176c8c170d821",
+  "sourceTables": {
+    "Spell": {
+      "archive": "patch.MPQ",
+      "records": 22357,
+      "fields": 173,
+      "size": 692,
+      "sha256": "913d01c0376d88310ed4a44ea1115f30fd8be15af64ce304f4f17b6bc51cf15b"
+    },
+    "SpellVisual": {
+      "archive": "patch.MPQ",
+      "records": 2165,
+      "fields": 16,
+      "size": 64,
+      "sha256": "124629fede4546ae01c30e0f94dc2511f5a7410d980c90d289a67d04c4f2fad2"
+    },
+    "SpellVisualKit": {
+      "archive": "patch.MPQ",
+      "records": 1772,
+      "fields": 35,
+      "size": 140,
+      "sha256": "c154ea8ab675f5b01a6d69deab825e3844f2cce468aa3f1f780356cbafd18f13"
+    },
+    "SpellVisualEffectName": {
+      "archive": "patch.MPQ",
+      "records": 775,
+      "fields": 5,
+      "size": 20,
+      "sha256": "aa17dcadc74a92bff5269bfda5a95c084d60c55ca0458bee02fedfecb2f4a841"
+    }
+  },
+  "spellCount": 11,
+  "uniqueOriginalModelsVerified": 22,
+  "spells": [
+    {
+      "id": "consecration",
+      "sourceSpellId": 26573,
+      "sourceOffset": "0x6b87fd8",
+      "castKindId": 3,
+      "kind": "groundAoe",
+      "sourceVisualId": 5600,
+      "sourceAttachments": [
+        {
+          "stage": "area",
+          "effectId": 2542,
+          "key": "d02bc71a978e2379"
+        },
+        {
+          "stage": "cast",
+          "slot": 5,
+          "kitId": 165,
+          "effectId": 211,
+          "key": "ce08f23a5004322c"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 165,
+          "effectId": 131,
+          "key": "5c0ed9a6c8d8d885"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 165,
+          "effectId": 131,
+          "key": "5c0ed9a6c8d8d885"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 121,
+          "effectId": 129,
+          "key": "cbcc8fb3198dc5a4"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "area",
+        "impact per admitted enemy tick"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": false,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "exorcism",
+      "sourceSpellId": 879,
+      "sourceOffset": "0x6b88050",
+      "castKindId": 0,
+      "kind": "projectile",
+      "sourceVisualId": 324,
+      "sourceAttachments": [
+        {
+          "stage": "precast",
+          "slot": 6,
+          "kitId": 184,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 184,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 119,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 119,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 487,
+          "effectId": 445,
+          "key": "ced809918eaea875"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "cast",
+        "missile when source speed > 0",
+        "impact per hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "hammer_of_wrath",
+      "sourceSpellId": 24275,
+      "sourceOffset": "0x6b880c8",
+      "castKindId": 0,
+      "kind": "projectile",
+      "sourceVisualId": 7250,
+      "sourceAttachments": [
+        {
+          "stage": "missile",
+          "effectId": 2962,
+          "key": "5342252b03640eb7"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 6408,
+          "effectId": 2962,
+          "key": "5342252b03640eb7"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 6409,
+          "effectId": 2962,
+          "key": "5342252b03640eb7"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 6359,
+          "effectId": 110,
+          "key": "f00afc5e86fc8804"
+        },
+        {
+          "stage": "impact",
+          "slot": 5,
+          "kitId": 6359,
+          "effectId": 148,
+          "key": "148968303b4d06de"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "cast",
+        "missile when source speed > 0",
+        "impact per hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": false,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "holy_shock",
+      "sourceSpellId": 25912,
+      "sourceOffset": "0x6b88140",
+      "castKindId": 1,
+      "kind": "instant",
+      "sourceVisualId": 128,
+      "sourceAttachments": [
+        {
+          "stage": "precast",
+          "slot": 6,
+          "kitId": 184,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 184,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 119,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 119,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 291,
+          "effectId": 294,
+          "key": "38fd14bbe5bb0227"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "cast",
+        "impact per hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "holy_wrath",
+      "sourceSpellId": 2812,
+      "sourceOffset": "0x6b881b8",
+      "castKindId": 2,
+      "kind": "selfAoe",
+      "sourceVisualId": 126,
+      "sourceAttachments": [
+        {
+          "stage": "missile",
+          "effectId": 225,
+          "key": "e9385bb4157c104a"
+        },
+        {
+          "stage": "precast",
+          "slot": 6,
+          "kitId": 186,
+          "effectId": 130,
+          "key": "f8f6dd3222e3a230"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 186,
+          "effectId": 130,
+          "key": "f8f6dd3222e3a230"
+        },
+        {
+          "stage": "cast",
+          "slot": 4,
+          "kitId": 329,
+          "effectId": 320,
+          "key": "75c7c9f76d4be2dc"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 211,
+          "effectId": 125,
+          "key": "9502c7e7376a0b18"
+        },
+        {
+          "stage": "impact",
+          "slot": 5,
+          "kitId": 211,
+          "effectId": 222,
+          "key": "6cdee296ac22c7cf"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "cast",
+        "impact per hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "judgement",
+      "sourceSpellId": 20271,
+      "sourceOffset": "0x6b88230",
+      "castKindId": 0,
+      "kind": "projectile",
+      "sourceVisualId": 5651,
+      "sourceAttachments": [
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 119,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 119,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 121,
+          "effectId": 129,
+          "key": "cbcc8fb3198dc5a4"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "cast",
+        "missile when source speed > 0",
+        "impact per hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": false,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "hammer_of_justice",
+      "sourceSpellId": 853,
+      "sourceOffset": "0x6b882a8",
+      "castKindId": 0,
+      "kind": "projectile",
+      "sourceVisualId": 322,
+      "sourceAttachments": [
+        {
+          "stage": "cast",
+          "slot": 5,
+          "kitId": 484,
+          "effectId": 442,
+          "key": "0a52108924e37856"
+        },
+        {
+          "stage": "impact",
+          "slot": 4,
+          "kitId": 485,
+          "effectId": 444,
+          "key": "4ea415e9ea241fe0"
+        },
+        {
+          "stage": "aura",
+          "slot": 3,
+          "kitId": 349,
+          "effectId": 50,
+          "key": "0a6c5a3d3da9dd34"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "cast",
+        "missile when source speed > 0",
+        "impact per hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": false,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": false,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "holy_light",
+      "sourceSpellId": 635,
+      "sourceOffset": "0x6b88320",
+      "castKindId": 9,
+      "kind": "selfBuff",
+      "sourceVisualId": 2936,
+      "sourceAttachments": [
+        {
+          "stage": "precast",
+          "slot": 6,
+          "kitId": 99,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 99,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 270,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 270,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "impact",
+          "slot": 3,
+          "kitId": 154,
+          "effectId": 244,
+          "key": "e6de627ddc799c62"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "aura; fallback to cast/impact if no aura mapping"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "divine_shield",
+      "sourceSpellId": 642,
+      "sourceOffset": "0x6b88398",
+      "castKindId": 9,
+      "kind": "selfBuff",
+      "sourceVisualId": 154,
+      "sourceAttachments": [
+        {
+          "stage": "precast",
+          "slot": 6,
+          "kitId": 99,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 99,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 417,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 417,
+          "effectId": 135,
+          "key": "3c4c0bae4da57253"
+        },
+        {
+          "stage": "aura",
+          "slot": 5,
+          "kitId": 252,
+          "effectId": 263,
+          "key": "ae56740a79a10719"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "aura; fallback to cast/impact if no aura mapping"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "holy_shield",
+      "sourceSpellId": 20925,
+      "sourceOffset": "0x6b88410",
+      "castKindId": 9,
+      "kind": "selfBuff",
+      "sourceVisualId": 5620,
+      "sourceAttachments": [
+        {
+          "stage": "cast",
+          "slot": 5,
+          "kitId": 5010,
+          "effectId": 222,
+          "key": "6cdee296ac22c7cf"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 5010,
+          "effectId": 125,
+          "key": "9502c7e7376a0b18"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "aura; fallback to cast/impact if no aura mapping"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": false,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": false,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    },
+    {
+      "id": "redemption",
+      "sourceSpellId": 7328,
+      "sourceOffset": "0x6b88488",
+      "castKindId": 11,
+      "kind": "passive",
+      "sourceVisualId": 41,
+      "sourceAttachments": [
+        {
+          "stage": "precast",
+          "slot": 5,
+          "kitId": 193,
+          "effectId": 123,
+          "key": "95e8074cabfd1906"
+        },
+        {
+          "stage": "precast",
+          "slot": 6,
+          "kitId": 193,
+          "effectId": 131,
+          "key": "5c0ed9a6c8d8d885"
+        },
+        {
+          "stage": "precast",
+          "slot": 7,
+          "kitId": 193,
+          "effectId": 131,
+          "key": "5c0ed9a6c8d8d885"
+        },
+        {
+          "stage": "cast",
+          "slot": 6,
+          "kitId": 191,
+          "effectId": 131,
+          "key": "5c0ed9a6c8d8d885"
+        },
+        {
+          "stage": "cast",
+          "slot": 7,
+          "kitId": 191,
+          "effectId": 131,
+          "key": "5c0ed9a6c8d8d885"
+        },
+        {
+          "stage": "impact",
+          "slot": 5,
+          "kitId": 70,
+          "effectId": 279,
+          "key": "5b72d37916381324"
+        }
+      ],
+      "currentRuntimeRequestsBeforeFix": [
+        "impact at actual passive proc center and each admitted hit"
+      ],
+      "sourcePrecastNotRoutedByCurrentGenericCaster": true,
+      "sourceDuplicateAttachmentKeysCollapsedByCurrentLoader": true,
+      "fidelityClaim": "Bindings and original model metadata verified; visual equivalence requires native frames, anchors, timing, and damage checks."
+    }
+  ],
+  "models": [
+    {
+      "key": "d02bc71a978e2379",
+      "sourcePath": "spells\\consecration_impact_base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "273a562539cff1cb1bfadc6ee8747afd615faa3e0606a1c6caa2cf92f4138a65",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 0,
+      "sourceClipEndMs": 12000,
+      "sourceClipDurationSeconds": 12.0,
+      "vertexCount": 8,
+      "frameCount": 289,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        6,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 1,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        2
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "ce08f23a5004322c",
+      "sourcePath": "Spells\\Holy_Precast_Uber_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "d9c00c3d6e37b7f2ee580e5ed5dacab27b5c83799e55cf2fbb90c8db7f1c5957",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4400,
+      "sourceClipDurationSeconds": 1.067,
+      "vertexCount": 96,
+      "frameCount": 26,
+      "geometryNodeCount": 4,
+      "nodeIndexCounts": [
+        6,
+        6,
+        120,
+        120
+      ],
+      "nodeBlendModes": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 6,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "5c0ed9a6c8d8d885",
+      "sourcePath": "Spells\\Holy_Precast_High_Hand.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "f85d47839d058960d1030b5739838cb37abbf92c5e67325edcace3c6c462426e",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4333,
+      "sourceClipDurationSeconds": 1.0,
+      "vertexCount": 12,
+      "frameCount": 25,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        12,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 1,
+      "ribbonCount": 3,
+      "animatedEffectBoneIds": [
+        10,
+        14,
+        15,
+        16
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "cbcc8fb3198dc5a4",
+      "sourcePath": "Spells\\Holy_ImpactDD_Low_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "45c28f82541a09ee107563e0af9d41dbfc5b5c7ef0a197ae44a9b40cd40aff45",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4267,
+      "sourceClipDurationSeconds": 0.934,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 10,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "3c4c0bae4da57253",
+      "sourcePath": "Spells\\Holy_Precast_Low_Hand.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "20b8a9e9ca1ae3400a6690fe172531a512d90c5cfb3cc89c15b81126c7e7a6c7",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4333,
+      "sourceClipDurationSeconds": 1.0,
+      "vertexCount": 8,
+      "frameCount": 25,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        6,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 0,
+      "ribbonCount": 3,
+      "animatedEffectBoneIds": [
+        11,
+        12,
+        13
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "ced809918eaea875",
+      "sourcePath": "Spells\\Exorcism_Impact_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "7284c71a67d7438156c8b19e9e0fdcad58c35a9a70d68e9cff0552b6103cbce6",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4267,
+      "sourceClipDurationSeconds": 0.934,
+      "vertexCount": 12,
+      "frameCount": 23,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        6,
+        12
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 8,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        2,
+        3,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "5342252b03640eb7",
+      "sourcePath": "spells\\holy_hammer_missile.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "bdeafaffc903e86bb9428d22fd37d4581602b9418e7a9b957109bb6e0c52f4fa",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 1667,
+      "sourceClipEndMs": 2000,
+      "sourceClipDurationSeconds": 0.333,
+      "vertexCount": 250,
+      "frameCount": 8,
+      "geometryNodeCount": 11,
+      "nodeIndexCounts": [
+        426,
+        426,
+        18,
+        12,
+        60,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "nodeBlendModes": [
+        0,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 0,
+      "ribbonCount": 4,
+      "animatedEffectBoneIds": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "f00afc5e86fc8804",
+      "sourcePath": "Spells\\Holy_ImpactDD_Uber_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "ec953518e0060bb0035901fe2162b33532251345cfc49aa5e4894f526998b19e",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 5000,
+      "sourceClipDurationSeconds": 1.667,
+      "vertexCount": 4,
+      "frameCount": 41,
+      "geometryNodeCount": 1,
+      "nodeIndexCounts": [
+        6
+      ],
+      "nodeBlendModes": [
+        4
+      ],
+      "emitterCount": 25,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "148968303b4d06de",
+      "sourcePath": "Spells\\Holy_ImpactDD_Uber_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "30a57586675c85f988c1578253c1732bff5f87908e49d38909e18cc1ccd87975",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 5000,
+      "sourceClipDurationSeconds": 1.667,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 2,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        0,
+        1
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "38fd14bbe5bb0227",
+      "sourcePath": "Spells\\HolySmite_Low_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "14bbce49029d6ed1854d3264449bfda0828932c207ddd14d84245863a3ca3232",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3300,
+      "sourceClipEndMs": 4433,
+      "sourceClipDurationSeconds": 1.133,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 13,
+      "ribbonCount": 2,
+      "animatedEffectBoneIds": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "e9385bb4157c104a",
+      "sourcePath": "Spells\\Holy_Missile_Med.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "dfa4b430fdac043eab016cc44fcaff25d869b1e5ba489fdc5d19f8fcb44b755c",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4933,
+      "sourceClipDurationSeconds": 1.6,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 4,
+      "ribbonCount": 4,
+      "animatedEffectBoneIds": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "f8f6dd3222e3a230",
+      "sourcePath": "Spells\\Holy_Precast_Med_Hand.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "988e5aad9f5add14d26a1e91ba71e40e2ce40bda2cca51472fbd419713375fd3",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4333,
+      "sourceClipDurationSeconds": 1.0,
+      "vertexCount": 12,
+      "frameCount": 25,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        12,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 1,
+      "ribbonCount": 3,
+      "animatedEffectBoneIds": [
+        6,
+        13,
+        14,
+        15
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "75c7c9f76d4be2dc",
+      "sourcePath": "Spells\\RighteousFury_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "3159675fcca4e89cd2d302d44ea72e2610c646f00e6980b8086e5792e3d4b966",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4400,
+      "sourceClipDurationSeconds": 1.067,
+      "vertexCount": 12,
+      "frameCount": 26,
+      "geometryNodeCount": 1,
+      "nodeIndexCounts": [
+        18
+      ],
+      "nodeBlendModes": [
+        4
+      ],
+      "emitterCount": 5,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "9502c7e7376a0b18",
+      "sourcePath": "Spells\\Holy_ImpactDD_High_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "099fedd165d9d2f4eda802209060882f53636bbef0caae3b5e7f390af17839a9",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4267,
+      "sourceClipDurationSeconds": 0.934,
+      "vertexCount": 4,
+      "frameCount": 23,
+      "geometryNodeCount": 1,
+      "nodeIndexCounts": [
+        6
+      ],
+      "nodeBlendModes": [
+        4
+      ],
+      "emitterCount": 14,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "6cdee296ac22c7cf",
+      "sourcePath": "Spells\\Holy_ImpactDD_High_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "88b130036deb7a8ae83044b617c451f8335e328e4acf085f94309a0a6f2fc233",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 5000,
+      "sourceClipDurationSeconds": 1.667,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 1,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        0
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "0a52108924e37856",
+      "sourcePath": "Spells\\FistOfJustice_Cast_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "109a37a51a8d7bcc0a9fb382b62ced741912c44de534547f4296eea791652a7b",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 110000,
+      "sourceClipEndMs": 110667,
+      "sourceClipDurationSeconds": 0.667,
+      "vertexCount": 28,
+      "frameCount": 17,
+      "geometryNodeCount": 7,
+      "nodeIndexCounts": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 0,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "4ea415e9ea241fe0",
+      "sourcePath": "Spells\\FistOfJustice_Impact_Chest.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "03e882791667039382cd454c457a0e3ca2fed359ca19e5e6697c3a716de8ec7f",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 5067,
+      "sourceClipDurationSeconds": 1.734,
+      "vertexCount": 28,
+      "frameCount": 42,
+      "geometryNodeCount": 3,
+      "nodeIndexCounts": [
+        30,
+        6,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 2,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        7,
+        8
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "0a6c5a3d3da9dd34",
+      "sourcePath": "Spells\\StunSwirl_State_Head.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "579c06a5a6bb50a1316437c309a9f6514a279c60ba0b9db9699c4df74327f6fc",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4333,
+      "sourceClipDurationSeconds": 1.0,
+      "vertexCount": 400,
+      "frameCount": 25,
+      "geometryNodeCount": 1,
+      "nodeIndexCounts": [
+        1152
+      ],
+      "nodeBlendModes": [
+        4
+      ],
+      "emitterCount": 0,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "e6de627ddc799c62",
+      "sourcePath": "Spells\\HolyLight_Low_Head.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "17c77d6b8bc6345590b413bc2e05bc87be81457f1093a76fd438300044003e36",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 5833,
+      "sourceClipDurationSeconds": 2.5,
+      "vertexCount": 30,
+      "frameCount": 61,
+      "geometryNodeCount": 2,
+      "nodeIndexCounts": [
+        42,
+        42
+      ],
+      "nodeBlendModes": [
+        4,
+        4
+      ],
+      "emitterCount": 12,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "ae56740a79a10719",
+      "sourcePath": "Spells\\DivineShield_Low_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "5473c6b35b3caab518c954add60019f4019a42e5b473d6ffd93ecf9c3efb0a98",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4033,
+      "sourceClipDurationSeconds": 0.7,
+      "vertexCount": 20,
+      "frameCount": 17,
+      "geometryNodeCount": 4,
+      "nodeIndexCounts": [
+        6,
+        12,
+        6,
+        6
+      ],
+      "nodeBlendModes": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 3,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        6,
+        7,
+        8
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "95e8074cabfd1906",
+      "sourcePath": "Spells\\Holy_Precast_High_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "db06a96665dbafea8685071d15c0da47401e1b7ccdf8334f8eac9f1750d74843",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 4400,
+      "sourceClipDurationSeconds": 1.067,
+      "vertexCount": 52,
+      "frameCount": 26,
+      "geometryNodeCount": 3,
+      "nodeIndexCounts": [
+        6,
+        6,
+        120
+      ],
+      "nodeBlendModes": [
+        4,
+        4,
+        4
+      ],
+      "emitterCount": 5,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "nestedParticleModelNames": []
+    },
+    {
+      "key": "5b72d37916381324",
+      "sourcePath": "Spells\\Resurrection_Low_Base.m2",
+      "sourceArchive": "patch.MPQ",
+      "sourceSha256": "67d6122f93dea076ae8da24fc0f407ee02e34d13563b33b7969f140279ecf10c",
+      "sourceVersion": 256,
+      "animationId": 0,
+      "sourceClipStartMs": 3333,
+      "sourceClipEndMs": 5000,
+      "sourceClipDurationSeconds": 1.667,
+      "vertexCount": 0,
+      "frameCount": 0,
+      "geometryNodeCount": 0,
+      "nodeIndexCounts": [],
+      "nodeBlendModes": [],
+      "emitterCount": 4,
+      "ribbonCount": 0,
+      "animatedEffectBoneIds": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "nestedParticleModelNames": []
+    }
+  ],
+  "runtimeSourceAtAudit": [
+    {
+      "path": "src/AzerothAbilities/ClassSpellBehaviors.cs",
+      "sha256": "229d058ede99caf55cb43c1e90a7b40448d55ce86a6bd3aebc1545bae6074d2a"
+    },
+    {
+      "path": "src/AzerothAbilities/SpellVfx.cs",
+      "sha256": "3289acb2947b7ea693eb028a5d45e4fd235a12e7c120c500a87030d56ca36376"
+    },
+    {
+      "path": "src/AzerothAbilities/Plugin.cs",
+      "sha256": "3f840d89fc1df8f567bf04f53ca432af85ef32a847d7c0ac50ec90d23f252bf2"
+    },
+    {
+      "path": "src/AzerothAbilities/ClassPassives.cs",
+      "sha256": "50ee1c9a71d45ba1c7e0ea257b26f9e9067b496701e9c160ab044c3e130b412d"
+    }
+  ],
+  "containsAssetBinaryOrGeometryPayload": false
+}

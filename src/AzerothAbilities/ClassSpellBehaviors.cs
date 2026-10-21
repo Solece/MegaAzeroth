@@ -141,9 +141,15 @@ internal static class ClassSpellBehaviors
     static int TickCount(LearnedSpell spell,float duration)=>Math.Max(1,(int)MathF.Round(duration/Mathf.Max(.01f,spell.Definition.Duration)*Math.Max(1,spell.Definition.Ticks),MidpointRounding.AwayFromZero));
     static void AddArea(LearnedSpell spell,Vector3 center,bool totem,float damage)
     {
-        float duration=Duration(spell);int count=TickCount(spell,duration);
-        areas.Add(new Area{Spell=spell,Center=center,Radius=Radius(spell),Range=spell.Definition.Range,Damage=damage/Math.Max(1,spell.Definition.Ticks),Remaining=count,Next=CombatSimulation.Time+.25f,Interval=duration/count,Targets=spell.Definition.Targets>0?Quantity(spell):0,Totem=totem});
-        Fx(spell,totem?"aura":"area",center,spell.RadiusFactor*TomeCompatibility.Size,duration);
+        float duration=Duration(spell),radius=Radius(spell);int count=TickCount(spell,duration);
+        areas.Add(new Area{Spell=spell,Center=center,Radius=radius,Range=spell.Definition.Range,Damage=damage/Math.Max(1,spell.Definition.Ticks),Remaining=count,Next=CombatSimulation.Time+.25f,Interval=duration/count,Targets=spell.Definition.Targets>0?Quantity(spell):0,Totem=totem});
+        bool consecration=!totem&&spell.Definition.Id=="consecration";
+        // Original ground cast sends its initial visual before the persistent
+        // object (14596100E/1459610F8). Keep each cast asset's original clip life.
+        if(consecration)SpellVfx.PlaySourceOneShot(spell.Definition.Id,"cast",center);
+        // Source spell26573 base radius8: dynamicobject scale=effectiveRadius/8
+        // (145964D30..D46, lookup145966A29). Share the actual gameplay radius.
+        Fx(spell,totem?"aura":"area",center,consecration?radius/8:spell.RadiusFactor*TomeCompatibility.Size,duration);
     }
     static bool Self(LearnedSpell spell,MyPlayer player)
     {

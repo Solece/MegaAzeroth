@@ -95,6 +95,14 @@ public static class TomeCompatibilityDiagnostics
     }
     public static bool CastSpellForProbe(string id)
     {if(!ProbeAllowed)return false;return AbilityRuntime.CastFreeSpell(id);}
+    internal static float CastProjectileSpeedOverride {get;private set;}
+    public static bool CastSpellWithSpeedForProbe(string id,float speed=3f)
+    {
+        if(!ProbeAllowed||!CombatSimulation.CanSimulate||!float.IsFinite(speed)||speed<=0)return false;
+        float previous=CastProjectileSpeedOverride;
+        try{CastProjectileSpeedOverride=speed;return AbilityRuntime.CastFreeSpell(id);}
+        finally{CastProjectileSpeedOverride=previous;}
+    }
     public static bool LaunchSlowProjectileForProbe(string id="fireball",float speed=.25f)
     {
         if(!ProbeAllowed || !CombatSimulation.CanSimulate || speed<=0)return false;

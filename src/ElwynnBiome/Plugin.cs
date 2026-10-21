@@ -32,7 +32,10 @@ public sealed class Plugin : BasePlugin
     internal static bool VfxFidelitySmoke => VfxFidelityProbe.Armed;
     internal static bool TargetingSmoke => TargetingProbe.Armed;
     internal static bool GhostSmoke => GhostProbe.Armed;
-    internal static bool Smoke => FirstSmoke || FeatureSmoke || TreeSmoke || HeroMenuSmoke || HeroClassSmoke || VitalsSmoke || VfxFidelitySmoke || TargetingSmoke || GhostSmoke;
+    internal static bool CatMaterialSmoke => CatMaterialProbe.Armed;
+    internal static bool EnemyVarietySmoke => EnemyVarietyProbe.Armed;
+    internal static bool PaladinVfxSmoke => PaladinVfxContractProbe.Armed;
+    internal static bool Smoke => FirstSmoke || FeatureSmoke || TreeSmoke || HeroMenuSmoke || HeroClassSmoke || VitalsSmoke || VfxFidelitySmoke || TargetingSmoke || GhostSmoke || CatMaterialSmoke || PaladinVfxSmoke || EnemyVarietySmoke;
     Harmony harmony;
     public override void Load()
     {
@@ -54,6 +57,9 @@ public sealed class Plugin : BasePlugin
         if (VfxFidelitySmoke) AddComponent<VfxFidelityProbe>();
         if (TargetingSmoke) AddComponent<TargetingProbe>();
         if (GhostSmoke) AddComponent<GhostProbe>();
+        if (CatMaterialSmoke) AddComponent<CatMaterialProbe>();
+        if (EnemyVarietySmoke) AddComponent<EnemyVarietyProbe>();
+        if (PaladinVfxSmoke) AddComponent<PaladinVfxContractProbe>();
         Note("Elwynn v2 all-stage palettes and original buildings armed; native generation, movement, spawn and progression retained. Probe=" + Smoke);
     }
     internal static BiomeAssets EnsureAssets()

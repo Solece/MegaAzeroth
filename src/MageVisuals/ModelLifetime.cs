@@ -54,6 +54,7 @@ internal sealed partial class Model
         bool textureAlive=false,materialAlive=false;
         try{textureAlive=Texture!=null && Texture.width>0 && Texture.height>0;if(!textureAlive)problems.Add("texture:destroyed");else if((Texture.hideFlags&HideFlags.DontUnloadUnusedAsset)==0)problems.Add("texture:not-retained");}catch(Exception ex){problems.Add("texture:"+ex.GetType().Name);}
         try{materialAlive=Material!=null && Material.shader!=null && Material.mainTexture==Texture;if(!materialAlive)problems.Add("material:destroyed-or-unbound");else if((Material.hideFlags&HideFlags.DontUnloadUnusedAsset)==0)problems.Add("material:not-retained");}catch(Exception ex){problems.Add("material:"+ex.GetType().Name);}
+        if(SourceMaterials!=null)foreach(var material in SourceMaterials)if(material==null||material.shader==null||material.mainTexture!=Texture||(material.hideFlags&HideFlags.DontUnloadUnusedAsset)==0)problems.Add("source-material:destroyed-unbound-or-not-retained");
         return new ModelAssetHealth{Valid=problems.Count==0,Folder=SourceFolder,SourceVertexCount=VertexCount,ExpectedMeshes=expected,CheckedMeshes=checkedMeshes,AliveMeshes=alive,RetainedMeshes=retained,ClipCount=Clips.Count,TextureAlive=textureAlive,MaterialAlive=materialAlive,HeadClosed=HeadClosed,Problems=problems.Take(20).ToArray()};
     }
 }
