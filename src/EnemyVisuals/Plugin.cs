@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.EnemyVisuals;
 
-[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.3")]
+[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.7")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.azerothmegabonk.enemyvisuals";
@@ -20,13 +20,14 @@ public sealed class Plugin : BasePlugin
     internal static readonly Dictionary<string, Model> Models = new();
     internal static readonly HashSet<string> FailedModels = new();
     internal static int Attached,ModelLoads,Recoveries;
-    internal static readonly string[] ModelKeys={"boar","skeleton","murloc","wolf","kobold","gnoll","tarantula","ogre","infernal","lich","bonegolem"};
+    internal static readonly string[] ModelKeys={"boar","skeleton","murloc","wolf","kobold","gnoll","tarantula","ogre","infernal","lich","bonegolem","ghost"};
     private static readonly Dictionary<string,float> RetryAt=new(),NextFailureLog=new();
     private Harmony harmony;
     public override void Load()
     {
         Logger = Log;
         ClassInjector.RegisterTypeInIl2Cpp<AzerothVisual>();
+        ClassInjector.RegisterTypeInIl2Cpp<AzerothCorpseVisual>();
         harmony = new Harmony(Id);
         harmony.PatchAll(typeof(Plugin).Assembly);
         // Do not make graphics calls until the game has initialized its device.
@@ -54,6 +55,8 @@ public sealed class Plugin : BasePlugin
     public override bool Unload()
     {
         harmony?.UnpatchSelf();
+        EnemyDeathPresentation.Shutdown();
+        NativeGhostPaletteCache.Shutdown();
         foreach(var visual in Object.FindObjectsOfType<AzerothVisual>(true)) visual.RestoreNative();
         foreach(var model in Models.Values) model.Release();
         Models.Clear();FailedModels.Clear();RetryAt.Clear();NextFailureLog.Clear();return true;
@@ -78,8 +81,8 @@ internal static class EnemyInitPatch
             if (__instance.renderer == null || __instance.enemyData == null) return;
             bool boss = __instance.IsBoss() || __instance.IsStageBoss() || __instance.IsFinalBoss();
             string original = __instance.enemyData.enemyName.ToString().ToLowerInvariant();
-            string key = boss ? BossModel(original) : original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar";
-            var model = Plugin.GetModel(key) ?? Plugin.GetModel(boss ? "ogre" : "boar");
+            string key = EndlessGhostPresentation.Matches(__instance) ? "ghost" : boss ? BossModel(original) : original.Contains("skeleton") ? "skeleton" : original.Contains("goblintank") ? "gnoll" : original.Contains("goblin") ? "kobold" : original.Contains("spider") || original.Contains("scorpion") ? "tarantula" : original.Contains("frog") || original.Contains("slime") ? "murloc" : original.Contains("ghoul") || original.Contains("zombie") ? "wolf" : "boar";
+            var model = Plugin.GetModel(key) ?? (key=="ghost"?null:Plugin.GetModel(boss ? "ogre" : "boar"));
             if (model == null) return;
             var visual = EnemyVisualOwnership.Find(__instance) ?? __instance.gameObject.GetComponent<AzerothVisual>() ?? __instance.gameObject.AddComponent<AzerothVisual>();
             visual.Bind(__instance, model, boss);
@@ -98,6 +101,7 @@ internal static class LabUploadGuard { static bool Prefix() => false; }
 internal sealed class Clip
 {
     public string Name = ""; public float Duration; public int Count; public Mesh[] Meshes = null!;
+    public int AnimationId,SequenceIndex,SourceFrequency=32767;
 }
 internal sealed partial class Model
 {
@@ -135,9 +139,10 @@ internal sealed partial class Model
         model.Material = Retain(new Material(shader) { mainTexture=texture, color=Color.white, enableInstancing=true });
         if(model.Material.HasProperty("_Cutoff")) model.Material.SetFloat("_Cutoff",0.5f);
         model.Material.SetFloat("_Mode",1); model.Material.EnableKeyword("_ALPHATEST_ON"); model.Material.renderQueue=2450;
+        model.LoadGhostProfile(folder);
         foreach(var c in j.GetProperty("animations").EnumerateArray())
         {
-            var clip = new Clip { Name=c.GetProperty("name").GetString()!,Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32() };
+            var clip = new Clip { Name=c.GetProperty("name").GetString()!,Duration=c.GetProperty("duration").GetSingle(),Count=c.GetProperty("frameCount").GetInt32(),AnimationId=c.GetProperty("animationId").GetInt32(),SequenceIndex=c.GetProperty("sequenceIndex").GetInt32() };
             byte[] bytes = File.ReadAllBytes(Path.Combine(folder,c.GetProperty("file").GetString()!));
             if(bytes.Length!=clip.Count*count*12) throw new InvalidDataException("Animation frame size mismatch");
             clip.Meshes=new Mesh[clip.Count];
@@ -153,6 +158,7 @@ internal sealed partial class Model
             }
             model.Clips[clip.Name]=clip;
         }
+        model.LoadDeathProfile(folder,j);
         Plugin.Logger.LogInfo($"Loaded {model.Name}: {count} vertices, {model.Clips.Count} original baked animation clips; shader {shader.name}.");
         return model;
         }
@@ -163,6 +169,8 @@ internal sealed partial class Model
         foreach(var clip in Clips.Values)
             if(clip.Meshes!=null) foreach(var mesh in clip.Meshes) if(mesh!=null) Object.Destroy(mesh);
         if(Template!=null) Object.Destroy(Template);
+        if(SourceMaterials!=null)foreach(var material in SourceMaterials)if(material!=null && material!=Material)Object.Destroy(material);
+        if(GhostHiddenMaterial!=null)Object.Destroy(GhostHiddenMaterial);
         if(Material!=null) Object.Destroy(Material);
         if(Texture!=null) Object.Destroy(Texture);
     }
@@ -192,6 +200,8 @@ public sealed partial class AzerothVisual : MonoBehaviour
     internal void Bind(Enemy target,Model data,bool boss)
     {
         RegisterOwnership(target);
+        deathCaptured=false;
+        ResetGhostPalette();
         enabled=true;enemy=target; original=target.renderer; model=data; isBoss=boss;retryAt=0;needsRebind=false;nextGroundSample=0;groundFound=false;nextAssetCheck=Time.unscaledTime+1;
         if(visual!=null) { visual.SetActive(false);Object.Destroy(visual); }
         visual=new GameObject("AzerothCreature_"+data.Name);
@@ -226,11 +236,12 @@ public sealed partial class AzerothVisual : MonoBehaviour
         visual.transform.localScale=Vector3.one*scale;
         visual.transform.localPosition=target.transform.InverseTransformPoint(feetWorld)-new Vector3(mesh.bounds.center.x*scale,mesh.bounds.min.y*scale,mesh.bounds.center.z*scale);
         filter=visual.AddComponent<MeshFilter>(); filter.sharedMesh=mesh;
-        replacement=visual.AddComponent<MeshRenderer>(); replacement.sharedMaterial=data.Material;
+        replacement=visual.AddComponent<MeshRenderer>(); replacement.sharedMaterials=data.RenderMaterials;
         PlaceAboveNativeFloor(mesh,true);
         if(Plugin.Attached<3 || boss) Plugin.Logger.LogInfo($"Visual scale evidence: boss={boss}, reference={scaleReference}, nativeRendererHeight={nativeRendererBounds.size.y}, nativeColliderHeight={nativeColliderBounds.size.y}, ratio={sizeMultiplier}, sourceHeight={sourceHeight}, localScale={scale}, visualBounds={replacement.bounds.size}, position={replacement.bounds.center}");
         SuppressNativeBodies();
         startTime=EnemyAnimationClock.Now; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
+        SyncGhostPalette();
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void PlaceAboveNativeFloor(Mesh mesh,bool forceGround=false)
@@ -265,6 +276,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
             SuppressNativeBodies();
             if(enemy.hp<=0){replacement.enabled=false;return;}
             replacement.enabled=true;
+            SyncGhostPalette();
             float animationNow=EnemyAnimationClock.Now;
             if(!EnemyAnimationClock.CanAnimate){if(filter.sharedMesh!=null)PlaceAboveNativeFloor(filter.sharedMesh);return;}
             if(animationNow<nextFrame)return;nextFrame=animationNow+1f/24;
@@ -283,6 +295,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
             var mesh=clip.Meshes[frame];if(mesh==null)throw new InvalidOperationException("Original enemy animation frame was unloaded: "+model.Key+"/"+name+"/"+frame);
             if(frame!=lastFrame){lastFrame=frame;filter.sharedMesh=mesh;}
             PlaceAboveNativeFloor(mesh);
+            SyncGhostPalette();
         }
         catch(Exception ex)
         {

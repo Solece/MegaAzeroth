@@ -48,7 +48,7 @@ internal static class ClassPassives
             int budget=Math.Min(dc.crit?2:1,(int)sealTokens);sealTokens-=budget;combo=Mathf.Min(5,combo+budget);
             if(combo>=5 && now>=nextSeal)
             {
-                var targets=AbilityRuntime.Targets(MyPlayer.Instance.transform.position,seal.Definition.Range,true)
+                var targets=TargetAcquisition.SkillTargets(MyPlayer.Instance.transform.position,seal.Definition.Range,true)
                     .OrderByDescending(e=>e.IsBoss()||e.IsElite()).ThenBy(e=>e.hp<e.maxHp*.3f?e.hp/e.maxHp:1).Take(Math.Min(3,ClassSpellBehaviors.Quantity(seal))).ToArray();
                 if(targets.Length>0){combo=0;nextSeal=now+AbilityRuntime.Cooldown(seal);depth++;try{foreach(var target in targets)AbilityRuntime.Hit(seal,target,AbilityRuntime.Damage(seal)*(target.hp<target.maxHp*.3f?2:1),MyPlayer.Instance.transform.position);procs++;}finally{depth--;}}
             }
@@ -104,22 +104,22 @@ internal static class ClassPassives
         if(fairy!=null)
         {
             int wanted=ClassSpellBehaviors.Quantity(fairy);
-            foreach(var enemy in AbilityRuntime.Targets(MyPlayer.Instance.transform.position,fairy.Definition.Range,true).Where(e=>!faerie.ContainsKey(e.id)).Take(Math.Max(0,wanted-faerie.Count)))
+            foreach(var enemy in TargetAcquisition.SkillTargets(MyPlayer.Instance.transform.position,fairy.Definition.Range,true).Where(e=>!faerie.ContainsKey(e.id)).Take(Math.Max(0,wanted-faerie.Count)))
             {faerie[enemy.id]=new Mark{Enemy=enemy,Id=enemy.id};ClassSpellBehaviors.Fx(fairy,"aura",enemy.transform.position,1,1);}
         }
         var mark=Spell("hunters_mark");
         if(mark!=null && (hunter==null||!Alive(hunter)) && now>=nextHunter)
-        {hunter=AbilityRuntime.Targets(MyPlayer.Instance.transform.position,mark.Definition.Range,true).OrderByDescending(e=>e.maxHp).FirstOrDefault();hunterId=hunter?.id??0;if(hunter!=null)ClassSpellBehaviors.Fx(mark,"aura",hunter.transform.position,1,1);}
+        {hunter=TargetAcquisition.SkillTargets(MyPlayer.Instance.transform.position,mark.Definition.Range,true).OrderByDescending(e=>e.maxHp).FirstOrDefault();hunterId=hunter?.id??0;if(hunter!=null)ClassSpellBehaviors.Fx(mark,"aura",hunter.transform.position,1,1);}
         var soul=Spell("soul_fire");
         if(soul!=null && soulShards>=5)
         {
-            var targets=AbilityRuntime.Targets(MyPlayer.Instance.transform.position,soul.Definition.Range,true).OrderByDescending(e=>e.maxHp).Take(ClassSpellBehaviors.Quantity(soul)).ToArray();
+            var targets=TargetAcquisition.SkillTargets(MyPlayer.Instance.transform.position,soul.Definition.Range,true).OrderByDescending(e=>e.maxHp).Take(ClassSpellBehaviors.Quantity(soul)).ToArray();
             if(targets.Length>0){soulShards=0;depth++;try{foreach(var enemy in targets)AbilityRuntime.Hit(soul,enemy,AbilityRuntime.Damage(soul),MyPlayer.Instance.transform.position);procs++;}finally{depth--;}}
         }
         var holy=Spell("redemption");
         if(holy!=null && redemption.Count>0 && now>=redemptionAt){var burst=redemption.Dequeue();redemptionAt=now+.5f;Burst(holy,burst.Position,AbilityRuntime.Damage(holy),burst.Depth);}
         var light=Spell("lightwell");
-        if(light!=null && now>=light.NextCast && AbilityRuntime.Targets(MyPlayer.Instance.transform.position,light.Definition.Range,false).Count>0)
+        if(light!=null && now>=light.NextCast && TargetAcquisition.SkillTargets(MyPlayer.Instance.transform.position,light.Definition.Range,false).Count>0)
         {float duration=ClassSpellBehaviors.Duration(light);wells.Add(new Well{Spell=light,Center=MyPlayer.Instance.transform.position,Until=now+duration,Next=now});light.NextCast=now+AbilityRuntime.Cooldown(light);ClassSpellBehaviors.Fx(light,"aura",MyPlayer.Instance.transform.position,1,duration);}
         foreach(var well in wells.ToArray())
         {

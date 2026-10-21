@@ -50,7 +50,8 @@ internal static class ClassSpellBehaviors
         float range=AbilityRuntime.OverrideCastRange>0?AbilityRuntime.OverrideCastRange:d.Range;
         if(d.Kind=="selfAoe")
         {
-            var enemies=AbilityRuntime.Targets(origin,Radius(spell),false);if(enemies.Count==0)return false;
+            if(TargetAcquisition.SkillTargets(origin,Radius(spell),false).Count==0)return false;
+            var enemies=AbilityRuntime.Targets(origin,Radius(spell),false);
             foreach(var enemy in enemies)AbilityRuntime.Hit(spell,enemy,damage,origin);
             Fx(spell,"cast",origin,spell.RadiusFactor*TomeCompatibility.Size,.7f);return true;
         }
@@ -58,30 +59,32 @@ internal static class ClassSpellBehaviors
         {
             // Both original totems are stationary: Magma damages in its radius,
             // Searing selects finite targets in range. They retain their source tick budget.
-            var enemies=AbilityRuntime.Targets(origin,Mathf.Max(d.Range,Radius(spell)),false);if(enemies.Count==0)return false;
+            var enemies=TargetAcquisition.SkillTargets(origin,Mathf.Max(d.Range,Radius(spell)),false);if(enemies.Count==0)return false;
             AddArea(spell,origin,true,damage);return true;
         }
         if(d.Kind=="groundAoe")
         {
             Vector3 center=origin;
-            if(d.Range>0)
+            if(range>0)
             {
-                var candidates=AbilityRuntime.Targets(origin,d.Range,false);if(candidates.Count==0)return false;
+                var candidates=TargetAcquisition.SkillTargets(origin,range,false);if(candidates.Count==0)return false;
                 float radius=Radius(spell);int best=-1;
                 foreach(var candidate in candidates.Take(24))
                 {int count=candidates.Count(e=>(e.transform.position-candidate.transform.position).sqrMagnitude<=radius*radius);if(count>best){best=count;center=candidate.transform.position;}}
             }
-            else if(AbilityRuntime.Targets(origin,Radius(spell),false).Count==0)return false;
+            else if(TargetAcquisition.SkillTargets(origin,Radius(spell),false).Count==0)return false;
             AddArea(spell,center,false,damage);return true;
         }
         if(d.Kind=="cone")
         {
             float reach=ConeReach(spell,range);
             Vector3 forward=player.transform.forward;forward.y=0;forward.Normalize();
+            bool InCone(Enemy e){var v=e.transform.position-origin;v.y=0;return v.sqrMagnitude>.0001f&&Vector3.Dot(v.normalized,forward)>.5f;}
+            if(!TargetAcquisition.SkillTargets(origin,reach,false).Any(InCone))return false;
             var enemies=AbilityRuntime.Targets(origin,reach,false).Where(e=>{var v=e.transform.position-origin;v.y=0;return v.sqrMagnitude>.0001f&&Vector3.Dot(v.normalized,forward)>.5f;}).ToArray();
-            if(enemies.Length==0)return false;foreach(var e in enemies)AbilityRuntime.Hit(spell,e,damage,origin);Fx(spell,"cast",origin,spell.RadiusFactor*TomeCompatibility.Size,.7f);return true;
+            foreach(var e in enemies)AbilityRuntime.Hit(spell,e,damage,origin);Fx(spell,"cast",origin,spell.RadiusFactor*TomeCompatibility.Size,.7f);return true;
         }
-        var targets=AbilityRuntime.Targets(origin,range,true);if(targets.Count==0)return false;
+        var targets=TargetAcquisition.SkillTargets(origin,range,d.Kind is not ("projectile" or "missiles" or "damageOverTime"));if(targets.Count==0)return false;
         if(d.Kind=="damageOverTime"){targets=targets.Where(e=>!HasDot(e,d.Id)).ToList();if(targets.Count==0)return false;}
         int quantity=Quantity(spell);
         if(d.Kind=="chain")
@@ -94,11 +97,15 @@ internal static class ClassSpellBehaviors
             }
             return true;
         }
+        // Source DoTs keep one delivery per eligible un-afflicted target;
+        // their moving deliveries still share the volley reservation policy.
+        var dotVolley=d.Kind=="damageOverTime"&&d.ProjectileSpeed>0?TargetAcquisition.Prepare(spell,origin,range,targets,Math.Min(quantity,targets.Count)):null;
+        int deliveryIndex=0;
         foreach(var target in targets.Take(Math.Min(quantity,targets.Count)))
         {
             if(d.Kind=="damageOverTime")
             {
-                if(d.ProjectileSpeed>0)AbilityRuntime.AddProjectile(spell,target,origin+Vector3.up*.8f,damage);
+                if(d.ProjectileSpeed>0)AbilityRuntime.AddVolleyProjectile(spell,target,origin+Vector3.up*.8f,damage,0,dotVolley,deliveryIndex++);
                 else ApplySpellDot(spell,target,damage,AbilityRuntime.CurrentCastSerial);
             }
             else if(d.Kind is "melee" or "finisher" or "instant" || d.ProjectileSpeed<=0)
@@ -109,11 +116,13 @@ internal static class ClassSpellBehaviors
         }
         if(d.Kind is "projectile" or "missiles" && d.ProjectileSpeed>0)
         {
-            // Quantity remains a real projectile count even with one target.
-            for(int i=0;i<quantity;i++)
+            // User policy: claim each nearest distinct target before reusing
+            // one. Reservation lifetime includes delayed launches and retargets.
+            var volley=TargetAcquisition.Prepare(spell,origin,range,targets,quantity);
+            for(int i=0;i<volley.Assigned.Count;i++)
             {
-                var target=targets[i%targets.Count];var launch=TomeCompatibility.LaunchOffset(origin+Vector3.up*.8f,target.transform.position,i,quantity);
-                AbilityRuntime.AddProjectile(spell,target,launch,damage,i*.06f);
+                var target=volley.Assigned[i];var launch=TomeCompatibility.LaunchOffset(origin+Vector3.up*.8f,target.transform.position,i,quantity);
+                AbilityRuntime.AddVolleyProjectile(spell,target,launch,damage,i*.06f,volley,i);
             }
         }
         Fx(spell,"cast",origin+Vector3.up,1,.3f);return true;

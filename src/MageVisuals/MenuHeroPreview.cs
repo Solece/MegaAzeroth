@@ -27,6 +27,7 @@ public sealed class MenuHeroPreview:MonoBehaviour
     string classId="",lastFailure="";
     float scanAt,frameAt,startedAt,retryAt,logAt,hideScanAt,nativeHeight,scale;
     int frame=-1,binds,releases,modelLoads,failures;
+    readonly MenuPreviewFocus focus=new();
     readonly List<SavedRenderer> hidden=new();
     readonly List<Gear> gear=new();
     sealed class SavedRenderer {internal Renderer Renderer;internal bool Enabled;}
@@ -72,6 +73,7 @@ public sealed class MenuHeroPreview:MonoBehaviour
                 HideNative(native.transform);
             }
             foreach(var saved in hidden)if(saved.Renderer!=null)saved.Renderer.enabled=false;
+            focus.Update(bodyRenderer);
             if(Time.unscaledTime<frameAt)return;
             frameAt=Time.unscaledTime+1f/24;
             ApplyIdleFrame(Time.unscaledTime-startedAt);
@@ -89,6 +91,8 @@ public sealed class MenuHeroPreview:MonoBehaviour
     {
         foreach(var menu in Resources.FindObjectsOfTypeAll<CharacterMenu>())
             if(menu!=null&&menu.isActiveAndEnabled&&menu.gameObject.activeInHierarchy)return true;
+        foreach(var menu in Resources.FindObjectsOfTypeAll<MainMenu>())
+            if(menu!=null && menu.gameObject.scene.IsValid() && menu.tabMaps!=null && menu.tabMaps.activeInHierarchy)return true;
         return false;
     }
     [HideFromIl2Cpp]
@@ -205,6 +209,7 @@ public sealed class MenuHeroPreview:MonoBehaviour
     void ReleaseOwned()
     {
         bool attached=subject!=null||hidden.Count>0||gear.Count>0;
+        focus.Restore();
         // Restore only the renderer states captured by this menu owner.
         foreach(var saved in hidden)if(saved.Renderer!=null)saved.Renderer.enabled=saved.Enabled;
         hidden.Clear();
@@ -236,7 +241,7 @@ public sealed class MenuHeroPreview:MonoBehaviour
             sourceVertexCount=owner.bodyModel?.VertexCount??0,sourceHeadClosed=owner.bodyModel?.HeadClosed??false,sourceAssetsValid=assets,
             idleAnimationId=owner.idle?.AnimationId??-1,frame=owner.frame,frameCount=owner.idle?.Count??0,sourceLayer=owner.subject!=null?owner.subject.layer:-1,
             parentPath=owner.anchor!=null?owner.anchor.name:"",nativeRenderersHidden=owner.hidden.Count,nativeRenderersStillEnabled=enabledNative,
-            worldCenter=new[]{center.x,center.y,center.z},equipment=equipment.ToArray(),binds=owner.binds,releases=owner.releases,equipmentModelLoads=owner.modelLoads,
+            focus=owner.focus.Snapshot(),worldCenter=new[]{center.x,center.y,center.z},equipment=equipment.ToArray(),binds=owner.binds,releases=owner.releases,equipmentModelLoads=owner.modelLoads,
             failures=owner.failures,lastFailure=owner.lastFailure,sharesBattleEquipmentOwner=false,mutatesBattleClassIdentity=false,usesNativeSpin=true});
     }
     void OnDisable(){ReleaseOwned();}

@@ -3,13 +3,12 @@ import json,struct,sys,hashlib,io,math,os
 from pathlib import Path
 import numpy as np
 from PIL import Image
-sys.path.insert(0,r'D:/Games/Saitan/AzerothMegabonkLab/scripts/azeroth-assets')
+from vfx_paths import arguments
+args=arguments(__doc__)
 from mpq_source import Archives
 from convert_m2 import arr,Track,tr,qm
-sys.path.insert(0,r'D:/Games/Saitan/AzerothMegabonkLab/scripts/azeroth-mage')
 from blp_decode import decode_blp
-root=Path(r'D:/Games/Saitan/AzerothMegabonkLab')
-work=Path(os.environ.get('AZEROTH_VFX_WORK',str(root/'private-assets/azeroth-vfx')))
+work=args.work
 out=work/'assets';out.mkdir(parents=True,exist_ok=True)
 source=Archives();catalog=json.loads((work/'source-vfx.json').read_text())
 def unity(v):return [-float(v[1]),float(v[2]),float(v[0])]
@@ -24,12 +23,8 @@ def sample(t,time):
  if i>=len(vals)-1 or t['interpolation']==0:return vals[min(i,len(vals)-1)]
  a=np.array(vals[i]);b=np.array(vals[i+1]);return (a+(b-a)*(time-times[i])/max(1,times[i+1]-times[i])).tolist()
 models={};textures={};failures=[]
-for spell in catalog['spells']:
- for entry in spell['effects']:
-  if not entry['available']:continue
-  path=entry['source'];key=hashlib.sha256(path.lower().encode()).hexdigest()[:16];entry['key']=key
-  if key in models:continue
-  b,arc=source.read(path);n,poff=struct.unpack_from('<II',b,316)
+def export_model(entry,key):
+  path=entry['source'];b,arc=source.read(path);assert b[:4]==b'MD20' and struct.unpack_from('<I',b,4)[0]==256,(path,'Unsupported M2 version');n,poff=struct.unpack_from('<II',b,316)
   assert n==0 or poff+n*504<=len(b),(path,n,poff,len(b))
   ts=[]
   for ti,(typ,flags,length,off) in enumerate(arr(b,92,'4I')):
@@ -93,6 +88,25 @@ for spell in catalog['spells']:
    ribbons.append(dict(texture=ts[ti],blend=materials[mi][1] if 0<=mi<len(materials) else 4,position=unity(struct.unpack_from('<3f',b,rp+8)),color=track(b,rp+36,'3f'),alpha=track(b,rp+64,'h'),above=track(b,rp+92),below=track(b,rp+120),edgesPerSecond=struct.unpack_from('<f',b,rp+148)[0],life=struct.unpack_from('<f',b,rp+152)[0],visible=track(b,rp+192,'B')))
   model=dict(key=key,source=path,sha256=entry['sha256'],archive=arc,textures=ts,geometry=geometry,emitters=emitters,duration=duration,startMs=allAnims[0][2] if allAnims else 0,globals=[v[0] for v in arr(b,20,'I')],ribbons=ribbons,ribbonCount=ribbonCount)
   (out/(key+'.json')).write_text(json.dumps(model,separators=(',',':')));models[key]=model
-manifest=dict(format='azeroth-spell-vfx-v1',sources=['https://github.com/wowdev/WoWDBDefs','https://github.com/samwhosung/wow-1121-client-internals/blob/main/docs/models.md','https://github.com/wowdev/pywowlib/blob/master/file_formats/m2_format.py'],spells=[dict(id=s['id'],spellId=s['spellId'],visualId=s['visualId'],effects=[dict(stage=e['stage'],slot=e.get('slot'),key=e['key'],path=e['source']) for e in s['effects'] if 'key' in e]) for s in catalog['spells']],textures=list(textures.values()),limitations=['Native particle/ribbon simulation is adapted to Unity meshes; original textures, emitter settings and mesh animation retained.','Recursive model particles and specialized source blend details are not yet rendered.'])
+
+for spell in catalog['spells']:
+ for entry in spell.get('effects',[]):
+  if not entry['available']:continue
+  key=hashlib.sha256(entry['source'].lower().encode()).hexdigest()[:16]
+  try:
+   if key not in models:export_model(entry,key)
+   entry['key']=key
+  except Exception as exc:
+   failures.append(dict(path=entry['source'],kind='model',error=repr(exc)))
+ print('Exported',spell['classId'],spell['id'],'models',len(models),'textures',len(textures),flush=True)
+manifest=dict(format='azeroth-spell-vfx-v1',sourceCatalogs=catalog['sourceCatalogs'],sources=['https://github.com/wowdev/WoWDBDefs','https://github.com/samwhosung/wow-1121-client-internals/blob/main/docs/models.md','https://github.com/wowdev/pywowlib/blob/master/file_formats/m2_format.py'],spells=[dict(id=s['id'],classId=s['classId'],spellId=s['spellId'],visualId=s.get('visualId'),effects=[dict(stage=e['stage'],slot=e.get('slot'),key=e['key'],path=e['source']) for e in s.get('effects',[]) if 'key' in e]) for s in catalog['spells']],textures=list(textures.values()),limitations=['Native particle/ribbon simulation is adapted to Unity meshes; original textures, emitter settings and mesh animation retained.','Recursive model particles and specialized source blend details are not yet rendered.','Absent source DBC model paths are reported and omitted; no replacement visual is fabricated.'])
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
-print(json.dumps(dict(models=len(models),textures=len(textures),emitters=sum(len(m['emitters']) for m in models.values()),meshNodes=sum(len(m['geometry']['nodes']) if m['geometry'] else 0 for m in models.values()),failures=failures),indent=2))
+class_root=out/'classes';class_root.mkdir(exist_ok=True)
+for cid in sorted({s['classId'] for s in manifest['spells']}):
+ cm=dict(manifest);cm['classId']=cid;cm['spells']=[s for s in manifest['spells'] if s['classId']==cid]
+ (class_root/(cid+'.json')).write_text(json.dumps(cm,indent=2))
+summary=dict(models=len(models),textures=len(textures),emitters=sum(len(m['emitters']) for m in models.values()),meshNodes=sum(len(m['geometry']['nodes']) if m['geometry'] else 0 for m in models.values()),ribbons=sum(len(m['ribbons']) for m in models.values()),failures=failures,
+ missingSourceModels=sorted({e['source'] for s in catalog['spells'] for e in s.get('effects',[]) if not e['available']}),
+ classCounts={cid:dict(spells=sum(s['classId']==cid for s in manifest['spells']),renderableSpells=sum(s['classId']==cid and bool(s['effects']) for s in manifest['spells']),effects=sum(len(s['effects']) for s in manifest['spells'] if s['classId']==cid)) for cid in sorted({s['classId'] for s in manifest['spells']})})
+(work/'export-summary.json').write_text(json.dumps(summary,indent=2))
+print(json.dumps(summary,indent=2))

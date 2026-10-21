@@ -160,7 +160,7 @@ public static class AbilityRuntime
     public static void ResetRun()
     {
         Clear();CombatSimulation.Reset();CastCount=HitCount=0;DamageDealt=0;reported=false;CastsBySpell.Clear();HitsBySpell.Clear();DamageBySpell.Clear();DamageSourceRegistry.Clear();
-        TomeCompatibilityDiagnostics.Reset();ClassCombat.Reset();autoWeapon=null;nextAuto=0;criticalCasts.Clear();castSerial=currentCastSerial=0;
+        TomeCompatibilityDiagnostics.Reset();TargetAcquisition.Reset();ClassCombat.Reset();autoWeapon=null;nextAuto=0;criticalCasts.Clear();castSerial=currentCastSerial=0;
         if(ClassCombat.GenericActive && Catalog.SourceClass.SourceAutoWeapon.Enabled)
         {var a=Catalog.SourceClass.SourceAutoWeapon;autoWeapon=new LearnedSpell(new SpellDefinition{Id="source_auto_weapon",Name=Catalog.SourceClass.Name+" Auto Attack",Icon=Catalog.SourceClass.Icon,SourceKind=1,SourceSpellId=0,Kind="melee",School="Physical",BaseDamage=a.Damage*1.5f,BaseCooldown=a.Cooldown,Range=a.Range,Targets=1,CastKindId=5,CastDamageScale=1});}
         var starter=StarterOverride?.Invoke(Catalog?.StartingSpell??"fireball")??Catalog?.StartingSpell;
@@ -300,22 +300,24 @@ public static class AbilityRuntime
         if(MageSpellBehaviors.TryCast(spell,player,out var specialCasted))
         {if(specialCasted)RecordCast(spell,player);return specialCasted;}
         var d=spell.Definition;var origin=castOrigin??(player.transform.position+Vector3.up*0.8f);
-        var targets=Targets(castOrigin??player.transform.position,d.Kind=="selfAoe"?d.Radius*spell.RadiusFactor*MageSpellBehaviors.RadiusScale(spell)*Mathf.Max(0.1f,Stat(EStat.SizeMultiplier)):(castRange>0?castRange:d.Range),true);
+        float activationRange=d.Kind=="selfAoe"?d.Radius*spell.RadiusFactor*MageSpellBehaviors.RadiusScale(spell)*Mathf.Max(0.1f,Stat(EStat.SizeMultiplier)):(castRange>0?castRange:d.Range);
+        var targets=TargetAcquisition.SkillTargets(castOrigin??player.transform.position,activationRange,d.Kind is not ("projectile" or "missiles"));
         if(targets.Count==0)return false;
         var damage=Damage(spell)*castDamageScale;
         if(d.Kind=="selfAoe")
         {
-            foreach(var target in targets)Hit(spell,target,damage,origin);
+            foreach(var target in targets.Where(e=>(e.transform.position-(castOrigin??player.transform.position)).sqrMagnitude<=activationRange*activationRange))Hit(spell,target,damage,origin);
             SpellVfx.Play(d.Id,"cast",player.transform.position,spell.RadiusFactor*MageSpellBehaviors.RadiusScale(spell)*TomeCompatibility.Size,.7f);
         }
         else
         {
             var count=TomeCompatibility.Quantity(spell);
+            var volley=d.Kind=="instant"?null:TargetAcquisition.Prepare(spell,castOrigin??player.transform.position,activationRange,targets,count);
             for(int i=0;i<count;i++)
             {
-                var target=d.Targeting=="random"?targets[UnityEngine.Random.Range(0,targets.Count)]:targets[i%targets.Count];
+                var target=volley!=null?volley.Assigned[i]:d.Targeting=="random"?targets[UnityEngine.Random.Range(0,targets.Count)]:targets[i%targets.Count];
                 if(d.Kind=="instant")Hit(spell,target,damage,origin);
-                else Projectiles.Add(new SpellProjectile(spell,target,TomeCompatibility.LaunchOffset(origin,target.transform.position,i,count),damage,launchDelay:i*.06f));
+                else Projectiles.Add(new SpellProjectile(spell,target,TomeCompatibility.LaunchOffset(origin,target.transform.position,i,count),damage,rangeOverride:activationRange,launchDelay:i*.06f,volley:volley,projectileIndex:i));
             }
         }
         RecordCast(spell,player,targets[0].transform.position);
@@ -412,6 +414,7 @@ public static class AbilityRuntime
         return actual;
     }
     internal static void AddProjectile(LearnedSpell spell,Enemy target,Vector3 origin,float damage,float delay=0)=>Projectiles.Add(new SpellProjectile(spell,target,origin,damage,launchDelay:delay,castToken:currentCastSerial));
+    internal static void AddVolleyProjectile(LearnedSpell spell,Enemy target,Vector3 origin,float damage,float delay,VolleyPlan volley,int index)=>Projectiles.Add(new SpellProjectile(spell,target,origin,damage,rangeOverride:volley.SourceRange,launchDelay:delay,castToken:currentCastSerial,volley:volley,projectileIndex:index));
     internal static List<AbilityChoice> Choices(int rarity=0)
     {
         var result=new List<AbilityChoice>();
@@ -461,19 +464,24 @@ internal sealed class SpellProjectile
     private readonly LearnedSpell spell;private Enemy target;private uint enemyId;
     private readonly float damage,speed,range,size,launchAt;private readonly int castToken;
     private readonly bool appliesDot;
+    private readonly VolleyPlan volley;private readonly int projectileIndex,projectileId;private bool ownsClaim;
     private Vector3 dotLegOrigin;private float dotLegStarted,dotLegDue,dotLegDistance,dotDistanceBefore;
     private readonly HashSet<uint> hitEnemies=new();
     private int bounces;
     private Vector3 pos;private float distance;private GameObject visual;
-    internal SpellProjectile(LearnedSpell spell,Enemy target,Vector3 position,float damage,float speedOverride=0,float rangeOverride=0,float launchDelay=0,int castToken=0)
+    internal SpellProjectile(LearnedSpell spell,Enemy target,Vector3 position,float damage,float speedOverride=0,float rangeOverride=0,float launchDelay=0,int castToken=0,VolleyPlan volley=null,int projectileIndex=-1)
     {
         this.castToken=castToken;this.spell=spell;this.target=target;enemyId=target.id;pos=position;this.damage=damage;
+        this.volley=volley;this.projectileIndex=projectileIndex;projectileId=TargetAcquisition.NewProjectile();
+        if(volley!=null){volley.Claim(enemyId);ownsClaim=true;}
         speed=(speedOverride>0?speedOverride:spell.Definition.ProjectileSpeed)*TomeCompatibility.ProjectileSpeed;
-        range=(rangeOverride>0?rangeOverride:spell.Definition.Range)*TomeCompatibility.Duration;
+        float sourceRange=rangeOverride>0?rangeOverride:AbilityRuntime.OverrideCastRange>0?AbilityRuntime.OverrideCastRange:spell.Definition.Range;
+        range=TargetAcquisition.DetectionRange(sourceRange)*TomeCompatibility.Duration;
         size=TomeCompatibility.Size;bounces=TomeCompatibility.ExtraBounces;launchAt=CombatSimulation.Time+Mathf.Max(0,launchDelay);
         appliesDot=ClassCombat.GenericActive&&spell.Definition.Kind=="damageOverTime";
         if(appliesDot)BeginDotLeg(launchAt);
         TomeCompatibilityDiagnostics.ProjectileCreated();
+        TargetAcquisition.ProjectileEvent("created",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,0,enemyId,pos,range,range,targetDistance:Vector3.Distance(pos,target.transform.position));
         if(launchDelay<=0)EnsureVisual();
     }
     private void EnsureVisual()
@@ -487,12 +495,31 @@ internal sealed class SpellProjectile
         var delta=target.transform.position-pos;delta.y=0;dotLegDistance=delta.magnitude;
         dotLegDue=started+dotLegDistance/Mathf.Max(.0001f,speed);
     }
-    internal object Snapshot()=>new{Spell=spell.Definition.Id,Enemy=enemyId,X=pos.x,Y=pos.y,Z=pos.z,Distance=distance,Range=range,Speed=speed,Size=size,Bounces=bounces,LaunchRemaining=Mathf.Max(0,launchAt-CombatSimulation.Time),AppliesDamageOverTime=appliesDot,DotDeliveryRemaining=appliesDot?Mathf.Max(0,dotLegDue-CombatSimulation.Time):0,HasVisual=visual!=null};
+    internal object Snapshot()=>new{Spell=spell.Definition.Id,Enemy=enemyId,ProjectileId=projectileId,ProjectileIndex=projectileIndex,VolleyId=volley?.VolleyId??0,CastToken=castToken,SourceRange=volley?.SourceRange,DetectionRange=volley!=null?TargetAcquisition.DetectionRange(volley.SourceRange):(float?)null,TargetDistance=ValidTarget()?Vector3.Distance(pos,target.transform.position):-1,X=pos.x,Y=pos.y,Z=pos.z,Distance=distance,Range=range,Speed=speed,Size=size,Bounces=bounces,LaunchRemaining=Mathf.Max(0,launchAt-CombatSimulation.Time),AppliesDamageOverTime=appliesDot,DotDeliveryRemaining=appliesDot?Mathf.Max(0,dotLegDue-CombatSimulation.Time):0,HasVisual=visual!=null};
+    private bool ValidTarget()
+    {try{return target!=null&&target.id==enemyId&&!target.IsDeadOrDyingNextFrame();}catch{return false;}}
+    private void ReplaceTarget(Enemy replacement)
+    {
+        if(ownsClaim){volley.Release(enemyId);ownsClaim=false;}
+        target=replacement;enemyId=replacement.id;
+        if(volley!=null){volley.Claim(enemyId);ownsClaim=true;}
+    }
+    private bool RetargetDead()
+    {
+        uint old=enemyId;if(ownsClaim){volley.Release(old);ownsClaim=false;}
+        var candidates=TargetAcquisition.DistinctNearest(AbilityRuntime.Targets(pos,Mathf.Max(0,range-distance),false).Where(e=>!hitEnemies.Contains(e.id)&&(!appliesDot||!ClassSpellBehaviors.HasDot(e,spell.Definition.Id))),pos);
+        var replacement=volley?.Replacement(candidates)??candidates.FirstOrDefault();
+        if(replacement==null)
+        {TargetAcquisition.ProjectileEvent("dead-target-no-replacement",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,old,0,pos,range,range-distance,candidates);return false;}
+        ReplaceTarget(replacement);if(appliesDot)BeginDotLeg(CombatSimulation.Time);
+        TargetAcquisition.ProjectileEvent("retarget-dead",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,old,enemyId,pos,range,range-distance,candidates,Vector3.Distance(pos,target.transform.position));return true;
+    }
     internal bool Tick(float dt)
     {
         if(!CombatSimulation.CanSimulate)return true;
         if(CombatSimulation.Time<launchAt)return true;
-        if(target==null || target.id!=enemyId || target.IsDeadOrDyingNextFrame() || distance>range)return false;
+        if(distance>range)return false;
+        if(!ValidTarget()&&!RetargetDead())return false;
         EnsureVisual();
         var endpoint=target.collider!=null?target.collider.bounds.center:target.transform.position+Vector3.up;
         if(appliesDot)
@@ -503,25 +530,27 @@ internal sealed class SpellProjectile
             if(CombatSimulation.Time<dotLegDue)return true;
             hitEnemies.Add(enemyId);pos=endpoint;
             ClassSpellBehaviors.ApplySpellDot(spell,target,damage,castToken);TomeCompatibilityDiagnostics.ProjectileHit();
+            TargetAcquisition.ProjectileEvent("hit-dot",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,enemyId,enemyId,pos,range,range-distance);
             if(bounces<=0)return false;
             var nextDot=AbilityRuntime.Targets(endpoint,Mathf.Max(0,range-distance),false).FirstOrDefault(e=>!hitEnemies.Contains(e.id));
             if(nextDot==null)return false;
-            bounces--;target=nextDot;enemyId=nextDot.id;BeginDotLeg(CombatSimulation.Time);TomeCompatibilityDiagnostics.ProjectileBounced();return true;
+            uint oldDot=enemyId;bounces--;ReplaceTarget(nextDot);BeginDotLeg(CombatSimulation.Time);TomeCompatibilityDiagnostics.ProjectileBounced();TargetAcquisition.ProjectileEvent("bounce",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,oldDot,enemyId,pos,range,range-distance);return true;
         }
         var step=speed*dt;
         if((endpoint-pos).sqrMagnitude<=Mathf.Max(0.2f*size,step)*Mathf.Max(0.2f*size,step))
         {
             var from=pos;hitEnemies.Add(enemyId);pos=endpoint;
             AbilityRuntime.Hit(spell,target,damage,from,castToken);TomeCompatibilityDiagnostics.ProjectileHit();
+            TargetAcquisition.ProjectileEvent("hit",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,enemyId,enemyId,pos,range,range-distance);
             if(bounces<=0)return false;
             var next=AbilityRuntime.Targets(endpoint,Mathf.Max(0,range-distance),false).FirstOrDefault(e=>!hitEnemies.Contains(e.id));
             if(next==null)return false;
-            bounces--;target=next;enemyId=next.id;TomeCompatibilityDiagnostics.ProjectileBounced();
+            uint old=enemyId;bounces--;ReplaceTarget(next);TomeCompatibilityDiagnostics.ProjectileBounced();TargetAcquisition.ProjectileEvent("bounce",projectileId,projectileIndex,volley,spell.Definition.Id,castToken,old,enemyId,pos,range,range-distance);
             return true;
         }
         pos=Vector3.MoveTowards(pos,endpoint,step);distance+=step;if(visual!=null){visual.transform.position=pos;var direction=endpoint-pos;if(direction.sqrMagnitude>.001f)visual.transform.rotation=Quaternion.LookRotation(direction);}return true;
     }
-    internal void Dispose(){SpellVfx.Release(visual);visual=null;}
+    internal void Dispose(){if(ownsClaim){volley.Release(enemyId);ownsClaim=false;}SpellVfx.Release(visual);visual=null;}
 }
 
 public sealed class AbilityBehaviour : MonoBehaviour

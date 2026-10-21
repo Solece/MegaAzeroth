@@ -20,8 +20,35 @@ internal static class SpellVfx
     private static readonly List<SourceSpellEffect> active=new();
     private static readonly HashSet<string> failed=new();
     private static readonly List<Material> instanceMaterials=new();
+    internal const int EffectCapacity=64,ReservedAreaCapacity=4;
+    private static int peakActive;
+    private static bool injectingBudgetProbe;
+    private static readonly Dictionary<string,int> requests=new(),drops=new(),fallbacks=new(),spawnedStages=new(),evictions=new();
+    private static void Count(Dictionary<string,int> counters,string key)=>counters[key]=counters.TryGetValue(key,out int value)?value+1:1;
+    internal static string RendererSnapshot()=>JsonSerializer.Serialize(new{EffectCapacity,ReservedAreaCapacity,PeakActive=peakActive,Requested=requests,Dropped=drops,Fallbacks=fallbacks,Evictions=evictions,SpawnedStages=spawnedStages,Effects=active.Where(Alive).Select(fx=>fx.RenderSnapshot()).ToArray()});
+    internal static string BindingAudit()=>JsonSerializer.Serialize(map.Select(spell=>new{Id=spell.Key,Stages=spell.Value.Select(stage=>new{Stage=stage.Key,Models=stage.Value.Select(key=>new{Key=key,Source=Asset(key).Source,Emitters=Asset(key).Emitters.Count,Ribbons=Asset(key).Ribbons.Count,GeometryNodes=Asset(key).Geometry?.Nodes.Count??0,BoneAttachments=Asset(key).BonePoses?.Bones.Length??0}).ToArray()}).ToArray()}).ToArray());
     internal static int Spawned,RecoveredTextures,RecoveredGeometry;
     internal static int Live{get{active.RemoveAll(fx=>!Alive(fx));return active.Count;}}
+    internal static int NonAreaLive{get{_ = Live;return active.Count(fx=>!fx.IsArea);}}
+    private static bool Admit(string id,string stage)
+    {
+        bool area=stage is "area" or "areaKit";int count=Live;
+        if(!area&&NonAreaLive>=EffectCapacity-ReservedAreaCapacity)
+        {Count(drops,"area-reserve:"+id+"/"+stage);return false;}
+        if(count<EffectCapacity)return true;
+        if(area)
+        {
+            var victim=active.Where(fx=>fx.PureTransient).OrderByDescending(fx=>fx.Age).FirstOrDefault();
+            if(victim!=null)
+            {
+                Count(evictions,"area-admission:"+id+"/"+stage+"<-"+victim.Identity);
+                // Disable immediately: native Destroy is deferred to frame end.
+                // These source cast/impact instances own no gameplay object.
+                victim.gameObject.SetActive(false);active.Remove(victim);Object.Destroy(victim.gameObject);return true;
+            }
+        }
+        Count(drops,"active-effect-cap:"+id+"/"+stage);return false;
+    }
     // CLR dictionaries are not native Unity roots. The map loader calls
     // UnloadUnusedAssets between stages while no renderer uses these caches.
     internal static bool Alive(Object value)
@@ -52,7 +79,8 @@ internal static class SpellVfx
             InvalidTextures=cachedTextures.Count(t=>!Alive(t)),InvalidMeshes=meshes.Count(m=>!Alive(m)),
             PinnedTextures=cachedTextures.Count(t=>Pinned(t)),PinnedMeshes=meshes.Count(m=>Pinned(m)),
             ActiveMaterials=materials.Length,InvalidMaterials=materials.Count(m=>!Alive(m)),PinnedMaterials=materials.Count(m=>Pinned(m)),
-            FailedEffects=failed.Count,ActiveEffects=Live,EffectAges=active.Where(fx=>Alive(fx)).Select(fx=>fx.Age).ToArray(),Spawned,RecoveredTextures,RecoveredGeometry});
+            FailedEffects=failed.Count,ActiveEffects=Live,EffectAges=active.Where(fx=>Alive(fx)).Select(fx=>fx.Age).ToArray(),Spawned,RecoveredTextures,RecoveredGeometry,
+            EffectCapacity,ReservedAreaCapacity,PeakActive=peakActive,NonAreaEffects=NonAreaLive,Requested=requests,Dropped=drops,Fallbacks=fallbacks,Evictions=evictions,SpawnedStages=spawnedStages});
     }
     internal static void PrimeAllAssets()
     {
@@ -78,6 +106,9 @@ internal static class SpellVfx
             var stages=new Dictionary<string,List<string>>();
             foreach(var e in spell.GetProperty("effects").EnumerateArray())
             {
+                // MD20/v256 SpellVisualKit fields13/14 are sound/camera shake,
+                // not SpellVisualEffectName IDs. Accept only attachment slots.
+                if(e.TryGetProperty("slot",out var slot)&&slot.ValueKind==JsonValueKind.Number&&slot.GetInt32()>=13)continue;
                 var stage=e.GetProperty("stage").GetString();var key=e.GetProperty("key").GetString();
                 if(!stages.TryGetValue(stage,out var keys))stages[stage]=keys=new();
                 if(!keys.Contains(key))keys.Add(key);
@@ -108,15 +139,21 @@ internal static class SpellVfx
         found=JsonSerializer.Deserialize<EffectAsset>(File.ReadAllText(Path.Combine(root,key+".json")),JsonOptions);
         found.Bake(root);assets[key]=found;return found;
     }
-    internal static Material Material(string texture,int blend)
+    internal static Material Material(string texture,int blend,int materialFlags=20)
     {
         var shader=Shader.Find("Particles/Standard Unlit")??Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply")??Shader.Find("Sprites/Default");
         if(shader==null)throw new InvalidOperationException("Native particle shader unavailable");
         var m=Keep(new Material(shader){name="AzerothVfxMaterial_"+texture,mainTexture=Texture(texture),color=Color.white,renderQueue=3000});
-        m.SetFloat("_Mode",blend==4?1:2);m.SetFloat("_ZWrite",0);m.SetFloat("_Cull",0);
-        m.SetFloat("_SrcBlend",(float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        m.SetFloat("_DstBlend",(float)(blend==4?UnityEngine.Rendering.BlendMode.One:UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
-        m.EnableKeyword("_ALPHABLEND_ON");m.DisableKeyword("_ALPHATEST_ON");m.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        bool opaque=blend==0,cutout=blend==1;
+        m.SetFloat("_Mode",opaque?0:cutout?1:2);
+        m.SetFloat("_ZWrite",(opaque||cutout)&&(materialFlags&16)==0?1:0);
+        m.SetFloat("_Cull",(materialFlags&4)!=0?0:(float)UnityEngine.Rendering.CullMode.Back);
+        m.SetFloat("_SrcBlend",(float)(opaque||cutout?UnityEngine.Rendering.BlendMode.One:UnityEngine.Rendering.BlendMode.SrcAlpha));
+        m.SetFloat("_DstBlend",(float)(opaque||cutout?UnityEngine.Rendering.BlendMode.Zero:blend==4?UnityEngine.Rendering.BlendMode.One:UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
+        m.SetFloat("_Cutoff",.5f);m.renderQueue=opaque?2000:cutout?2450:3000;
+        if(cutout)m.EnableKeyword("_ALPHATEST_ON");else m.DisableKeyword("_ALPHATEST_ON");
+        if(!opaque&&!cutout)m.EnableKeyword("_ALPHABLEND_ON");else m.DisableKeyword("_ALPHABLEND_ON");
+        m.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         instanceMaterials.Add(m);return m;
     }
     internal static void Play(string id,string stage,Vector3 position,float scale=1,float duration=0)
@@ -127,28 +164,39 @@ internal static class SpellVfx
     internal static GameObject Projectile(string id,Vector3 position,float scale=1)=>Spawn(id,"missile",position,scale,0,true);
     private static GameObject Spawn(string id,string stage,Vector3 position,float scale,float life,bool loop)
     {
-        if(!map.TryGetValue(id,out var stages) || Live>=64)return null;
+        string request=id+"/"+stage;Count(requests,request);
+        if(!map.TryGetValue(id,out var stages)){Count(drops,"unmapped-spell:"+request);return null;}
         if(!stages.TryGetValue(stage,out var keys))
         {
             var fallback=stage is "area" or "areaKit"?new[]{"areaKit","impact","cast"}:stage=="aura"?new[]{"cast","impact"}:new[]{"impact","cast"};
             keys=fallback.Select(s=>stages.TryGetValue(s,out var x)?x:null).FirstOrDefault(x=>x!=null);
+            if(keys!=null)Count(fallbacks,request);
         }
-        if(keys==null)return null;
+        if(keys==null){Count(drops,"unmapped-stage:"+request);return null;}
+        Vector3 requestedPosition=position;string anchor="requested-position";
+        if(stage is "area" or "areaKit")
+        {
+            var manager=GameManager.Instance;int mask=manager!=null?manager.whatIsGround.value:0;
+            if(mask!=0&&Physics.Raycast(position+Vector3.up*100,Vector3.down,out var hit,240,mask,QueryTriggerInteraction.Ignore))
+            {position=hit.point+Vector3.up*.02f;anchor="native-ground-mask:"+mask;}
+            else anchor="native-ground-query-missed";
+        }
         GameObject first=null;
         var group=loop?new GameObject("AzerothProjectileVfx_"+id):null;
         if(group!=null){group.transform.position=position;group.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);}
         foreach(var key in keys)
         {
-            if(failed.Contains(key))continue;
+            if(failed.Contains(key)){Count(drops,"previous-asset-error:"+request);continue;}
+            if(!Admit(id,stage))continue;
             try
             {
                 var asset=Asset(key);var go=new GameObject("AzerothVfx_"+id+"_"+stage);
                 if(group!=null)go.transform.SetParent(group.transform,false);
                 else{go.transform.position=position;go.transform.localScale=Vector3.one*Mathf.Clamp(scale,.1f,10);}
-                var fx=go.AddComponent<SourceSpellEffect>();fx.Init(asset,life,loop);active.Add(fx);Spawned++;
+                var fx=go.AddComponent<SourceSpellEffect>();fx.Init(asset,life,loop,id,stage,key,requestedPosition,anchor,injectingBudgetProbe);active.Add(fx);peakActive=Math.Max(peakActive,active.Count);Spawned++;Count(spawnedStages,request);
                 first??=go;
             }
-            catch(Exception ex){failed.Add(key);Plugin.Current.Log.LogError("Source spell VFX failed "+id+"/"+stage+": "+ex);}
+            catch(Exception ex){Count(drops,"asset-error:"+request);failed.Add(key);Plugin.Current.Log.LogError("Source spell VFX failed "+id+"/"+stage+": "+ex);}
         }
         if(group!=null && first==null){Object.Destroy(group);return null;}
         return group??first;
@@ -163,6 +211,32 @@ internal static class SpellVfx
         Object.Destroy(go);
     }
     internal static void Removed(SourceSpellEffect effect)=>active.Remove(effect);
+    internal static string FillTransientBudgetProbe()
+    {
+        int before=Live,createdBefore=Spawned;var player=Assets.Scripts.Actors.Player.MyPlayer.Instance;
+        if(player==null)return JsonSerializer.Serialize(new{SyntheticRenderLoad=true,Error="Native player is absent"});
+        injectingBudgetProbe=true;
+        try
+        {
+            // One original4-vertex source mesh per instance, no invented sprite
+            // and no native damage/casts/items. It remains a synthetic load.
+            for(int attempt=0;attempt<EffectCapacity&&NonAreaLive<EffectCapacity-ReservedAreaCapacity&&Live<EffectCapacity;attempt++)
+            {
+                int old=Spawned;var offset=new Vector3((attempt%5-2)*.5f,1,(attempt/5%5-2)*.5f);
+                Spawn("demo_shout","impact",player.transform.position+offset,1,3,false);if(Spawned==old)break;
+            }
+        }
+        finally{injectingBudgetProbe=false;}
+        return JsonSerializer.Serialize(new{SyntheticRenderLoad=true,Source="Spells\\DemoralizingShout_Impact_Head.m2",DurationSeconds=3,BeforeActive=before,AfterActive=Live,Created=Spawned-createdBefore,
+            EffectCapacity,ReservedAreaCapacity,NonAreaEffects=NonAreaLive,ReachedTransientBudget=NonAreaLive==EffectCapacity-ReservedAreaCapacity,Snapshot=JsonSerializer.Deserialize<JsonElement>(ResourceSnapshot())});
+    }
+    internal static string ClearTransientBudgetProbe()
+    {
+        int cleared=0;
+        foreach(var fx in active.Where(fx=>Alive(fx)&&fx.SyntheticBudgetLoad).ToArray())
+        {fx.gameObject.SetActive(false);active.Remove(fx);Object.Destroy(fx.gameObject);cleared++;}
+        return JsonSerializer.Serialize(new{SyntheticRenderLoad=true,Cleared=cleared,AfterActive=Live});
+    }
     internal static void Clear()
     {
         // Clear scene instances only. Baked meshes and uploaded textures belong
@@ -176,6 +250,8 @@ public static class SpellVfxDiagnostics
 {
     // Read on the Unity thread; these properties inspect native resource state.
     public static string SnapshotJson=>SpellVfx.ResourceSnapshot();
+    public static string RendererSnapshotJson=>SpellVfx.RendererSnapshot();
+    public static string BindingAuditJson=>SpellVfx.BindingAudit();
     public static bool PrimeAllAssetsForProbe()
     {
         if(!Application.isBatchMode || Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")!="1")return false;
@@ -188,26 +264,37 @@ public static class SpellVfxDiagnostics
     }
 }
 
+public static class VfxBudgetDiagnostics
+{
+    static bool Allowed=>Application.isBatchMode&&Environment.GetEnvironmentVariable("AZEROTH_LAB_HEADLESS_TEST")=="1"&&AbilityBehaviour.RenderVisuals;
+    public static string FillTransientBudgetForProbe()=>Allowed?SpellVfx.FillTransientBudgetProbe():"{\"Denied\":\"Requires rendered batch probe with HEADLESS_TEST1\"}";
+    public static string ClearTransientBudgetForProbe()=>Allowed?SpellVfx.ClearTransientBudgetProbe():"{\"Denied\":\"Requires rendered batch probe with HEADLESS_TEST1\"}";
+    public static string SnapshotJson=>SpellVfx.ResourceSnapshot();
+}
+
 internal sealed class Curve
 {
-    public int Interpolation,GlobalSequence=-1;public int[] Times=Array.Empty<int>();public JsonElement Values;
+    public int Interpolation,GlobalSequence=-1;public int[] Times=Array.Empty<int>();public int[][] Ranges=Array.Empty<int[]>();public JsonElement Values;
     internal float At(float ms,float fallback=0,int component=0)
     {
         if(Values.ValueKind!=JsonValueKind.Array || Values.GetArrayLength()==0 || Times.Length==0)return fallback;
-        int i=0;while(i+1<Times.Length && Times[i+1]<=ms)i++;
+        int start=0,end=Math.Min(Times.Length,Values.GetArrayLength())-1;
+        if(GlobalSequence<0 && Ranges.Length>0 && Ranges[0].Length>=2){start=Ranges[0][0];end=Math.Min(end,Ranges[0][1]);}
+        if(start<0||start>end||start>=Times.Length)return fallback;
+        int i=start;while(i<end && Times[i+1]<=ms)i++;
         float Value(int n){var v=Values[Math.Min(n,Values.GetArrayLength()-1)];return v.ValueKind==JsonValueKind.Array?v[Math.Min(component,v.GetArrayLength()-1)].GetSingle():v.GetSingle();}
-        var a=Value(i);if(i+1>=Times.Length || Interpolation==0)return a;
+        var a=Value(i);if(i>=end || Interpolation==0)return a;
         return Mathf.Lerp(a,Value(i+1),Mathf.Clamp01((ms-Times[i])/Math.Max(1,Times[i+1]-Times[i])));
     }
 }
 internal sealed class EmitterAsset
 {
-    public string Texture;public uint Flags;public int Blend,Shape,Rows=1,Cols=1;public float[] Position=Array.Empty<float>();
+    public string Texture;public uint Flags;public int Bone=-1,Blend,Shape,Rows=1,Cols=1;public float[] Position=Array.Empty<float>();
     public Dictionary<string,Curve> Tracks=new();public float Mid=.5f;public float[][] Colors=Array.Empty<float[]>();public float[] Sizes=Array.Empty<float>();public float Drag,Spin,TailLength;public Curve Enabled;
 }
 internal sealed class MeshAsset
 {
-    public string Texture;public int[] Triangles=Array.Empty<int>();public int Blend;public Curve Color,Alpha,Weight;
+    public string Texture;public int[] Triangles=Array.Empty<int>();public int Blend,MaterialFlags=20;public Curve Color,Alpha,Weight;
     internal Mesh[] Frames;
 }
 internal sealed class GeometryAsset
@@ -217,10 +304,11 @@ internal sealed class GeometryAsset
 internal sealed class EffectAsset
 {
     public string Source;public float Duration;public int StartMs;public int[] Globals=Array.Empty<int>();public List<EmitterAsset> Emitters=new();public GeometryAsset Geometry;
-    public List<RibbonAsset> Ribbons=new();
+    public List<RibbonAsset> Ribbons=new();public BonePoseAsset BonePoses;
     internal bool NativeGeometryValid=>Geometry==null || Geometry.Nodes.All(node=>node.Frames!=null && node.Frames.Length==Geometry.FrameCount && node.Frames.All(mesh=>SpellVfx.Alive(mesh)));
     internal void Bake(string root)
     {
+        BonePoses?.Bake(root);
         if(Geometry==null)return;
         foreach(var node in Geometry.Nodes)if(node.Frames!=null)foreach(var frame in node.Frames)if(SpellVfx.Alive(frame))Object.Destroy(frame);
         var g=Geometry;var bytes=System.IO.File.ReadAllBytes(Path.Combine(root,g.File));
@@ -237,30 +325,81 @@ internal sealed class EffectAsset
             }
         }
     }
-    internal float Millis(float elapsed,Curve curve)
+    internal Matrix4x4 Attachment(int bone,float elapsed)=>BonePoses?.At(bone,elapsed)??Matrix4x4.identity;
+    internal float Millis(float animation,Curve curve,float elapsed=-1)
     {
-        if(curve!=null && curve.GlobalSequence>=0 && curve.GlobalSequence<Globals.Length && Globals[curve.GlobalSequence]>0)return elapsed*1000%Globals[curve.GlobalSequence];
-        return StartMs+elapsed*1000;
+        if(curve!=null && curve.GlobalSequence>=0 && curve.GlobalSequence<Globals.Length)return Globals[curve.GlobalSequence]>0?(elapsed>=0?elapsed:animation)*1000%Globals[curve.GlobalSequence]:0;
+        return StartMs+animation*1000;
+    }
+}
+
+internal sealed class BonePoseAsset
+{
+    public string File;public int FrameCount;public float Duration;public int[] Bones=Array.Empty<int>();
+    private Matrix4x4[][] frames;
+    internal void Bake(string root)
+    {
+        if(frames!=null)return;
+        var bytes=System.IO.File.ReadAllBytes(Path.Combine(root,File));
+        if(FrameCount<=0||bytes.Length!=FrameCount*Bones.Length*64)throw new InvalidDataException("VFX bone frame size mismatch");
+        var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);frames=new Matrix4x4[FrameCount][];
+        for(int f=0;f<FrameCount;f++)
+        {
+            frames[f]=new Matrix4x4[Bones.Length];
+            for(int b=0;b<Bones.Length;b++)
+            {
+                var matrix=Matrix4x4.identity;int at=(f*Bones.Length+b)*16;
+                for(int row=0;row<4;row++)for(int column=0;column<4;column++)matrix[row,column]=values[at+row*4+column];
+                frames[f][b]=matrix;
+            }
+        }
+    }
+    internal Matrix4x4 At(int bone,float time)
+    {
+        int index=Array.IndexOf(Bones,bone);if(index<0||frames==null)return Matrix4x4.identity;
+        int frame=Mathf.Clamp((int)(time/Mathf.Max(.1f,Duration)*(FrameCount-1)),0,FrameCount-1);return frames[frame][index];
     }
 }
 
 public sealed class SourceSpellEffect:MonoBehaviour
 {
     public SourceSpellEffect(IntPtr pointer):base(pointer){}
-    private EffectAsset asset;private float began,life,stopAt=-1,next;private bool loop;
+    private EffectAsset asset;private float began,life,stopAt=-1,next,lastAnimation;private bool loop,syntheticBudgetLoad;private string sourceId,sourceStage,sourceKey,anchor;private Vector3 requestedPosition;
     public float Age=>Mathf.Max(0,CombatSimulation.Time-began);
+    internal bool IsArea=>sourceStage is "area" or "areaKit";
+    internal bool PureTransient=>!loop&&sourceStage is "cast" or "impact" or "precast";
+    internal bool SyntheticBudgetLoad=>syntheticBudgetLoad;
+    internal string Identity=>sourceId+"/"+sourceStage;
     private readonly List<ParticleLayer> particles=new();private readonly List<GeometryLayer> geometry=new();
     private readonly List<RibbonLayer> ribbons=new();
     [HideFromIl2Cpp]
-    internal void Init(EffectAsset source,float duration,bool repeat)
+    internal void Init(EffectAsset source,float duration,bool repeat,string id,string stage,string key,Vector3 requested,string anchoring,bool synthetic)
     {
-        asset=source;began=CombatSimulation.Time;life=duration;loop=repeat;
+        asset=source;began=CombatSimulation.Time;life=duration;loop=repeat;sourceId=id;sourceStage=stage;sourceKey=key;requestedPosition=requested;anchor=anchoring;syntheticBudgetLoad=synthetic;
         foreach(var e in asset.Emitters)particles.Add(new ParticleLayer(transform,e,asset));
         foreach(var r in asset.Ribbons)ribbons.Add(new RibbonLayer(transform,r,asset));
         if(asset.Geometry!=null)foreach(var m in asset.Geometry.Nodes)geometry.Add(new GeometryLayer(transform,m,asset));
     }
     [HideFromIl2Cpp]
     internal void Stop(){if(stopAt<0)stopAt=CombatSimulation.Time;}
+    [HideFromIl2Cpp]
+    internal object RenderSnapshot()
+    {
+        var renderers=GetComponentsInChildren<MeshRenderer>(true);
+        var position=transform.position;
+        return new{Id=sourceId,Stage=sourceStage,Key=sourceKey,Source=asset?.Source,Age,AnimationTime=lastAnimation,Stopped=stopAt>=0,SyntheticBudgetLoad=syntheticBudgetLoad,Anchor=anchor,RequestedPosition=new[]{requestedPosition.x,requestedPosition.y,requestedPosition.z},Position=new[]{position.x,position.y,position.z},
+            BoneAttachments=asset?.BonePoses?.Bones.Length??0,ParticleLayers=particles.Select(p=>p.Snapshot()).ToArray(),
+            RibbonLayers=ribbons.Select(r=>r.Snapshot()).ToArray(),
+            Renderers=renderers.Select(r=>{
+                var mesh=r.GetComponent<MeshFilter>()?.sharedMesh;var material=r.sharedMaterial;var bounds=r.bounds;var color=material!=null?material.color:Color.clear;
+                float Value(string property)=>material!=null&&material.HasProperty(property)?material.GetFloat(property):-1;
+                return new{Name=r.gameObject.name,Enabled=r.enabled,Active=r.gameObject.activeInHierarchy,IsVisible=r.isVisible,
+                    VertexCount=mesh!=null?mesh.vertexCount:0,IndexCount=mesh!=null&&mesh.subMeshCount>0?mesh.GetIndexCount(0):0,
+                    BoundsCenter=new[]{bounds.center.x,bounds.center.y,bounds.center.z},BoundsSize=new[]{bounds.size.x,bounds.size.y,bounds.size.z},
+                    Shader=material?.shader?.name,Texture=material?.mainTexture?.name,Alpha=color.a,Color=new[]{color.r,color.g,color.b,color.a},
+                    SrcBlend=Value("_SrcBlend"),DstBlend=Value("_DstBlend"),ZWrite=Value("_ZWrite"),Cull=Value("_Cull")};
+            }).ToArray()};
+    }
     void Update()
     {
         if(asset==null || !CombatSimulation.CanSimulate)return;
@@ -268,9 +407,9 @@ public sealed class SourceSpellEffect:MonoBehaviour
         float elapsed=now-began;
         if(!loop && stopAt<0 && elapsed>=life)Stop();
         if(stopAt>=0 && now-stopAt>3){Object.Destroy(gameObject);return;}
-        float animation=(loop || life>asset.Duration)?elapsed%Math.Max(.1f,asset.Duration):elapsed;
+        float animation=(loop || life>asset.Duration)?elapsed%Math.Max(.1f,asset.Duration):elapsed;lastAnimation=animation;
         foreach(var layer in particles)layer.Tick(dt,elapsed,animation,stopAt<0);
-        foreach(var layer in geometry)layer.Tick(animation,stopAt<0?1:Mathf.Max(0,1-(now-stopAt)/.35f));
+        foreach(var layer in geometry)layer.Tick(animation,stopAt<0?1:Mathf.Max(0,1-(now-stopAt)/.35f),elapsed);
         foreach(var layer in ribbons)layer.Tick(elapsed,animation,stopAt<0);
     }
     void OnDestroy(){foreach(var p in particles)p.Dispose();foreach(var g in geometry)g.Dispose();foreach(var r in ribbons)r.Dispose();SpellVfx.Removed(this);}
@@ -278,7 +417,7 @@ public sealed class SourceSpellEffect:MonoBehaviour
 
 internal sealed class RibbonAsset
 {
-    public string Texture;public int Blend;public float[] Position=Array.Empty<float>();public Curve Color,Alpha,Above,Below,Visible;public float EdgesPerSecond,Life;
+    public string Texture;public int Bone=-1,Blend,MaterialFlags=20;public float[] Position=Array.Empty<float>();public Curve Color,Alpha,Above,Below,Visible;public float EdgesPerSecond,Life;
 }
 internal sealed class RibbonLayer
 {
@@ -288,21 +427,24 @@ internal sealed class RibbonLayer
     {
         owner=parent;source=ribbon;asset=model;go=new GameObject("OriginalM2Ribbon");go.transform.SetParent(parent,false);
         mesh=SpellVfx.Keep(new Mesh{name="OriginalM2RibbonTrail"});mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;
-        material=SpellVfx.Material(ribbon.Texture,ribbon.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
+        material=SpellVfx.Material(ribbon.Texture,ribbon.Blend,ribbon.MaterialFlags);go.AddComponent<MeshRenderer>().sharedMaterial=material;
     }
+    internal object Snapshot()=>new{source.Bone,Points=trail.Count,LastPoint=trail.Count>0?new[]{trail[^1].Position.x,trail[^1].Position.y,trail[^1].Position.z}:Array.Empty<float>()};
     internal void Tick(float elapsed,float animation,bool emitting)
     {
         float life=Mathf.Clamp(source.Life,.03f,3);
         while(trail.Count>0 && elapsed-trail[0].Time>life)trail.RemoveAt(0);
-        if(emitting && elapsed>=nextPoint)
+        bool visible=source.Visible==null||source.Visible.Values.ValueKind!=JsonValueKind.Array||source.Visible.Values.GetArrayLength()==0||source.Visible.At(asset.Millis(animation,source.Visible,elapsed),1)>0;
+        if(emitting && visible && elapsed>=nextPoint)
         {
             nextPoint=elapsed+1/Mathf.Clamp(source.EdgesPerSecond,15,90);
-            trail.Add((owner.TransformPoint(new Vector3(source.Position[0],source.Position[1],source.Position[2])),elapsed));
+            var point=asset.Attachment(source.Bone,animation).MultiplyPoint3x4(new Vector3(source.Position[0],source.Position[1],source.Position[2]));
+            trail.Add((owner.TransformPoint(point),elapsed));
         }
         var vertices=new Vector3[trail.Count*2];var uv=new Vector2[vertices.Length];var colors=new Color[vertices.Length];var triangles=new int[Math.Max(0,trail.Count-1)*6];
         var camera=Camera.main;var cameraForward=camera!=null?camera.transform.forward:Vector3.forward;
-        float above=source.Above?.At(asset.Millis(animation,source.Above),.1f)??.1f,below=source.Below?.At(asset.Millis(animation,source.Below),.1f)??.1f;
-        var color=new Color(source.Color?.At(asset.Millis(animation,source.Color),1,0)??1,source.Color?.At(asset.Millis(animation,source.Color),1,1)??1,source.Color?.At(asset.Millis(animation,source.Color),1,2)??1,(source.Alpha?.At(asset.Millis(animation,source.Alpha),32767)??32767)/32767);
+        float above=source.Above?.At(asset.Millis(animation,source.Above,elapsed),.1f)??.1f,below=source.Below?.At(asset.Millis(animation,source.Below,elapsed),.1f)??.1f;
+        var color=new Color(source.Color?.At(asset.Millis(animation,source.Color,elapsed),1,0)??1,source.Color?.At(asset.Millis(animation,source.Color,elapsed),1,1)??1,source.Color?.At(asset.Millis(animation,source.Color,elapsed),1,2)??1,(source.Alpha?.At(asset.Millis(animation,source.Alpha,elapsed),32767)??32767)/32767);
         for(int i=0;i<trail.Count;i++)
         {
             var p=trail[i];var direction=(i+1<trail.Count?trail[i+1].Position:p.Position+owner.forward)-p.Position;
@@ -318,13 +460,13 @@ internal sealed class RibbonLayer
 
 internal sealed class GeometryLayer
 {
-    readonly GameObject go;readonly MeshFilter filter;readonly Material material;readonly MeshAsset source;readonly EffectAsset asset;
+    readonly GameObject go;readonly MeshFilter filter;readonly MeshRenderer renderer;readonly Material material;readonly MeshAsset source;readonly EffectAsset asset;
     internal GeometryLayer(Transform parent,MeshAsset node,EffectAsset model)
     {
         source=node;asset=model;go=new GameObject("OriginalM2Geometry");go.transform.SetParent(parent,false);
-        filter=go.AddComponent<MeshFilter>();material=SpellVfx.Material(node.Texture,node.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
+        filter=go.AddComponent<MeshFilter>();material=SpellVfx.Material(node.Texture,node.Blend,node.MaterialFlags);renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=material;
     }
-    internal void Tick(float time,float fade)
+    internal void Tick(float time,float fade,float elapsed)
     {
         // Normal rendering checks only the selected frame. Deep validation of
         // all cached animation meshes belongs to load/recovery and probes.
@@ -333,8 +475,9 @@ internal sealed class GeometryLayer
         int index=Mathf.Clamp((int)(time/Math.Max(.1f,asset.Geometry.Duration)*(source.Frames.Length-1)),0,source.Frames.Length-1);
         if(!SpellVfx.Alive(source.Frames[index]))SpellVfx.EnsureGeometry(asset);
         filter.sharedMesh=source.Frames[index];
-        float alpha=(source.Alpha?.At(asset.Millis(time,source.Alpha),32767)??32767)/32767*(source.Weight?.At(asset.Millis(time,source.Weight),32767)??32767)/32767*fade;
-        material.color=new Color(source.Color?.At(asset.Millis(time,source.Color),1,0)??1,source.Color?.At(asset.Millis(time,source.Color),1,1)??1,source.Color?.At(asset.Millis(time,source.Color),1,2)??1,Mathf.Clamp01(alpha));
+        float alpha=(source.Alpha?.At(asset.Millis(time,source.Alpha,elapsed),32767)??32767)/32767*(source.Weight?.At(asset.Millis(time,source.Weight,elapsed),32767)??32767)/32767*fade;
+        renderer.enabled=alpha>0;
+        material.color=new Color(source.Color?.At(asset.Millis(time,source.Color,elapsed),1,0)??1,source.Color?.At(asset.Millis(time,source.Color,elapsed),1,1)??1,source.Color?.At(asset.Millis(time,source.Color,elapsed),1,2)??1,Mathf.Clamp01(alpha));
     }
     internal void Dispose(){SpellVfx.DestroyMaterial(material);if(SpellVfx.Alive(go))Object.Destroy(go);}
 }
@@ -342,28 +485,31 @@ internal sealed class ParticleLayer
 {
     sealed class Particle{internal Vector3 Position,Velocity;internal float Age,Life,Spin,Size;}
     readonly Transform owner;readonly EmitterAsset source;readonly EffectAsset asset;readonly GameObject go;readonly Mesh mesh;readonly Material material;
-    readonly List<Particle> live=new();readonly System.Random random=new();float budget;
+    readonly List<Particle> live=new();readonly System.Random random=new();float budget,clockElapsed;Vector3 lastEmitter;
     const int Capacity=192;
     internal ParticleLayer(Transform parent,EmitterAsset emitter,EffectAsset model)
     {
         owner=parent;source=emitter;asset=model;go=new GameObject("OriginalM2Emitter");go.transform.SetParent(parent,false);
         mesh=SpellVfx.Keep(new Mesh{name="OriginalM2ParticleBillboards"});mesh.MarkDynamic();go.AddComponent<MeshFilter>().sharedMesh=mesh;material=SpellVfx.Material(emitter.Texture,emitter.Blend);go.AddComponent<MeshRenderer>().sharedMaterial=material;
     }
+    internal object Snapshot()=>new{source.Bone,source.Blend,Flags=source.Flags,LiveParticles=live.Count,LastEmitterPosition=new[]{lastEmitter.x,lastEmitter.y,lastEmitter.z},ParticlePositions=live.Take(12).Select(p=>new[]{p.Position.x,p.Position.y,p.Position.z}).ToArray()};
     float Random()=> (float)random.NextDouble();
-    float Parameter(string key,float time,float fallback=0)=>source.Tracks.TryGetValue(key,out var curve)?curve.At(asset.Millis(time,curve),fallback):fallback;
+    float Parameter(string key,float time,float fallback=0)=>source.Tracks.TryGetValue(key,out var curve)?curve.At(asset.Millis(time,curve,clockElapsed),fallback):fallback;
     internal void Tick(float dt,float elapsed,float animation,bool emitting)
     {
+        clockElapsed=elapsed;
         float rate=Mathf.Clamp(Parameter("rate",animation),0,1600),gravity=Parameter("gravity",animation);
-        if(emitting && (source.Enabled==null || source.Enabled.Values.GetArrayLength()==0 || source.Enabled.At(asset.Millis(animation,source.Enabled),1)>0))budget+=rate*dt;
+        if(emitting && (source.Enabled==null || source.Enabled.Values.ValueKind!=JsonValueKind.Array || source.Enabled.Values.GetArrayLength()==0 || source.Enabled.At(asset.Millis(animation,source.Enabled,elapsed),1)>0))budget+=rate*dt;
         int born=Math.Min(Capacity-live.Count,(int)budget);budget=Math.Min(1,budget-born);
         var basePosition=new Vector3(source.Position[0],source.Position[1],source.Position[2]);
+        var attachment=asset.Attachment(source.Bone,animation);lastEmitter=owner.TransformPoint(attachment.MultiplyPoint3x4(basePosition));
         for(int i=0;i<born;i++)
         {
             float angle=Random()*Mathf.PI*2,polar=Random()*Parameter("vertical",animation,Mathf.PI),horizontal=Parameter("horizontal",animation,Mathf.PI*2);
             var direction=source.Shape==2?new Vector3(Mathf.Cos(angle)*Mathf.Sin(polar),Mathf.Cos(polar),Mathf.Sin(angle)*Mathf.Sin(polar)):new Vector3(Mathf.Sin(polar)*Mathf.Cos(horizontal*(Random()-.5f)),Mathf.Cos(polar),Mathf.Sin(polar)*Mathf.Sin(horizontal*(Random()-.5f)));
             var offset=new Vector3((Random()-.5f)*Parameter("width",animation),0,(Random()-.5f)*Parameter("length",animation));
             float speed=Parameter("speed",animation)*(1+(Random()*2-1)*Parameter("variation",animation));
-            live.Add(new Particle{Position=owner.TransformPoint(basePosition+offset),Velocity=owner.TransformDirection(direction)*speed*owner.lossyScale.x,Age=0,Life=Mathf.Clamp(Parameter("life",animation,.4f),.03f,3),Spin=Random()*Mathf.PI*2,Size=.8f+Random()*.4f});
+            live.Add(new Particle{Position=owner.TransformPoint(attachment.MultiplyPoint3x4(basePosition+offset)),Velocity=owner.TransformDirection(direction)*speed*owner.lossyScale.x,Age=0,Life=Mathf.Clamp(Parameter("life",animation,.4f),.03f,3),Spin=Random()*Mathf.PI*2,Size=.8f+Random()*.4f});
         }
         for(int i=live.Count-1;i>=0;i--)
         {

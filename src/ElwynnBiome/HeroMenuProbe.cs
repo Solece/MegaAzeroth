@@ -53,7 +53,11 @@ public sealed class HeroMenuProbe:MonoBehaviour
             }
             if(phase==2)
             {
-                Act("focus");Act("click:"+classes[index]);at=Time.realtimeSinceStartup;phase=3;return;
+                Act("focus");at=Time.realtimeSinceStartup;phase=5;return;
+            }
+            if(phase==5)
+            {
+                Act("click:"+classes[index]);at=Time.realtimeSinceStartup;phase=3;return;
             }
             if(phase==3)
             {
@@ -71,13 +75,24 @@ public sealed class HeroMenuProbe:MonoBehaviour
                     Require(v.GetProperty("nativeRenderersStillEnabled").GetInt32()==0&&v.GetProperty("idleAnimationId").GetInt32()==0,"native preview hidden and original idle active "+classes[index]);
                 }
                 Save(classes[index]+"-selected.json",state.GetRawText());
-                if(classes[index]=="mage"||classes[index]=="druid")BiomeCapture.Capture(relative+"/"+classes[index]+"-menu.ppm");
-                Act("confirm:"+classes[index]);at=Time.realtimeSinceStartup;phase=4;return;
+                BiomeCapture.Capture(relative+"/"+classes[index]+"-menu.ppm");NativeMenuCapture.Capture(Path.Combine(output,classes[index]+"-characters-raw.ppm"));
+                Act("confirm:"+classes[index]);var route=Object.FindObjectOfType<MainMenu>();if(route!=null&&route.tabMaps!=null&&!route.tabMaps.activeSelf)route.GoToMapSelection();at=Time.realtimeSinceStartup;phase=4;return;
             }
             if(phase==4)
             {
                 var state=State();Require(state.GetProperty("LastConfirmed").GetString()==classes[index],"native confirmation callback "+classes[index]);
                 Require(state.GetProperty("SelectedClassId").GetString()==classes[index],"native persisted enum maps to source class "+classes[index]);
+                var main=Object.FindObjectOfType<MainMenu>();
+                Require(main!=null && main.tabMaps!=null && main.tabMaps.activeInHierarchy,"native map tab follows confirmation "+classes[index]);
+                var previewType=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("AzerothMegabonk.MageVisuals.MenuHeroPreviewBridge",false)).First(t=>t!=null);
+                using(var preview=JsonDocument.Parse((string)previewType.GetProperty("DiagnosticsJson").GetValue(null)))
+                {
+                    var v=preview.RootElement;Save(classes[index]+"-map-3d-preview.json",v.GetRawText());
+                    Require(v.GetProperty("attached").GetBoolean()&&v.GetProperty("classId").GetString()==classes[index],"selected source hero persists on native map tab "+classes[index]);
+                    Require(v.GetProperty("nativeRenderersStillEnabled").GetInt32()==0,"native placeholder stays hidden on map tab "+classes[index]);
+                    Require(!string.IsNullOrWhiteSpace(v.GetProperty("focus").GetProperty("camera").GetString()),"actual preview camera focus observed "+classes[index]);
+                }
+                NativeMenuCapture.Capture(Path.Combine(output,classes[index]+"-maps-raw.ppm"));
                 index++;if(index<classes.Length){phase=2;return;}Save("final.json",state.GetRawText());Finish(true,null);
             }
         }

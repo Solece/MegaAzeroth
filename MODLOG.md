@@ -245,3 +245,63 @@ Packaged menu47840 passed195 checks; packaged Mage67540 passed. Feature62292:20P
 ## Post-combat portrait hotfix
 
 HUD0.8.1 prefers the persistent original class portrait in results; the live gameplay portrait is unchanged. Talents0.2.2 hides the F6 hint outside an active run. Feature66620 passed20 checks with0 failures/2 explicit skips, including the actual active DeathStatsUi texture name. Updated playable-v3 hashes; no user game stopped. Nine-class gameplay acceptance remains applicable because gameplay modules are unchanged.
+
+## VFX fidelity audit started
+
+User reports missing death effects and invisible Warlock Rain of Fire. Baseline de3bf82, user's playable PID57736 left running. Isolated runtime private-assets/vfx-fidelity-runtime created with independent BepInEx and class VFX assets; baseline DLL hashes retained. Audit source spell stages, M2 particle bones/blends, native death/pool lifecycle, and active-effects capacity. All experiments and screenshots stay isolated.
+
+
+### 2026-10-21: explicit test decor density and fidelity checkpoint
+
+- Requested test-only obstacle/decor density: `-azeroth-decor-density=1.2` is accepted only with `-azeroth-test-menu` or `-azeroth-test-battle`; all other modes/values retain multiplier1. Applies to11 owned Elwynn source groups across the three normal native stages. Native terrain, interactables, enemy spawning and final arena are unchanged.
+- Native run62636:258 baseline requests ->309 requests/placements, then22 clearance removals ->287 active source roots. Integer rounding and original terrain/door/boss/portal clearance remain authoritative, so final survivors need not be exactly20% higher. Native RNG was restored for11/11groups,0failures. Evidence retained in private-assets/vfx-fidelity-runtime/reports/vfx-fidelity-62636 and native generation log.
+- Combined Warlock/Rain/death/shield/budget run62636:56PASS,0FAIL,2explicitSKIP. Independent Quantity/targeting run55444:31PASS,0FAIL,1explicitSKIP. Nine classes in native character/map selection59864:231PASS,0FAIL; screenshots use actual postprocessed camera rather than composited preview.
+- Rejected Ghost palette baseline48604/63752: all four ordinary tier albedo multipliers are white; actual tier colors come from distinct native `_AlbedoMap` textures. Runtime inventory retained; palette correction pending. Never infer tier color from debuff albedo alone.
+- Full nine-class VFX matrix started; results remain pending. No current player process or v3 runtime modified.
+
+
+## 2026-10-21: all-heroes v4 acceptance
+
+
+## 2026-10-21 — v4 candidate: source VFX, targeting and presentation
+
+Source-only changes prepared against the accepted all-heroes v3 baseline. This entry records candidate evidence; it does not announce a packaged v4 release or replace the accepted v3 gameplay matrix.
+
+### Spell VFX and reproducible export
+
+- `rain_of_fire` (DBC 5740, SpellVisual 329) uses the original `Spells\RainOfFire_Impact_Base.m2`. Original emitter attachment bones 13/14 were previously ignored, leaving high particle origins static. Exported bone samples now drive particle/ribbon positions. Ground-area visuals use the native ground mask and raycast; the gameplay area center, damage radius and tick schedule are unchanged by visual anchoring.
+- Corrected the source SpellVisualKit schema: ten model attachments are fields 3–12; fields 13/14 are SoundID/ShakeID. The corrected all-class graph has 112 identities, 421 links, 150 referenced M2 models, 171 textures and 130 bone buffers. Original material flags/alpha are retained. Nested model particles and specialized source simulation remain fidelity limits.
+- Bounded admission remains 64 active M2 model instances, with four reserved for area/areaKit effects. At capacity, an area may evict only an old non-looping cast/impact/precast cosmetic effect. Missiles, auras, channels and gameplay projectiles are protected. Explicit drop/eviction/renderer diagnostics replace silent admission loss; an all-protected pool can still reject a new visual.
+- Portable source export uses `scripts/azeroth-vfx/{probe.py,export_vfx.py,augment_assets.py,validate_vfx.py,vfx_paths.py}` and the accompanying README. Clean export passed 4025 checks; 150 model JSON and 130 bone files match the frozen VFX payload by SHA256, and all 421 binding tuples match. The 295-file historical overlay includes stale cache entries and is not the fresh-export file-count contract. Generated game data stays private.
+
+### Requested targeting adapter
+
+Volley targets are ordered by actual distance and unique native enemy ID. Each projectile takes a distinct nearest target before round-robin reuse; delayed launches retain volley claims. Dead/pooled targets are retargeted to the nearest unclaimed eligible enemy using the remaining travel budget. Quantity and native tome bounce semantics are retained.
+
+Initial source/override detection scans and projectile reach are multiplied by 1.2. Ground-area initial acquisition and totem/passive activation scans share that detection change. Damage AoE/cone shapes, area ticks, chain-hop radius and established totem attack radius are unchanged; source auto-weapons and pet AI acquisition are outside this change. This is an explicit user-requested adaptation, not an original-source rule.
+
+### Death, Shield, menu and test decoration
+
+- Detached source Death playback lasts 1.2s of pause-aware combat time and survives native pool release. It adds no collider, physics, rewards or generic elemental death burst. Existing diffuse model material is retained; omitted embedded body particles are not claimed restored.
+- Native Shield/PlayerShieldEffects and particle subtrees are excluded from character-skin hiding. Native pickup activation, lifetime, pause and expiration remain authoritative. The fixed issue is suppressed native presentation, not a new immunity implementation.
+- All nine source hero previews retain body, equipment and idle animation through native map selection. Preview camera DOF focuses on the actual rendered bounds; saved native focus/aperture/override states restore on release. Concrete native FloatParameter writes and readback avoid the broken generated generic float marshaller.
+- `-azeroth-decor-density=1.2` is guarded by explicit test-menu/test-battle mode and Elwynn activation. It changes the amount multiplier for exactly 11 original decor/obstacle groups. Native ground/interactables, placement/clearance and final-arena palette remain unchanged. In 62636, native seed 1526482981 requested/placed 309 objects versus 258 baseline requested; clearance removed 22, leaving 287. This is one observed test fixture, not proof of exactly 20% more surviving objects on every map or a paired-seed terrain comparison.
+
+### Actual acceptance and remaining work
+
+| Native run | Result | Scope |
+| --- | --- | --- |
+| 62636 | 56 PASS / 0 FAIL / 2 SKIP | Real Rain cast, pixel contribution, native pause/VFX age, synthetic render load with peak 64 and area eviction, detached source corpse/pool release, actual Shield pickup/render/pause/expiry. |
+| 55444 | 31 PASS / 0 FAIL / 1 SKIP | Real native Quantity tome and projectile constructors, distinct nearest targets, excess round robin, dead-target retarget, actual 1.1R included / 1.21R excluded, computed AoE radius invariant. |
+| 59864 | 231 PASS / 0 FAIL | Native nine-choice menu, original bodies/equipment, map-tab persistence, hidden native placeholder and observed camera focus for all nine classes. |
+
+62636 explicitly skips visual confirmation of falling-meteor appearance and natural-collision Shield HP protection. 55444 skips actual AoE boundary-hit proof. Nonzero geometry/pixels do not establish source-engine visual equivalence. The earlier 46604 menu fixture failed on the transition to its second class; 59864 is the completed nine-class acceptance.
+
+Ghost0.2.7 accepted by native34864: 126PASS/0FAIL/1SKIP. Actual native _AlbedoMap colors are sampled once per texture, composed with material-slot0 status modifiers, then applied to source luminance atlas/opacity. Alpha-over replaces additive source passes so actual black remains visible. Embedded particles remain unsupported. The first0.2.6 run46332 exposed generated managed methods in IL2CPP injection; explicit HideFromIl2Cpp on generated helpers fixes registration. Historical rejected runs retained.
+
+Final native VFX matrix:9classes/102catalogrows,93explicitCAST/9natural-passiveSKIP;494PASS/0FAIL/24SKIP checks. Native pixels prove contribution, not pixel-for-pixel source raster equivalence. Read-only source review found no P1/P2 blockers. Harmony audit118bindings/70unique native signatures,0collisions/0unresolved.
+
+
+Separate v4 packaged runtime accepted: native menu49112 231PASS/0FAIL; native Warlock Rain/death/Shield/budget67708 56PASS/0FAIL/2SKIP. Source-built DLL hashes and local asset overlay retained in builds/all-heroes-v4/build-manifest.json. Root launchers now point to v4; the active v3 user process was not stopped/restarted or patched. Native collision Shield HP and actual AoE boundary remain explicit probe skips. Source-only commit excludes all original/extracted game files.
+
+Final Ghost visibility fixture correction: earlier25024 pinned the native root Y to the terrain and sank the actor collider/source mesh, producing misleading hidden-body frames. The fixture now pins only X/Z and preserves native vertical/flight movement. Native34864:126PASS/0FAIL/1SKIP, independent floor clearance for all five source bodies and real per-tier close-camera frames. No production ground placement was changed for this fixture issue. Original source Ghost is spectral and segmented; three embedded source emitters remain unsupported.

@@ -107,13 +107,13 @@ public static class MageSpellBehaviors
                 var origin=player.transform.position;
                 var reach=d.Range*spell.RadiusFactor*RadiusScale(spell)*Mathf.Max(.1f,AbilityRuntime.Stat(EStat.SizeMultiplier));
                 var direction=player.transform.forward;direction.y=0;direction.Normalize();
-                var hits=AbilityRuntime.Targets(origin,reach,false).Where(e=>
-                {var delta=e.transform.position-origin;delta.y=0;return delta.sqrMagnitude>.0001f && Vector3.Dot(delta.normalized,direction)>.5f;}).ToArray();
-                if(hits.Length==0)return true;
+                bool InCone(Enemy e){var delta=e.transform.position-origin;delta.y=0;return delta.sqrMagnitude>.0001f&&Vector3.Dot(delta.normalized,direction)>.5f;}
+                if(!TargetAcquisition.SkillTargets(origin,reach,false).Any(InCone))return true;
+                var hits=AbilityRuntime.Targets(origin,reach,false).Where(InCone).ToArray();
                 foreach(var e in hits)AbilityRuntime.Hit(spell,e,AbilityRuntime.Damage(spell),origin);
                 Fx(d.Id,"cast",origin,reach,.7f);casted=true;return true;
             case "groundAoe":
-                var candidates=AbilityRuntime.Targets(player.transform.position,d.Range,false);
+                var candidates=TargetAcquisition.SkillTargets(player.transform.position,d.Range,false);
                 if(candidates.Count==0)return true;
                 var radius=d.Radius*spell.RadiusFactor*RadiusScale(spell)*Mathf.Max(.1f,AbilityRuntime.Stat(EStat.SizeMultiplier));
                 // Original chooses among the first24 nearby targets to maximize coverage.

@@ -29,7 +29,10 @@ public sealed class Plugin : BasePlugin
     internal static bool HeroMenuSmoke => ProbeAllowed && Environment.GetCommandLineArgs().Contains("-azeroth-hero-menu-smoke");
     internal static bool HeroClassSmoke => HeroClassProbe.Armed;
     internal static bool VitalsSmoke => VitalsProbe.Armed;
-    internal static bool Smoke => FirstSmoke || FeatureSmoke || TreeSmoke || HeroMenuSmoke || HeroClassSmoke || VitalsSmoke;
+    internal static bool VfxFidelitySmoke => VfxFidelityProbe.Armed;
+    internal static bool TargetingSmoke => TargetingProbe.Armed;
+    internal static bool GhostSmoke => GhostProbe.Armed;
+    internal static bool Smoke => FirstSmoke || FeatureSmoke || TreeSmoke || HeroMenuSmoke || HeroClassSmoke || VitalsSmoke || VfxFidelitySmoke || TargetingSmoke || GhostSmoke;
     Harmony harmony;
     public override void Load()
     {
@@ -48,6 +51,9 @@ public sealed class Plugin : BasePlugin
         if (HeroMenuSmoke) AddComponent<HeroMenuProbe>();
         if (HeroClassSmoke) AddComponent<HeroClassProbe>();
         if (VitalsSmoke) AddComponent<VitalsProbe>();
+        if (VfxFidelitySmoke) AddComponent<VfxFidelityProbe>();
+        if (TargetingSmoke) AddComponent<TargetingProbe>();
+        if (GhostSmoke) AddComponent<GhostProbe>();
         Note("Elwynn v2 all-stage palettes and original buildings armed; native generation, movement, spawn and progression retained. Probe=" + Smoke);
     }
     internal static BiomeAssets EnsureAssets()

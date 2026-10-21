@@ -381,6 +381,7 @@ public static class NativeBiomeIntegration
         nativeRngRestores, nativeRngRestoreFailures,
         rngIsolationVerified = decorGroups.Count > 0 && seededGroups.Count == decorGroups.Count && nativeRngRestores == decorGroupCalls && nativeRngRestoreFailures == 0,
         nativeMapSeed = MapGenerationController.mapSeed, decorSeed, overrideRestored,
+        decorDensity = DecorDensityDiagnostics.Snapshot(),
         groundScale = GroundScale(elwynnStage?.triplanarMaterial),
         materials = materialChanges, variants = variantDiagnostics, preservedTerrain,
         terrainRendererBindings = InspectTerrainBindings(),
@@ -525,7 +526,7 @@ public static class NativeBiomeIntegration
     static void ResetPlacementTelemetry()
     {
         nativeSpawnerCalls = 0; decorGroupCalls = 0; nativeRngRestores = 0; nativeRngRestoreFailures = 0;
-        decorSeed = 0; seededGroups.Clear();
+        decorSeed = 0; seededGroups.Clear(); DecorDensityDiagnostics.Reset();
     }
 
     public static void ReleaseVariants()
@@ -547,9 +548,9 @@ public static class NativeBiomeIntegration
         Plugin.Note($"Native RandomObjectPlacer.Generate palette={objects.Length}; multiplier={multiplier}; mapSeed={MapGenerationController.mapSeed}; decorSeed={decorSeed}; ground landmark RNG retained, individual decoration groups restore native RNG afterwards.");
     }
 
-    internal static bool BeginDecorGroup(RandomMapObject group, float multiplier, out Random.State saved)
+    internal static bool BeginDecorGroup(RandomMapObject group, ref float multiplier, out Random.State saved, out DecorDensityDiagnostics.GroupSample density)
     {
-        saved = default;
+        saved = default; density = null;
         if (!IsElwynnStage) return false;
         nativeSpawnerCalls++;
         if (group == null || !decorGroups.TryGetValue(group.Pointer, out int index)) return false;
@@ -560,7 +561,8 @@ public static class NativeBiomeIntegration
         Random.InitState(seed);
         decorGroupCalls++; seededGroups.Add(group.Pointer);
         Plugin.Note($"Native RandomObjectSpawner decorative group={index}, seed={seed}, mapSeed={MapGenerationController.mapSeed}, multiplier={multiplier}; RNG captured.");
-        return true;
+        try { density = DecorDensityDiagnostics.BeginGroup(group, index, ref multiplier); return true; }
+        catch { RestoreDecorRng(saved); throw; }
     }
 
     internal static void RestoreDecorRng(Random.State saved)
@@ -634,14 +636,21 @@ static class ElwynnNativePlacementPatch
 [HarmonyPatch(typeof(RandomObjectPlacer), "RandomObjectSpawner")]
 static class ElwynnDecorGroupSeedPatch
 {
-    sealed class PlacementState { public bool changed; public Random.State saved; }
-    static void Prefix(RandomMapObject randomObject, float amountMultiplier, out PlacementState __state)
+    sealed class PlacementState { public bool changed; public Random.State saved; public DecorDensityDiagnostics.GroupSample density; }
+    static void Prefix(RandomMapObject __0, ref float __1, out PlacementState __state)
     {
         __state = new PlacementState();
-        __state.changed = NativeBiomeIntegration.BeginDecorGroup(randomObject, amountMultiplier, out __state.saved);
+        __state.changed = NativeBiomeIntegration.BeginDecorGroup(__0, ref __1, out __state.saved, out __state.density);
     }
     static Exception Finalizer(Exception __exception, PlacementState __state)
-    { if (__state?.changed == true) NativeBiomeIntegration.RestoreDecorRng(__state.saved); return __exception; }
+    {
+        if (__state?.changed == true)
+        {
+            try { DecorDensityDiagnostics.EndGroup(__state.density, __exception); }
+            finally { NativeBiomeIntegration.RestoreDecorRng(__state.saved); }
+        }
+        return __exception;
+    }
 }
 
 [HarmonyPatch(typeof(StageData), nameof(StageData.GetName))]

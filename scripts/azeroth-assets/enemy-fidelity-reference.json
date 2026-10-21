@@ -1,0 +1,125 @@
+{
+  "format": "azeroth-enemy-fidelity-reference-v1",
+  "files": [
+    {
+      "path": "AzerothAssets/boar/death-profile.json",
+      "sha256": "59130de101093cee26c2b20902d066537ef5030fed7a8ac081712850dece35e5",
+      "bytes": 871
+    },
+    {
+      "path": "AzerothAssets/bonegolem/death-profile.json",
+      "sha256": "857c22f3dabac97cb365fad1be7af24edc5f1c5da03e239266f001a5bec78678",
+      "bytes": 883
+    },
+    {
+      "path": "AzerothAssets/gnoll/death-profile.json",
+      "sha256": "c23e5eefb33ccfe347370e7d9afe14754aa42283eeec03064919cbe5e312d565",
+      "bytes": 872
+    },
+    {
+      "path": "AzerothAssets/infernal/death-profile.json",
+      "sha256": "23e57f05ba32b870a7919837cd90e3aba062046b2321f78a397c8e596e2e2cc7",
+      "bytes": 880
+    },
+    {
+      "path": "AzerothAssets/kobold/death-profile.json",
+      "sha256": "b9e253230c893f0ae4cb2587fe7659cc2af944e74c2bd3d6a5254e9de6be592d",
+      "bytes": 876
+    },
+    {
+      "path": "AzerothAssets/lich/death-profile.json",
+      "sha256": "5ecd8050fe9614ebb0a78ea38bebfcfbc6b8009e33680ab319e1332976a9673e",
+      "bytes": 874
+    },
+    {
+      "path": "AzerothAssets/murloc/death-profile.json",
+      "sha256": "6c8fcf1307e2ae53a45da4299f9df2dff2087616339c54b8ec6d953d72a7b38d",
+      "bytes": 1420
+    },
+    {
+      "path": "AzerothAssets/murloc/death_variant_11.vertices.bin",
+      "sha256": "1a3a344abd9daa067c6bd68e918f6cbf34f66a9f98aa5251156802732d589913",
+      "bytes": 282384
+    },
+    {
+      "path": "AzerothAssets/ogre/death-profile.json",
+      "sha256": "c6852e316227df8dd0d8907950a422e042ab95818e268d295c6143ecc4656abd",
+      "bytes": 858
+    },
+    {
+      "path": "AzerothAssets/skeleton/death-profile.json",
+      "sha256": "a07130096151af48133fa2585de2900f89aded72e9e3b47bfb758d34105265ce",
+      "bytes": 879
+    },
+    {
+      "path": "AzerothAssets/tarantula/death-profile.json",
+      "sha256": "c7c2c9739545ed21ec4ac14bf5bd2e11761fde52abd6fea6d594a23cfa075292",
+      "bytes": 865
+    },
+    {
+      "path": "AzerothAssets/wolf/death-profile.json",
+      "sha256": "7e2a68959bb8fbf5b212060ce923e3a74d7e18a5072647a02aa8479a1bec9964",
+      "bytes": 871
+    },
+    {
+      "path": "AzerothAssets/ghost/attack.vertices.bin",
+      "sha256": "5d2a40c6b89ba90f2bdcb70756b06faf93fad847a654e51643962c25658740ac",
+      "bytes": 328200
+    },
+    {
+      "path": "AzerothAssets/ghost/cast.vertices.bin",
+      "sha256": "fbfad7edba480a0f3c9ab93aca3f3bafba7843592c7e0326861c28d2244a0399",
+      "bytes": 328200
+    },
+    {
+      "path": "AzerothAssets/ghost/cast_omni.vertices.bin",
+      "sha256": "fbfad7edba480a0f3c9ab93aca3f3bafba7843592c7e0326861c28d2244a0399",
+      "bytes": 328200
+    },
+    {
+      "path": "AzerothAssets/ghost/death-profile.json",
+      "sha256": "68bcb0c884647a51731ef9da1b7092d8b75494d011ec5db4db9d78206586104f",
+      "bytes": 876
+    },
+    {
+      "path": "AzerothAssets/ghost/death.vertices.bin",
+      "sha256": "3c8eeb89c8bf152e55c6646ec5fa9d0378741d17557ecee91075ca3294057e0f",
+      "bytes": 853320
+    },
+    {
+      "path": "AzerothAssets/ghost/ghost-material-profile.json",
+      "sha256": "1db834b20e1d8a01e2ad36ed4f1da558b4456a868e4da6966adaed6a10c754da",
+      "bytes": 37377
+    },
+    {
+      "path": "AzerothAssets/ghost/idle.vertices.bin",
+      "sha256": "0654681354fd93286f0c031285bc47497abb0c4f44d1f0f21bae9587f17875c2",
+      "bytes": 1063368
+    },
+    {
+      "path": "AzerothAssets/ghost/model.json",
+      "sha256": "564881c8a0d4d650e56e5fd7c77d64da11c31fb3516e07334a54516a96cf1dbb",
+      "bytes": 184083
+    },
+    {
+      "path": "AzerothAssets/ghost/run.vertices.bin",
+      "sha256": "807305c5bf173219724e77d3a030bb5220c9dacbfa38bc2071bd6443d8003970",
+      "bytes": 393840
+    },
+    {
+      "path": "AzerothAssets/ghost/texture.rgba",
+      "sha256": "1df696645b30cf3b0070388e5a0103fceb677808e0002018229758ac8b0973a2",
+      "bytes": 397056
+    },
+    {
+      "path": "AzerothAssets/ghost/texture.rgba.json",
+      "sha256": "3a47d88b20b5f49868712a1440d43c9c9b2c43644575703b7538f4b49d3bd53d",
+      "bytes": 74
+    },
+    {
+      "path": "AzerothAssets/ghost/walk.vertices.bin",
+      "sha256": "02b03c448660dbedfa3220940470262ef45ff46ecae647c04025822d254e603f",
+      "bytes": 538248
+    }
+  ]
+}

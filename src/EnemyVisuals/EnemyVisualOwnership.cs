@@ -102,7 +102,7 @@ public sealed partial class AzerothVisual
         if(nativeBodyMeshIds.Count==0 && enemy.enemyData?.animation!=null)
             foreach(var sequence in enemy.enemyData.animation.Animations)
                 foreach(var mesh in sequence.Meshes)if(mesh!=null)nativeBodyMeshIds.Add(mesh.GetInstanceID());
-        void Add(Renderer renderer)
+        [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] void Add(Renderer renderer)
         {
             if(renderer==null || EnemyVisualOwnership.ReplacementNode(renderer.transform))return;
             if(renderer!=original && !EnemyVisualOwnership.Owned(enemy,renderer.transform))return;
@@ -136,8 +136,8 @@ public sealed partial class AzerothVisual
     {
         if(enemy==null)return;
         var duplicates=EnemyVisualOwnership.Nodes(enemy.transform)
-            .Where(t=>t!=null && t.gameObject!=visual && t.name.StartsWith("AzerothCreature_",StringComparison.Ordinal) && EnemyVisualOwnership.Owned(enemy,t))
-            .Select(t=>t.gameObject).ToArray();
+            .Where([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>t!=null && t.gameObject!=visual && t.name.StartsWith("AzerothCreature_",StringComparison.Ordinal) && EnemyVisualOwnership.Owned(enemy,t))
+            .Select([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>t.gameObject).ToArray();
         foreach(var extra in duplicates)
         {
             // Destroy is deferred until the end of the frame; hide immediately.
@@ -177,14 +177,14 @@ public sealed partial class AzerothVisual
     object OwnershipSnapshot()
     {
         var roots=enemy==null?Array.Empty<Transform>():EnemyVisualOwnership.Nodes(enemy.transform)
-            .Where(t=>t.name.StartsWith("AzerothCreature_",StringComparison.Ordinal) && EnemyVisualOwnership.Owned(enemy,t)).ToArray();
-        var bodyStates=nativeBodies.Values.Where(b=>b.Renderer!=null).Select(b=>new{
+            .Where([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>t.name.StartsWith("AzerothCreature_",StringComparison.Ordinal) && EnemyVisualOwnership.Owned(enemy,t)).ToArray();
+        var bodyStates=nativeBodies.Values.Where([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (b)=>b.Renderer!=null).Select([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (b)=>new{
             path=b.Path,instanceId=b.Renderer.GetInstanceID(),type=b.Renderer.GetIl2CppType().Name,
             initiallyEnabled=b.WasEnabled,enabled=b.Renderer.enabled,active=b.Renderer.gameObject.activeInHierarchy,
             visible=b.Renderer.enabled && b.Renderer.gameObject.activeInHierarchy && !b.Renderer.forceRenderingOff
         }).ToArray();
-        int activeRoots=roots.Count(t=>t.gameObject.activeInHierarchy);
-        int sourceRenderers=roots.Where(t=>t.gameObject.activeInHierarchy).Sum(t=>EnemyVisualOwnership.Nodes(t).Count(n=>{
+        int activeRoots=roots.Count([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>t.gameObject.activeInHierarchy);
+        int sourceRenderers=roots.Where([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>t.gameObject.activeInHierarchy).Sum([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>EnemyVisualOwnership.Nodes(t).Count([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (n)=>{
             var r=n.GetComponent<MeshRenderer>();return r!=null && r.enabled && r.gameObject.activeInHierarchy && EnemyVisualOwnership.Owned(enemy,n);
         }));
         return new{
@@ -192,11 +192,11 @@ public sealed partial class AzerothVisual
             ownerPointer=enemy!=null?enemy.Pointer.ToInt64():0,controllerPointer=Pointer.ToInt64(),
             controllerOwnsActor=enemy!=null && EnemyVisualOwnership.Find(enemy)?.Pointer==Pointer,
             activeReplacementRoots=activeRoots,visibleSourceBodyRenderers=sourceRenderers,
-            visibleNativeBodyRenderers=bodyStates.Count(b=>b.visible),trackedNativeBodyRenderers=bodyStates.Length,
-            oneSourceAndNoNative=activeRoots==1 && sourceRenderers==1 && bodyStates.All(b=>!b.visible),
+            visibleNativeBodyRenderers=bodyStates.Count([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (b)=>b.visible),trackedNativeBodyRenderers=bodyStates.Length,
+            oneSourceAndNoNative=activeRoots==1 && sourceRenderers==1 && bodyStates.All([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (b)=>!b.visible),
             duplicateRootsRemoved,nativeBodies=bodyStates,
-            preservedMeshEffects=enemy==null?Array.Empty<string>():EnemyVisualOwnership.Nodes(enemy.transform).Where(t=>EnemyVisualOwnership.Owned(enemy,t) && !EnemyVisualOwnership.ReplacementNode(t)).Select(t=>t.GetComponent<MeshRenderer>()).Where(r=>r!=null && !IsNativeBody(r)).Select(r=>EnemyVisualOwnership.Path(r.transform,enemy.transform)).ToArray(),
-            sourceRoots=roots.Select(t=>new{path=EnemyVisualOwnership.Path(t,enemy.transform),active=t.gameObject.activeInHierarchy,instanceId=t.gameObject.GetInstanceID()}).ToArray()
+            preservedMeshEffects=enemy==null?Array.Empty<string>():EnemyVisualOwnership.Nodes(enemy.transform).Where([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>EnemyVisualOwnership.Owned(enemy,t) && !EnemyVisualOwnership.ReplacementNode(t)).Select([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>t.GetComponent<MeshRenderer>()).Where([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (r)=>r!=null && !IsNativeBody(r)).Select([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (r)=>EnemyVisualOwnership.Path(r.transform,enemy.transform)).ToArray(),
+            sourceRoots=roots.Select([Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] (t)=>new{path=EnemyVisualOwnership.Path(t,enemy.transform),active=t.gameObject.activeInHierarchy,instanceId=t.gameObject.GetInstanceID()}).ToArray()
         };
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
@@ -214,7 +214,7 @@ public sealed partial class AzerothVisual
         var colliderHeight=collider!=null?collider.height:0;var radius=collider!=null?collider.radius:0;
         GameObject extraNative=null,duplicate=null,meshEffect=null;
         int checks=0;
-        void Check(bool value,string label){if(!value)throw new InvalidOperationException("Enemy ownership regression: "+label);checks++;}
+        [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp] void Check(bool value,string label){if(!value)throw new InvalidOperationException("Enemy ownership regression: "+label);checks++;}
         try
         {
             CaptureNativeBodies();int before=nativeBodies.Count;
