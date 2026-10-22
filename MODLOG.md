@@ -397,3 +397,11 @@ Added a short Russian tester guide, one launcher with diagnostic menu3/-CollectL
 
 Actual Windows PowerShell5.1 checks:11PASS/0FAIL, including incomplete runtime, startup failure capture, private-save/.env exclusion, bounded tails, path redaction and interactive menu3. Archive integrity and a fresh extracted native startup are recorded in the delivered verification JSON; the hardware remains the developer PC, not a second physical machine.
 Tester diagnostic follow-up:12PASS/0FAIL on actual PowerShell5.1, including Unity forward-slash and case-variant path redaction. Runtime files remain unchanged.
+
+### Final tester ZIP acceptance
+
+Delivered MegaAzeroth-v0.5.1-test1-Windows-x64.zip:341912692bytes, SHA2564f9a5c164f39645e9d083dd6fe8c02907591d4f85e34dd0a74a67b3b526b7ee7. All4715ZIP members independently re-read and SHA-verified; all4683Runtime files are byte-identical to accepted v0.5.1. Full PowerShell5.1 integrity verification passed after a fresh extraction to a new path with Cyrillic and spaces. Megabonk itself and its engine/data, eleven plugins and all prepared dependencies are present. No external asset links, prior logs, personal profiles or verification stamps are packaged.
+
+Owned hidden native PID15944 completed22PASS/0FAIL/0SKIP in25.47s:menu, actual loading, gameplay state, pause/resume, real next-stage loading, results and return-menu. This proves lifecycle/state checks, not visual fidelity. Manual review of its offscreen gameplay captures found the first largely occluded and the second black; the cause is not established, so visual acceptance is explicitly FALSE in the external verification JSON. Do not represent these checks as proof of correct combat rendering or another physical PC.
+
+Actual diagnostic collection from the extracted package succeeded on PowerShell5.1 and included build metadata, the real play log and BepInEx log, with bounded/redacted text. Detailed QA reports, failed fixture-driver output and captures remain in the tester work folder. The selected external tester still needs to perform the interactive gameplay/visual run.
