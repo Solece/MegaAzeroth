@@ -389,3 +389,10 @@ First isolated Presentation candidate75356 completed full native menu/character/
 ### Private publisher metadata follow-up
 
 During v0.5.1 upload, a read-only metadata check exposed PowerShell nested-array handling when Invoke-RestMethod is wrapped in @(...). Direct JSON-array assignment correctly lists the actual draft420856859 and published v0.5.0. The publisher now uses direct assignment before filtering tags, so retrying an existing matching draft does not mistakenly create a second release. The active upload and runtime payload are unchanged.
+## 2026-10-23 — complete closed tester handoff
+
+The owner requested a build to give a selected tester on another PC and explicitly requested Megabonk itself inside the archive. The tester package is based on the complete accepted v0.5.1 archive (SHA2560fb0190f3efbfb549b333716a62a2d1f512946ae2a693a6607c7fb30f4d40f60), including Megabonk1.0.69, all eleven plugins, prepared art and pinned loader/runtime. No gameplay assembly or native Steam check is changed.
+
+Added a short Russian tester guide, one launcher with diagnostic menu3/-CollectLogs, and startup-error reports. The collector can run before integrity verification, including a broken installation. It includes only build metadata, three recent play logs, three startup-error logs, one BepInEx log and basic Windows/CPU/GPU details. Each file is bounded to its final2MiB, package/profile paths are redacted, and saves/account files/environment dumps are excluded.
+
+Actual Windows PowerShell5.1 checks:11PASS/0FAIL, including incomplete runtime, startup failure capture, private-save/.env exclusion, bounded tails, path redaction and interactive menu3. Archive integrity and a fresh extracted native startup are recorded in the delivered verification JSON; the hardware remains the developer PC, not a second physical machine.
