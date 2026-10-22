@@ -1,0 +1,90 @@
+[
+  {
+    "Name": "BepInEx-LGPL-2.1.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/BepInEx/BepInEx/3fab71a1914132a1ce3a545caf3192da603f2258/LICENSE",
+    "ResolvedUrl": "https://raw.githubusercontent.com/BepInEx/BepInEx/3fab71a1914132a1ce3a545caf3192da603f2258/LICENSE",
+    "Bytes": 25338,
+    "Sha256": "f2ceca48af033d8adf337a8f9453e633cfad10a1f8c9fec2e5ae55a2d8ffe952",
+    "Success": true
+  },
+  {
+    "Name": "UnityDoorstop-v4.5.0-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/NeighTools/UnityDoorstop/v4.5.0/LICENSE",
+    "ResolvedUrl": "https://raw.githubusercontent.com/NeighTools/UnityDoorstop/v4.5.0/LICENSE",
+    "Bytes": 26526,
+    "Sha256": "20c17d8b8c48a600800dfd14f95d5cb9ff47066a9641ddeab48dc54aec96e331",
+    "Success": true
+  },
+  {
+    "Name": "dotnet-runtime-v6.0.7-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/dotnet/runtime/v6.0.7/LICENSE.TXT",
+    "ResolvedUrl": "https://raw.githubusercontent.com/dotnet/runtime/v6.0.7/LICENSE.TXT",
+    "Bytes": 1116,
+    "Sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+    "Success": true
+  },
+  {
+    "Name": "dotnet-runtime-v6.0.7-THIRD-PARTY-NOTICES.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/dotnet/runtime/v6.0.7/THIRD-PARTY-NOTICES.TXT",
+    "ResolvedUrl": "https://raw.githubusercontent.com/dotnet/runtime/v6.0.7/THIRD-PARTY-NOTICES.TXT",
+    "Bytes": 46771,
+    "Sha256": "55ff71c32f96483c2f4e061eb78ee9bf3d8d562d00143c67b361bb4ce989fe44",
+    "Success": true
+  },
+  {
+    "Name": "Il2CppInterop-6d9007c-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/BepInEx/Il2CppInterop/6d9007c18cc8440830379c5e1d5714085e7ec577/LICENSE",
+    "ResolvedUrl": "https://raw.githubusercontent.com/BepInEx/Il2CppInterop/6d9007c18cc8440830379c5e1d5714085e7ec577/LICENSE",
+    "Bytes": 42802,
+    "Sha256": "5eecce16e59e24ddd9d3712012517a033f2cd0459ace22b43d5659d4624abff0",
+    "Success": true
+  },
+  {
+    "Name": "HarmonyX-v2.10.2-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/BepInEx/HarmonyX/v2.10.2/LICENSE",
+    "ResolvedUrl": "https://raw.githubusercontent.com/BepInEx/HarmonyX/v2.10.2/LICENSE",
+    "Bytes": 1063,
+    "Sha256": "7e54ab4766ef78637a05fb3454663a66de6bb960dbd4c7088890ed76b0844f36",
+    "Success": true
+  },
+  {
+    "Name": "MonoMod-v22.07.31.01-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/MonoMod/MonoMod/v22.07.31.01/LICENSE",
+    "ResolvedUrl": "https://raw.githubusercontent.com/MonoMod/MonoMod/v22.07.31.01/LICENSE",
+    "Bytes": 1080,
+    "Sha256": "0b64833222e3c6a426ad29362d26334619fe02eaf2b89ea9c37805521896c920",
+    "Success": true
+  },
+  {
+    "Name": "Mono-Cecil-0.11.4-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/jbevain/cecil/0.11.4/LICENSE.txt",
+    "ResolvedUrl": "https://raw.githubusercontent.com/jbevain/cecil/0.11.4/LICENSE.txt",
+    "Bytes": 1098,
+    "Sha256": "13d58ecbed676511c0c4c4009bff107025e50007ff5e7901dc562700ec62509e",
+    "Success": true
+  },
+  {
+    "Name": "Cpp2IL-558ddd9-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/SamboyCoding/Cpp2IL/558ddd98642010897d54316b51fbaa7889fda093/LICENSE",
+    "ResolvedUrl": "https://raw.githubusercontent.com/SamboyCoding/Cpp2IL/558ddd98642010897d54316b51fbaa7889fda093/LICENSE",
+    "Bytes": 1066,
+    "Sha256": "1a80d1b99e958385045da1e383a105895d1c997ef2b36448430dbfe3763fe670",
+    "Success": true
+  },
+  {
+    "Name": "AsmResolver-124e161-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/Washi1337/AsmResolver/124e161a9bc0ebb83b4d97276ae3da3c9cfe2fc5/LICENSE.md",
+    "ResolvedUrl": "https://raw.githubusercontent.com/Washi1337/AsmResolver/124e161a9bc0ebb83b4d97276ae3da3c9cfe2fc5/LICENSE.md",
+    "Bytes": 1108,
+    "Sha256": "1c967bb945d9e86f79e49dda29e834d49ff3cb203c9a98878e7661b3de7a5559",
+    "Success": true
+  },
+  {
+    "Name": "Iced-v1.21.0-LICENSE.txt",
+    "SourceUrl": "https://raw.githubusercontent.com/icedland/iced/v1.21.0/LICENSE.txt",
+    "ResolvedUrl": "https://raw.githubusercontent.com/icedland/iced/v1.21.0/LICENSE.txt",
+    "Bytes": 1114,
+    "Sha256": "93a47598376fd3f276b631e75149340087153c6ff1635a53c5790249e9124e2d",
+    "Success": true
+  }
+]

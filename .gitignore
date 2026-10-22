@@ -14,3 +14,11 @@ scripts/megabonk-research/
 *.dll
 *.pdb
 builds/
+
+Runtime/
+Mod/
+release.json
+runtime-files.json
+.bundle-verified.json
+*.zip
+*.zip.sha256
