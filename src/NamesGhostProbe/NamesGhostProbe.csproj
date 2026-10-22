@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net6.0</TargetFramework><AssemblyName>NamesGhostProbe</AssemblyName><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable><NuGetAudit>false</NuGetAudit><BepRoot>$(MSBuildProjectDirectory)/../../Megabonk-Lab/BepInEx</BepRoot></PropertyGroup>
+  <ItemGroup><Reference Include="$(BepRoot)/core/BepInEx.Core.dll" Private="false"/><Reference Include="$(BepRoot)/core/BepInEx.Unity.IL2CPP.dll" Private="false"/><Reference Include="$(BepRoot)/core/0Harmony.dll" Private="false"/><Reference Include="$(BepRoot)/core/Il2CppInterop.Runtime.dll" Private="false"/><Reference Include="$(BepRoot)/interop/Assembly-CSharp.dll" Private="false"/><Reference Include="$(BepRoot)/interop/Il2Cppmscorlib.dll" Private="false"/><Reference Include="$(BepRoot)/interop/Unity*.dll" Private="false"/></ItemGroup>
+</Project>

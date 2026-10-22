@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace AzerothMegabonk.EnemyVisuals;
 
-[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.8")]
+[BepInPlugin(Id, "Azeroth Megabonk - Enemy Visuals", "0.2.9")]
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.azerothmegabonk.enemyvisuals";
@@ -26,6 +26,7 @@ public sealed class Plugin : BasePlugin
     public override void Load()
     {
         Logger = Log;
+        BossNamePresentation.Initialize();
         ClassInjector.RegisterTypeInIl2Cpp<AzerothVisual>();
         ClassInjector.RegisterTypeInIl2Cpp<AzerothCorpseVisual>();
         harmony = new Harmony(Id);
@@ -54,6 +55,7 @@ public sealed class Plugin : BasePlugin
     }
     public override bool Unload()
     {
+        BossNamePresentation.Shutdown();
         harmony?.UnpatchSelf();
         EnemyDeathPresentation.Shutdown();
         NativeGhostPaletteCache.Shutdown();
@@ -204,6 +206,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     internal void Bind(Enemy target,Model data,bool boss)
     {
+        BossNamePresentation.ReleaseEnemy(enemy);
         RegisterOwnership(target);
         deathCaptured=false;
         ResetGhostPalette();
@@ -229,13 +232,13 @@ public sealed partial class AzerothVisual : MonoBehaviour
             float worldHeight=(c.direction==1?c.height:c.radius*2)*Math.Abs(c.transform.lossyScale.y);
             nativeColliderBounds=new Bounds(c.transform.TransformPoint(c.center),new Vector3(c.radius*2,worldHeight,c.radius*2));
         }
-        // Ordinary creatures use exactly two-thirds of the former collider-normalized
-        // visual height. Bosses retain their original Megabonk rendered height.
+        // Ordinary creatures use two-thirds of native collider height; endless
+        // ghosts use native height (1.5 times their previous visual size).
         bool rendererValid=float.IsFinite(nativeRendererBounds.size.y) && nativeRendererBounds.size.y>.01f;
         var nativeBounds=boss && rendererValid ? nativeRendererBounds : nativeColliderBounds;
         scaleReference=boss && rendererValid ? "native-renderer" : "native-collider";
         referenceHeight=Math.Max(.01f,nativeBounds.size.y);
-        sizeMultiplier=boss ? 1f : 2f/3f;
+        sizeMultiplier=EndlessGhostPresentation.SizeMultiplier(target,boss);
         float desired=referenceHeight*sizeMultiplier/parentScale;
         var feetWorld=EnemyVisualGround.NativeFeet(target,out nativeGroundCheckY);nativeFeetY=feetWorld.y;
         sourceHeight=Math.Max(.01f,mesh.bounds.size.y);
@@ -250,6 +253,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
         startTime=EnemyAnimationClock.Now; nextFrame=0; lastFrame=-1; clipName=""; previous=target.transform.position;
         SyncGhostPalette();
         SetSourceRenderFrame(mesh);
+        BossNamePresentation.RefreshEnemy(target);
     }
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void PlaceAboveNativeFloor(Mesh mesh,bool forceGround=false)
@@ -342,6 +346,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     public void RestoreNative()
     {
+        BossNamePresentation.ReleaseEnemy(enemy);
         enabled=false;
         ResetSourcePresentation();
         ReleaseOwnership();
@@ -349,7 +354,7 @@ public sealed partial class AzerothVisual : MonoBehaviour
         if(visual!=null){visual.SetActive(false);Object.Destroy(visual);}
         original=null;enemy=null;filter=null;replacement=null;visual=null;
     }
-    void OnDestroy() { ResetSourcePresentation();ReleaseOwnership();if(visual!=null)Object.Destroy(visual); }
+    void OnDestroy() { BossNamePresentation.ReleaseEnemy(enemy);ResetSourcePresentation();ReleaseOwnership();if(visual!=null)Object.Destroy(visual); }
 }
 
 

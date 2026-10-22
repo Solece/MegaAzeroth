@@ -1,0 +1,607 @@
+{
+  "Pass": true,
+  "Passed": 119,
+  "Failed": 0,
+  "Phase": 13,
+  "Index": 5,
+  "Seconds": 41.427807,
+  "Checks": [
+    {
+      "Pass": true,
+      "Label": "actual boss model ogre",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption ogre",
+      "Detail": "Огр"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData ogre",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption ogre",
+      "Detail": "Ogre"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual ogre",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model ogre",
+      "Detail": "Mummy"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind ogre",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind ogre",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual boss model infernal",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption infernal",
+      "Detail": "Инфернал"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData infernal",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption infernal",
+      "Detail": "Infernal"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual infernal",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model infernal",
+      "Detail": "Golem"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind infernal",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind infernal",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual boss model tarantula",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption tarantula",
+      "Detail": "Тарантул"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData tarantula",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption tarantula",
+      "Detail": "Tarantula"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual tarantula",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model tarantula",
+      "Detail": "Scorpionussy"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind tarantula",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind tarantula",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual boss model lich",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption lich",
+      "Detail": "Лич"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData lich",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption lich",
+      "Detail": "Lich"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual lich",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model lich",
+      "Detail": "Lil' Anubis"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind lich",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind lich",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual boss model bonegolem",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption bonegolem",
+      "Detail": "Костяной голем"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData bonegolem",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption bonegolem",
+      "Detail": "Bone Golem"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual bonegolem",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model bonegolem",
+      "Detail": "Calcium's Dad"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind bonegolem",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind bonegolem",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual boss model doomguard",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption doomguard",
+      "Detail": "Стражник ужаса"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData doomguard",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption doomguard",
+      "Detail": "Doomguard"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual doomguard",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model doomguard",
+      "Detail": "Chunkham the Terrible"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind doomguard",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind doomguard",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual boss model dragonspawncaster",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native Russian TMP boss caption dragonspawncaster",
+      "Detail": "Драконид-заклинатель"
+    },
+    {
+      "Pass": true,
+      "Label": "caption uses instance without changing native EnemyData dragonspawncaster",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native English TMP boss caption dragonspawncaster",
+      "Detail": "Dragonspawn Caster"
+    },
+    {
+      "Pass": true,
+      "Label": "actual restore source visual dragonspawncaster",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "native caption restored with native model dragonspawncaster",
+      "Detail": "Anubruh"
+    },
+    {
+      "Pass": true,
+      "Label": "actual source model rebind dragonspawncaster",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "source caption returns after rebind dragonspawncaster",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "same species ordinary actor keeps native caption",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "pooled native HUD follows actual new boss",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "managed original ghost pass/scope regression",
+      "Detail": "{\"allowed\":true,\"pass\":true,\"checks\":443,\"OpaqueBody\":true,\"SourceDisplayId\":146,\"VisualSizeMultiplier\":1,\"IncreaseFromPrevious\":1.5,\"DrawPasses\":[{\"Role\":\"OpaqueBody\",\"SourceGroup\":0,\"Opaque\":true,\"Triangles\":944,\"Shader\":\"Particles/Standard Unlit\",\"SrcBlend\":1,\"DstBlend\":0,\"ZWrite\":1,\"RenderQueue\":2000,\"Color\":[1,1,1,1]},{\"Role\":\"OptionalSourceWisps\",\"SourceGroup\":0,\"Opaque\":false,\"Triangles\":30,\"Shader\":\"Particles/Standard Unlit\",\"SrcBlend\":5,\"DstBlend\":10,\"ZWrite\":0,\"RenderQueue\":3000,\"Color\":[1,1,1,1]},{\"Role\":\"SourceDeathGlow\",\"SourceGroup\":1,\"Opaque\":false,\"Triangles\":2,\"Shader\":\"Particles/Standard Unlit\",\"SrcBlend\":5,\"DstBlend\":10,\"ZWrite\":0,\"RenderQueue\":3000,\"Color\":[0.77527845,0.77527845,0.77527845,0]},{\"Role\":\"SourceDeathOrb\",\"SourceGroup\":2,\"Opaque\":true,\"Triangles\":180,\"Shader\":\"Particles/Standard Unlit\",\"SrcBlend\":1,\"DstBlend\":0,\"ZWrite\":1,\"RenderQueue\":2000,\"Color\":[0,0,0,0]}]}"
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost source body attached/visible 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native ghost palette available 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost exact50percent visual increase 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost opaque body blend/depth 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost actual MPB alpha1 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer material opaque One/Zero and depth 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer RGB phase tint and alpha1 16",
+      "Detail": "RGBA(0.576, 0.579, 0.581, 1.000)"
+    },
+    {
+      "Pass": true,
+      "Label": "actual transform equals full native reference height 16",
+      "Detail": "1,1060585 expected 1,1060585"
+    },
+    {
+      "Pass": true,
+      "Label": "actual opaque-body shader produces visible pixels 16",
+      "Detail": "9236 pixels; actual native mesh frame/material/MPB/scale, body submesh only"
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost restore/rebind 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "no accumulated ghost scale on rebind 16",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost corpse preserves grown visual scale",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost death captures1.5scale once",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost source body attached/visible 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native ghost palette available 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost exact50percent visual increase 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost opaque body blend/depth 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost actual MPB alpha1 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer material opaque One/Zero and depth 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer RGB phase tint and alpha1 17",
+      "Detail": "RGBA(0.004, 0.009, 0.013, 1.000)"
+    },
+    {
+      "Pass": true,
+      "Label": "actual transform equals full native reference height 17",
+      "Detail": "1,2719673 expected 1,2719673"
+    },
+    {
+      "Pass": true,
+      "Label": "actual opaque-body shader produces visible pixels 17",
+      "Detail": "9642 pixels; actual native mesh frame/material/MPB/scale, body submesh only"
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost restore/rebind 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "no accumulated ghost scale on rebind 17",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost source body attached/visible 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native ghost palette available 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost exact50percent visual increase 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost opaque body blend/depth 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost actual MPB alpha1 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer material opaque One/Zero and depth 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer RGB phase tint and alpha1 39",
+      "Detail": "RGBA(0.510, 0.006, 0.010, 1.000)"
+    },
+    {
+      "Pass": true,
+      "Label": "actual transform equals full native reference height 39",
+      "Detail": "1,6590877 expected 1,6590877"
+    },
+    {
+      "Pass": true,
+      "Label": "actual opaque-body shader produces visible pixels 39",
+      "Detail": "9642 pixels; actual native mesh frame/material/MPB/scale, body submesh only"
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost restore/rebind 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "no accumulated ghost scale on rebind 39",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost source body attached/visible 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native ghost palette available 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost exact50percent visual increase 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost opaque body blend/depth 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost actual MPB alpha1 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer material opaque One/Zero and depth 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer RGB phase tint and alpha1 40",
+      "Detail": "RGBA(0.059, 0.006, 0.162, 1.000)"
+    },
+    {
+      "Pass": true,
+      "Label": "actual transform equals full native reference height 40",
+      "Detail": "1,4378759 expected 1,4378759"
+    },
+    {
+      "Pass": true,
+      "Label": "actual opaque-body shader produces visible pixels 40",
+      "Detail": "9356 pixels; actual native mesh frame/material/MPB/scale, body submesh only"
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost restore/rebind 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "no accumulated ghost scale on rebind 40",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost source body attached/visible 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual native ghost palette available 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost exact50percent visual increase 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost opaque body blend/depth 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "live ghost actual MPB alpha1 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer material opaque One/Zero and depth 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "actual renderer RGB phase tint and alpha1 48",
+      "Detail": "RGBA(0.495, 0.000, 0.450, 1.000)"
+    },
+    {
+      "Pass": true,
+      "Label": "actual transform equals full native reference height 48",
+      "Detail": "3,0604446 expected 3,0604446"
+    },
+    {
+      "Pass": true,
+      "Label": "actual opaque-body shader produces visible pixels 48",
+      "Detail": "9642 pixels; actual native mesh frame/material/MPB/scale, body submesh only"
+    },
+    {
+      "Pass": true,
+      "Label": "actual ghost restore/rebind 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "no accumulated ghost scale on rebind 48",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "ordinary mob scale remains two-thirds",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "GhostKing boss excluded from endless ghost changes",
+      "Detail": ""
+    },
+    {
+      "Pass": true,
+      "Label": "no production caption runtime failures",
+      "Detail": ""
+    }
+  ],
+  "Error": null,
+  "Scope": "Owned hidden process; actual native Enemy/UI/locale and source mesh/material captures. Isolated body captures do not establish full gameplay visual fidelity."
+}

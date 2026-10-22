@@ -1,0 +1,167 @@
+{
+  "format": "azeroth-boss-names-v1",
+  "sourceExeSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "entries": [
+    {
+      "modelKey": "ogre",
+      "ru": "Огр",
+      "en": "Ogre",
+      "sourceDisplayId": 415,
+      "evidence": {
+        "classification": "shortened-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Ogre\\Ogre.m2",
+        "sourceModelSha256": "d0916ac0c07c1532ec3d6495b0c40ba40680cce6182e1c37abed380f947421c1",
+        "sourceSkins": [
+          "OgreSkinYellow",
+          "",
+          ""
+        ],
+        "sourceCreatureIds": [
+          804,
+          304
+        ],
+        "sourceLocalizationKeys": [
+          "enemy.804",
+          "enemy.304"
+        ],
+        "exactOriginalBossIds": [],
+        "policy": "Generic model-family label; current yellow appearance is used by source enemy804 and304 with different creature names. No named-boss identity."
+      }
+    },
+    {
+      "modelKey": "infernal",
+      "ru": "Инфернал",
+      "en": "Infernal",
+      "sourceDisplayId": 169,
+      "evidence": {
+        "classification": "exact-original-creature-name",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Infernal\\Infernal.m2",
+        "sourceModelSha256": "7916d6b9d7e6991ae5c1b8b6b005c237a0468281ac068cb0691e04e3f372fbbf",
+        "sourceSkins": [
+          "InfernalSkin",
+          "",
+          ""
+        ],
+        "sourceCreatureIds": [
+          107
+        ],
+        "sourceLocalizationKeys": [
+          "enemy.107"
+        ],
+        "exactOriginalBossIds": [],
+        "policy": "Original ordinary-creature name reused as a model-bound HUD label; this is not a named boss identity."
+      }
+    },
+    {
+      "modelKey": "tarantula",
+      "ru": "Тарантул",
+      "en": "Tarantula",
+      "sourceDisplayId": 520,
+      "evidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Tarantula\\Tarantula.m2",
+        "sourceModelSha256": "1d50b07786d1f480fb7b77c5adf9a299aefc05ed02e44fcbb773e8f53a41c6c6",
+        "sourceSkins": [
+          "TarantulaSkinBrown",
+          "",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      }
+    },
+    {
+      "modelKey": "lich",
+      "ru": "Лич",
+      "en": "Lich",
+      "sourceDisplayId": 7919,
+      "evidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Lich\\Lich.m2",
+        "sourceModelSha256": "64abed55438a042f89f111787912d51d1f9c8c3a65dedad8b6a597fd30c57f9a",
+        "sourceSkins": [
+          "LichSkin",
+          "ArmorReflect3",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      }
+    },
+    {
+      "modelKey": "bonegolem",
+      "ru": "Костяной голем",
+      "en": "Bone Golem",
+      "sourceDisplayId": 12073,
+      "evidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\BoneGolem\\BoneGolem.m2",
+        "sourceModelSha256": "ccda000298ffb1640f0c1d6c214f5af002452aed736f5dda170876e64589d53a",
+        "sourceSkins": [
+          "BoneGolemSkin",
+          "BoneGolemSkullbag",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      }
+    },
+    {
+      "modelKey": "doomguard",
+      "ru": "Стражник ужаса",
+      "en": "Doomguard",
+      "sourceDisplayId": 433,
+      "evidence": {
+        "classification": "exact-original-creature-name",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\DoomGuard\\DoomGuard.m2",
+        "sourceModelSha256": "34ad6d5a5bf0a2394f69a18b113122eab10b03fc158cb0472835c1e42decea2b",
+        "sourceSkins": [
+          "BalrogSkinRed",
+          "BalrogWingRed",
+          ""
+        ],
+        "sourceCreatureIds": [
+          111
+        ],
+        "sourceLocalizationKeys": [
+          "enemy.111"
+        ],
+        "exactOriginalBossIds": [],
+        "policy": "Original ordinary-creature name reused as a model-bound HUD label; this is not a named boss identity."
+      }
+    },
+    {
+      "modelKey": "dragonspawncaster",
+      "ru": "Драконид-заклинатель",
+      "en": "Dragonspawn Caster",
+      "sourceDisplayId": 6761,
+      "evidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\DragonSpawnCaster\\DragonSpawnCaster.m2",
+        "sourceModelSha256": "e934998c8ec6cd4461254bdf9e5c7f6e4bae681da898160e66ffeac3a1533785",
+        "sourceSkins": [
+          "DragonSpawnCasterSkinBlue",
+          "DragonSpawnCasterBodySkinBlue",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      }
+    }
+  ]
+}

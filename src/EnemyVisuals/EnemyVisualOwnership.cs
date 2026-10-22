@@ -91,6 +91,7 @@ public sealed partial class AzerothVisual
     [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     internal void RetireForReplacement()
     {
+        BossNamePresentation.ReleaseEnemy(enemy);
         ResetSourcePresentation();
         enabled=false;ReleaseOwnership();
         if(visual!=null){visual.SetActive(false);Object.Destroy(visual);}

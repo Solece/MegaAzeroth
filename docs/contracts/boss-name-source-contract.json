@@ -1,0 +1,867 @@
+{
+  "format": "azeroth-boss-name-source-contract-v1",
+  "sourceExeSha256": "2c2f3926e1f8f8092809f5de0624ac8f2197bb341a2870d408ce0250f13f094a",
+  "sourceVersion": "0.102.3 (f78e6fab)",
+  "scope": "Existing visual appearance is unchanged. Names bind actual source model keys, not native enemy enums. All labels are generic; none claim a named Azeroth boss identity.",
+  "localeSources": {
+    "en": {
+      "rawOffset": "0x6b9bc92"
+    },
+    "ru": {
+      "rawOffset": "0x6d2cf6b"
+    }
+  },
+  "registries": {
+    "zoneTableRaw": "0x6b84480",
+    "zoneCount": 12,
+    "zoneRecordStride": 240,
+    "zoneEnemyPointerOffset": 120,
+    "zoneEnemyCountOffset": 128,
+    "zoneBossPointerOffset": 136,
+    "zoneBossCountOffset": 144,
+    "enemyCount": 148,
+    "enemyRecordStride": 80,
+    "enemyFields": {
+      "namePointer": 16,
+      "nameLength": 24,
+      "id": 32,
+      "displayId": 36
+    },
+    "bossCount": 60,
+    "bossRecordStride": 88,
+    "bossFields": {
+      "namePointer": 0,
+      "nameLength": 8,
+      "id": 48,
+      "displayId": 52
+    }
+  },
+  "dbcEvidence": [
+    {
+      "path": "DBFilesClient\\CreatureDisplayInfo.dbc",
+      "archive": "patch.MPQ",
+      "sha256": "aa6dbb0601f5abec1bb21b8ee96bd7f1e695948410835a06f7ab4257c2d4cf8b",
+      "recordCount": 10534,
+      "fieldCount": 12
+    },
+    {
+      "path": "DBFilesClient\\CreatureModelData.dbc",
+      "archive": "patch.MPQ",
+      "sha256": "e973e78ea0894d2afc802b06db0ed2d7c77238671df7235e9f744791d54256c9",
+      "recordCount": 430,
+      "fieldCount": 16
+    }
+  ],
+  "models": [
+    {
+      "modelKey": "ogre",
+      "currentAppearance": {
+        "displayId": 415,
+        "modelId": 32,
+        "modelPath": "Creature\\Ogre\\Ogre.mdx",
+        "skins": [
+          "OgreSkinYellow",
+          "",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "6769692446efd5510d147aa987dd95599f1676b4a8ee188f406dc4459f8be412",
+      "packRgbaSha256": "4a30d6634d042f6142e833d53a03f32bc7bb142ef2b1bcda3ea82a947ea67afd",
+      "sourceModel": {
+        "path": "Creature\\Ogre\\Ogre.m2",
+        "archive": "patch.MPQ",
+        "sha256": "d0916ac0c07c1532ec3d6495b0c40ba40680cce6182e1c37abed380f947421c1"
+      },
+      "textures": [
+        {
+          "path": "Creature\\Ogre\\OgreSkinYellow.blp",
+          "archive": "patch.MPQ",
+          "sha256": "da67c588ba1da3283ed07e9c7c07ec6331e6095d1de499c9010b56c7d45ddbfc"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "shortened-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Ogre\\Ogre.m2",
+        "sourceModelSha256": "d0916ac0c07c1532ec3d6495b0c40ba40680cce6182e1c37abed380f947421c1",
+        "sourceSkins": [
+          "OgreSkinYellow",
+          "",
+          ""
+        ],
+        "sourceCreatureIds": [
+          804,
+          304
+        ],
+        "sourceLocalizationKeys": [
+          "enemy.804",
+          "enemy.304"
+        ],
+        "exactOriginalBossIds": [],
+        "policy": "Generic model-family label; current yellow appearance is used by source enemy804 and304 with different creature names. No named-boss identity."
+      },
+      "exactCreatureMatches": [
+        {
+          "zone": "feralas",
+          "sourceRecordRaw": "0x6b7fd78",
+          "sourceNameRaw": "0x6b7fbbe",
+          "sourceEnemyId": 804,
+          "sourceDisplayId": 415,
+          "localizationKey": "enemy.804",
+          "en": "Gordunni Ogre",
+          "ru": "Огр Гордунни",
+          "recordSha256": "2e9e4631da9f91cc7cee0b34913d49df068a42c6be857431c8abaedc9c4ecb43",
+          "appearance": {
+            "displayId": 415,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinYellow",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "av",
+          "sourceRecordRaw": "0x6b81c58",
+          "sourceNameRaw": "0x6b81a50",
+          "sourceEnemyId": 304,
+          "sourceDisplayId": 415,
+          "localizationKey": "enemy.304",
+          "en": "Crushridge Brute",
+          "ru": "Громила из клана Тяжелого Кряжа",
+          "recordSha256": "52a140cc75b443e2d0f1c6a31307fc8c35f20c0dc2152ddf105d1d13510346dc",
+          "appearance": {
+            "displayId": 415,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinYellow",
+              "",
+              ""
+            ]
+          }
+        }
+      ],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [
+        {
+          "zone": "elwynn",
+          "sourceRecordRaw": "0x6b7d180",
+          "sourceNameRaw": "0x6b7cf15",
+          "sourceBossId": 692,
+          "sourceDisplayId": 14403,
+          "localizationKey": "boss.692.name",
+          "en": "Rhahk'Zor",
+          "ru": "Рак'Зор",
+          "recordSha256": "be2f143d3281e044c2fee01f0298cc3bf4f58781ea05d4f0312aff49c9927e19",
+          "appearance": {
+            "displayId": 14403,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinBeige",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "ab",
+          "sourceRecordRaw": "0x6b7f8c8",
+          "sourceNameRaw": "0x6b7f5d8",
+          "sourceBossId": 1590,
+          "sourceDisplayId": 448,
+          "localizationKey": "boss.1590.name",
+          "en": "Kovork",
+          "ru": "Коворк",
+          "recordSha256": "350bf595a8df56becede2b5133da841f086c45534a38cff6268eab63a4982ece",
+          "appearance": {
+            "displayId": 448,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinGray",
+              "",
+              ""
+            ]
+          }
+        }
+      ],
+      "sameModelCreatureMatches": [
+        {
+          "zone": "ab",
+          "sourceRecordRaw": "0x6b7f3a8",
+          "sourceNameRaw": "0x6b7f195",
+          "sourceEnemyId": 1505,
+          "sourceDisplayId": 1052,
+          "localizationKey": "enemy.1505",
+          "en": "Boulderfist Ogre",
+          "ru": "Огр из клана Камнелома",
+          "recordSha256": "17f4152834c9a466de57fe5b0dcdd4cb1d256f559d019b0f16879e9c8214d5e9",
+          "appearance": {
+            "displayId": 1052,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinGray",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "ab",
+          "sourceRecordRaw": "0x6b7f498",
+          "sourceNameRaw": "0x6b7f1c9",
+          "sourceEnemyId": 1508,
+          "sourceDisplayId": 3193,
+          "localizationKey": "enemy.1508",
+          "en": "Boulderfist Brute",
+          "ru": "Громила Камнелома",
+          "recordSha256": "548c8336163acac8cce7de38de857629e1a965505940b7314ee2e2a7dc117e76",
+          "appearance": {
+            "displayId": 3193,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinGray",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "ab",
+          "sourceRecordRaw": "0x6b7f588",
+          "sourceNameRaw": "0x6b7f1fd",
+          "sourceEnemyId": 1511,
+          "sourceDisplayId": 1054,
+          "localizationKey": "enemy.1511",
+          "en": "Boulderfist Enforcer",
+          "ru": "Каратель Камнелома",
+          "recordSha256": "bdb7bc2ae4e7460093ce80d9a7019de7676b548226d71f292627a582070d4323",
+          "appearance": {
+            "displayId": 1054,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinGray",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "feralas",
+          "sourceRecordRaw": "0x6b7fd78",
+          "sourceNameRaw": "0x6b7fbbe",
+          "sourceEnemyId": 804,
+          "sourceDisplayId": 415,
+          "localizationKey": "enemy.804",
+          "en": "Gordunni Ogre",
+          "ru": "Огр Гордунни",
+          "recordSha256": "2e9e4631da9f91cc7cee0b34913d49df068a42c6be857431c8abaedc9c4ecb43",
+          "appearance": {
+            "displayId": 415,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinYellow",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "av",
+          "sourceRecordRaw": "0x6b81c58",
+          "sourceNameRaw": "0x6b81a50",
+          "sourceEnemyId": 304,
+          "sourceDisplayId": 415,
+          "localizationKey": "enemy.304",
+          "en": "Crushridge Brute",
+          "ru": "Громила из клана Тяжелого Кряжа",
+          "recordSha256": "52a140cc75b443e2d0f1c6a31307fc8c35f20c0dc2152ddf105d1d13510346dc",
+          "appearance": {
+            "displayId": 415,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinYellow",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "brm",
+          "sourceRecordRaw": "0x6b82658",
+          "sourceNameRaw": "0x6b82425",
+          "sourceEnemyId": 1006,
+          "sourceDisplayId": 10707,
+          "localizationKey": "enemy.1006",
+          "en": "Firegut Ogre",
+          "ru": "Огр из клана Огненного Брюха",
+          "recordSha256": "8aaad4cdf6af5507b1bb1c3545073960ca712b2c08fea3298db089b3b44bce87",
+          "appearance": {
+            "displayId": 10707,
+            "modelId": 32,
+            "modelPath": "Creature\\Ogre\\Ogre.mdx",
+            "skins": [
+              "OgreSkinRed",
+              "",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "modelKey": "infernal",
+      "currentAppearance": {
+        "displayId": 169,
+        "modelId": 24,
+        "modelPath": "Creature\\Infernal\\Infernal.mdx",
+        "skins": [
+          "InfernalSkin",
+          "",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "0f26e57c0264a8751f1c654ee4ebcf8bf0831391ef2522cec2c0debfdccf3c30",
+      "packRgbaSha256": "9a980a2585f36d10b7ba1932e74698ca88e1bae182ebff7ef84ce218500dad99",
+      "sourceModel": {
+        "path": "Creature\\Infernal\\Infernal.m2",
+        "archive": "patch.MPQ",
+        "sha256": "7916d6b9d7e6991ae5c1b8b6b005c237a0468281ac068cb0691e04e3f372fbbf"
+      },
+      "textures": [
+        {
+          "path": "Creature\\Infernal\\InfernalSkin.blp",
+          "archive": "patch.MPQ",
+          "sha256": "4ffe5548d1305936f9b3ab6942566144ad201744a847a97eb650ec1929f8c548"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "exact-original-creature-name",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Infernal\\Infernal.m2",
+        "sourceModelSha256": "7916d6b9d7e6991ae5c1b8b6b005c237a0468281ac068cb0691e04e3f372fbbf",
+        "sourceSkins": [
+          "InfernalSkin",
+          "",
+          ""
+        ],
+        "sourceCreatureIds": [
+          107
+        ],
+        "sourceLocalizationKeys": [
+          "enemy.107"
+        ],
+        "exactOriginalBossIds": [],
+        "policy": "Original ordinary-creature name reused as a model-bound HUD label; this is not a named boss identity."
+      },
+      "exactCreatureMatches": [
+        {
+          "zone": "wsg",
+          "sourceRecordRaw": "0x6b7e1a8",
+          "sourceNameRaw": "0x6b7de75",
+          "sourceEnemyId": 107,
+          "sourceDisplayId": 169,
+          "localizationKey": "enemy.107",
+          "en": "Infernal",
+          "ru": "Инфернал",
+          "recordSha256": "57b61b5ba256a2cd77f56d90a452f336ce78ed43f97b9c71dbf4eed929e8d098",
+          "appearance": {
+            "displayId": 169,
+            "modelId": 24,
+            "modelPath": "Creature\\Infernal\\Infernal.mdx",
+            "skins": [
+              "InfernalSkin",
+              "",
+              ""
+            ]
+          }
+        }
+      ],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [],
+      "sameModelCreatureMatches": [
+        {
+          "zone": "wsg",
+          "sourceRecordRaw": "0x6b7e1a8",
+          "sourceNameRaw": "0x6b7de75",
+          "sourceEnemyId": 107,
+          "sourceDisplayId": 169,
+          "localizationKey": "enemy.107",
+          "en": "Infernal",
+          "ru": "Инфернал",
+          "recordSha256": "57b61b5ba256a2cd77f56d90a452f336ce78ed43f97b9c71dbf4eed929e8d098",
+          "appearance": {
+            "displayId": 169,
+            "modelId": 24,
+            "modelPath": "Creature\\Infernal\\Infernal.mdx",
+            "skins": [
+              "InfernalSkin",
+              "",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "modelKey": "tarantula",
+      "currentAppearance": {
+        "displayId": 520,
+        "modelId": 63,
+        "modelPath": "Creature\\Tarantula\\Tarantula.mdx",
+        "skins": [
+          "TarantulaSkinBrown",
+          "",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "58c68ab33e416ab58a76d63f0a1611a4f001397e4f91e4835b5c0fc4c6c38948",
+      "packRgbaSha256": "89b3810babb9800cec34ee09565941e390c468cda9f0880c48a40a8b51e4f1f5",
+      "sourceModel": {
+        "path": "Creature\\Tarantula\\Tarantula.m2",
+        "archive": "patch.MPQ",
+        "sha256": "1d50b07786d1f480fb7b77c5adf9a299aefc05ed02e44fcbb773e8f53a41c6c6"
+      },
+      "textures": [
+        {
+          "path": "Creature\\Tarantula\\TarantulaSkinBrown.blp",
+          "archive": "patch.MPQ",
+          "sha256": "a482bcfe498e7bb8dee5d8eceefd89642ec9ce68d7aa5cbbfe4c2fe25518af3f"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Tarantula\\Tarantula.m2",
+        "sourceModelSha256": "1d50b07786d1f480fb7b77c5adf9a299aefc05ed02e44fcbb773e8f53a41c6c6",
+        "sourceSkins": [
+          "TarantulaSkinBrown",
+          "",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      },
+      "exactCreatureMatches": [],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [
+        {
+          "zone": "duskwood",
+          "sourceRecordRaw": "0x6b7da70",
+          "sourceNameRaw": "0x6b7d7e8",
+          "sourceBossId": 790,
+          "sourceDisplayId": 1091,
+          "localizationKey": "boss.790.name",
+          "en": "Naraxis",
+          "ru": "Наракис",
+          "recordSha256": "1b4419237981c67c33393b0b3489c99784a4f8d572a7ed05b6fee407c86c2a3b",
+          "appearance": {
+            "displayId": 1091,
+            "modelId": 63,
+            "modelPath": "Creature\\Tarantula\\Tarantula.mdx",
+            "skins": [
+              "TarantulaSkinGrey",
+              "",
+              ""
+            ]
+          }
+        }
+      ],
+      "sameModelCreatureMatches": [
+        {
+          "zone": "duskwood",
+          "sourceRecordRaw": "0x6b7d4c8",
+          "sourceNameRaw": "0x6b7d377",
+          "sourceEnemyId": 702,
+          "sourceDisplayId": 1091,
+          "localizationKey": "enemy.702",
+          "en": "Black Widow Hatchling",
+          "ru": "Детёныш черной вдовы",
+          "recordSha256": "577859a84136ddb3cb9f99dd16047aab9d36eb479e533500a4e9695fbeba7581",
+          "appearance": {
+            "displayId": 1091,
+            "modelId": 63,
+            "modelPath": "Creature\\Tarantula\\Tarantula.mdx",
+            "skins": [
+              "TarantulaSkinGrey",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "duskwood",
+          "sourceRecordRaw": "0x6b7d748",
+          "sourceNameRaw": "0x6b7d400",
+          "sourceEnemyId": 710,
+          "sourceDisplayId": 366,
+          "localizationKey": "enemy.710",
+          "en": "Carrion Recluse",
+          "ru": "Паук-трупоед",
+          "recordSha256": "5718e8d1c39381daebfa1f1492a05da5615354ae189ba00092c631cbdf37c249",
+          "appearance": {
+            "displayId": 366,
+            "modelId": 63,
+            "modelPath": "Creature\\Tarantula\\Tarantula.mdx",
+            "skins": [
+              "TarantulaSkinOrange",
+              "",
+              ""
+            ]
+          }
+        },
+        {
+          "zone": "ab",
+          "sourceRecordRaw": "0x6b7f268",
+          "sourceNameRaw": "0x6b7f151",
+          "sourceEnemyId": 1501,
+          "sourceDisplayId": 1103,
+          "localizationKey": "enemy.1501",
+          "en": "Plains Creeper",
+          "ru": "Равнинный ползун",
+          "recordSha256": "6aa72287a150c2010e089c97ed4ab2938ebf71dd3134232f47c8385cf01c31a7",
+          "appearance": {
+            "displayId": 1103,
+            "modelId": 63,
+            "modelPath": "Creature\\Tarantula\\Tarantula.mdx",
+            "skins": [
+              "TarantulaSkinGrey",
+              "",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "modelKey": "lich",
+      "currentAppearance": {
+        "displayId": 7919,
+        "modelId": 1051,
+        "modelPath": "Creature\\Lich\\Lich.mdx",
+        "skins": [
+          "LichSkin",
+          "ArmorReflect3",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "42753f7d0baeb93f242d402ca086fd47e658793708588f2866542f8bbb5a1e21",
+      "packRgbaSha256": "de28abf6d8bcdcb53a69278848b90480077bcab51028914e7483d3a0cec68f3d",
+      "sourceModel": {
+        "path": "Creature\\Lich\\Lich.m2",
+        "archive": "patch.MPQ",
+        "sha256": "64abed55438a042f89f111787912d51d1f9c8c3a65dedad8b6a597fd30c57f9a"
+      },
+      "textures": [
+        {
+          "path": "Creature\\Lich\\LichSkin.blp",
+          "archive": "patch.MPQ",
+          "sha256": "b80fc46203a6c07638d1a4f4db244502bad38902b0a942836ea10242770628cd"
+        },
+        {
+          "path": "CREATURE\\LICH\\LICHSKIN.BLP",
+          "archive": "patch.MPQ",
+          "sha256": "b80fc46203a6c07638d1a4f4db244502bad38902b0a942836ea10242770628cd"
+        },
+        {
+          "path": "CREATURE\\GHOST\\GHOST2.BLP",
+          "archive": "patch.MPQ",
+          "sha256": "906085d5fef07f21b4596ad92c1b77e1d3ec6454fbf5fe884240986569b0f43a"
+        },
+        {
+          "path": "CREATURE\\GHOST\\BLACK32.BLP",
+          "archive": "patch.MPQ",
+          "sha256": "bc042044cdc2f643ddc013a00d4f6ff6bee163d684a512a04203139f0ed83e02"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\Lich\\Lich.m2",
+        "sourceModelSha256": "64abed55438a042f89f111787912d51d1f9c8c3a65dedad8b6a597fd30c57f9a",
+        "sourceSkins": [
+          "LichSkin",
+          "ArmorReflect3",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      },
+      "exactCreatureMatches": [],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [],
+      "sameModelCreatureMatches": []
+    },
+    {
+      "modelKey": "bonegolem",
+      "currentAppearance": {
+        "displayId": 12073,
+        "modelId": 1771,
+        "modelPath": "Creature\\BoneGolem\\BoneGolem.mdx",
+        "skins": [
+          "BoneGolemSkin",
+          "BoneGolemSkullbag",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "ac164fb605b0569989bd9e13729529bc007d3e7b4abf275341fcb5794f5daa4b",
+      "packRgbaSha256": "d7553772f4d8011c94be8167c054ea1255fa5a29443fed78a0a03c74734e7e63",
+      "sourceModel": {
+        "path": "Creature\\BoneGolem\\BoneGolem.m2",
+        "archive": "patch.MPQ",
+        "sha256": "ccda000298ffb1640f0c1d6c214f5af002452aed736f5dda170876e64589d53a"
+      },
+      "textures": [
+        {
+          "path": "Creature\\BoneGolem\\BoneGolemSkin.blp",
+          "archive": "patch.MPQ",
+          "sha256": "f1dbc82ab49461fbba3bac5f3810bd690e8ef6775aab4dc98f7d977b6c148fa9"
+        },
+        {
+          "path": "Creature\\BoneGolem\\BoneGolemSkullbag.blp",
+          "archive": "patch.MPQ",
+          "sha256": "99a9505b60abb3c129dbfa03fa1158efc4906415a462709bdcca62ea6c2d514c"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\BoneGolem\\BoneGolem.m2",
+        "sourceModelSha256": "ccda000298ffb1640f0c1d6c214f5af002452aed736f5dda170876e64589d53a",
+        "sourceSkins": [
+          "BoneGolemSkin",
+          "BoneGolemSkullbag",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      },
+      "exactCreatureMatches": [],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [],
+      "sameModelCreatureMatches": []
+    },
+    {
+      "modelKey": "doomguard",
+      "currentAppearance": {
+        "displayId": 433,
+        "modelId": 68,
+        "modelPath": "Creature\\DoomGuard\\DoomGuard.mdx",
+        "skins": [
+          "BalrogSkinRed",
+          "BalrogWingRed",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "5448f8eb2d002a40100f07e4bf6aa6a5eea00280e700a972ef55d99696b82256",
+      "packRgbaSha256": "b61bb925dd3d17b58574f24b8c29bf45b977a03e0fedae9307a15ac75061d9ed",
+      "sourceModel": {
+        "path": "Creature\\DoomGuard\\DoomGuard.m2",
+        "archive": "patch.MPQ",
+        "sha256": "34ad6d5a5bf0a2394f69a18b113122eab10b03fc158cb0472835c1e42decea2b"
+      },
+      "textures": [
+        {
+          "path": "Creature\\DoomGuard\\BalrogSkinRed.blp",
+          "archive": "patch.MPQ",
+          "sha256": "5965cdad13ccd38aa2cebbaec3f954780d5c9d777aa4059cea3f84f19fb5a768"
+        },
+        {
+          "path": "Creature\\DoomGuard\\BalrogWingRed.blp",
+          "archive": "patch.MPQ",
+          "sha256": "461f121b53d76e57fa4f772818555673b3065f7ff13fc284de1c8dcbd1a8d957"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "exact-original-creature-name",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\DoomGuard\\DoomGuard.m2",
+        "sourceModelSha256": "34ad6d5a5bf0a2394f69a18b113122eab10b03fc158cb0472835c1e42decea2b",
+        "sourceSkins": [
+          "BalrogSkinRed",
+          "BalrogWingRed",
+          ""
+        ],
+        "sourceCreatureIds": [
+          111
+        ],
+        "sourceLocalizationKeys": [
+          "enemy.111"
+        ],
+        "exactOriginalBossIds": [],
+        "policy": "Original ordinary-creature name reused as a model-bound HUD label; this is not a named boss identity."
+      },
+      "exactCreatureMatches": [
+        {
+          "zone": "wsg",
+          "sourceRecordRaw": "0x6b7e1f8",
+          "sourceNameRaw": "0x6b7de7d",
+          "sourceEnemyId": 111,
+          "sourceDisplayId": 433,
+          "localizationKey": "enemy.111",
+          "en": "Doomguard",
+          "ru": "Стражник ужаса",
+          "recordSha256": "c410f8bdd9815ca21f691c1b3d1cc494fbb18bc360112a32051bca8ef349c3ef",
+          "appearance": {
+            "displayId": 433,
+            "modelId": 68,
+            "modelPath": "Creature\\DoomGuard\\DoomGuard.mdx",
+            "skins": [
+              "BalrogSkinRed",
+              "BalrogWingRed",
+              ""
+            ]
+          }
+        }
+      ],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [
+        {
+          "zone": "wsg",
+          "sourceRecordRaw": "0x6b7e500",
+          "sourceNameRaw": "0x6b7e248",
+          "sourceBossId": 190,
+          "sourceDisplayId": 68,
+          "localizationKey": "boss.190.name",
+          "en": "Doomguard Commander",
+          "ru": "Командир стражников ужаса",
+          "recordSha256": "74d04110bc0c65cf7ca75dca4dfe211c789277c5ec66f3f1a007364b0c2783c1",
+          "appearance": {
+            "displayId": 68,
+            "modelId": 68,
+            "modelPath": "Creature\\DoomGuard\\DoomGuard.mdx",
+            "skins": [
+              "BalrogSkinBlue",
+              "BalrogWingBlue",
+              ""
+            ]
+          }
+        }
+      ],
+      "sameModelCreatureMatches": [
+        {
+          "zone": "wsg",
+          "sourceRecordRaw": "0x6b7e1f8",
+          "sourceNameRaw": "0x6b7de7d",
+          "sourceEnemyId": 111,
+          "sourceDisplayId": 433,
+          "localizationKey": "enemy.111",
+          "en": "Doomguard",
+          "ru": "Стражник ужаса",
+          "recordSha256": "c410f8bdd9815ca21f691c1b3d1cc494fbb18bc360112a32051bca8ef349c3ef",
+          "appearance": {
+            "displayId": 433,
+            "modelId": 68,
+            "modelPath": "Creature\\DoomGuard\\DoomGuard.mdx",
+            "skins": [
+              "BalrogSkinRed",
+              "BalrogWingRed",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "modelKey": "dragonspawncaster",
+      "currentAppearance": {
+        "displayId": 6761,
+        "modelId": 1011,
+        "modelPath": "Creature\\DragonSpawnCaster\\DragonSpawnCaster.mdx",
+        "skins": [
+          "DragonSpawnCasterSkinBlue",
+          "DragonSpawnCasterBodySkinBlue",
+          ""
+        ]
+      },
+      "packModelJsonSha256": "ddee95df71694c589a5b242c48f97b3a383bd67e470e74f5b6e4e072cdd8489b",
+      "packRgbaSha256": "78f7cea1d151cfbd342c4481a2c4751e9c2ca589d8b84318f9a963cc8fdd7dd7",
+      "sourceModel": {
+        "path": "Creature\\DragonSpawnCaster\\DragonSpawnCaster.m2",
+        "archive": "patch.MPQ",
+        "sha256": "e934998c8ec6cd4461254bdf9e5c7f6e4bae681da898160e66ffeac3a1533785"
+      },
+      "textures": [
+        {
+          "path": "Creature\\DragonSpawnCaster\\DragonSpawnCasterSkinBlue.blp",
+          "archive": "patch.MPQ",
+          "sha256": "5aaffe44ad65e683d9cebd2f2500411cf137d73e9d7a6ea5f3a48be19fa6bb5a"
+        },
+        {
+          "path": "Creature\\DragonSpawnCaster\\DragonSpawnCasterBodySkinBlue.blp",
+          "archive": "patch.MPQ",
+          "sha256": "a0a45aee4bbb4df40844dcf2aa86111643bb94855a63e6a0f3313cd32a3d25d9"
+        }
+      ],
+      "nameEvidence": {
+        "classification": "translated-original-model-family",
+        "namedBossIdentity": false,
+        "sourceModel": "Creature\\DragonSpawnCaster\\DragonSpawnCaster.m2",
+        "sourceModelSha256": "e934998c8ec6cd4461254bdf9e5c7f6e4bae681da898160e66ffeac3a1533785",
+        "sourceSkins": [
+          "DragonSpawnCasterSkinBlue",
+          "DragonSpawnCasterBodySkinBlue",
+          ""
+        ],
+        "sourceCreatureIds": [],
+        "sourceLocalizationKeys": [],
+        "exactOriginalBossIds": [],
+        "policy": "Russian model-family translation selected by the integration; not an original localized actor name. This display/skin is absent from the original148-enemy and60-boss registries. The English label identifies the model family."
+      },
+      "exactCreatureMatches": [],
+      "exactBossMatches": [],
+      "sameModelDifferentSkinBossMatches": [],
+      "sameModelCreatureMatches": [
+        {
+          "zone": "brm",
+          "sourceRecordRaw": "0x6b826a8",
+          "sourceNameRaw": "0x6b82431",
+          "sourceEnemyId": 1007,
+          "sourceDisplayId": 8249,
+          "localizationKey": "enemy.1007",
+          "en": "Black Wyrmkin",
+          "ru": "Черный драконид",
+          "recordSha256": "f2bf6479b637de3060825e1b8ae867dec159754e790f79b69da2cedf54878c3b",
+          "appearance": {
+            "displayId": 8249,
+            "modelId": 1011,
+            "modelPath": "Creature\\DragonSpawnCaster\\DragonSpawnCaster.mdx",
+            "skins": [
+              "DragonSpawnCasterSkinBlack",
+              "DragonSpawnCasterBodySkinBlack",
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "runtimeCatalog": {
+    "path": "AzerothAssets/boss-names.json",
+    "sha256": "6669a15145d94e09ba37bbc9a8985f7efe20829f79a99c0f67efb79489de7a2b"
+  },
+  "verification": {
+    "currentPackDisplayAndModelMatchesSource": true,
+    "allSevenSourceM2HashesVerified": true,
+    "allUsedSkinSourceHashesVerified": true,
+    "all148EnemyAnd60BossRowsTraversed": true,
+    "exactNamedBossMatches": 0,
+    "appearanceModified": false,
+    "nativeGameLaunched": false
+  }
+}

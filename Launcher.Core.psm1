@@ -23,7 +23,7 @@ function Assert-NativeGame([string]$Runtime) {
 function Test-BundledRuntime([string]$PackageRoot,[switch]$VerifyAll) {
     $releasePath=Join-Path $PackageRoot 'release.json'
     if (!(Test-Path -LiteralPath $releasePath)) {
-        foreach ($version in @('all-heroes-v6','all-heroes-v5')) {
+        foreach ($version in @('all-heroes-v7','all-heroes-v6','all-heroes-v5')) {
             $existing=Resolve-LaunchPath $PackageRoot ('builds/'+$version+'/Megabonk-Lab')
             if (!(Test-Path -LiteralPath $existing)) { continue }
             Assert-NativeGame $existing

@@ -102,7 +102,7 @@ public sealed partial class AzerothVisual
             root.transform.rotation=visual.transform.rotation;
             root.transform.localScale=visual.transform.lossyScale;
             var corpse=root.AddComponent<AzerothCorpseVisual>();
-            corpse.Bind(enemy.id,enemy.Pointer.ToInt64(),model,isBoss,death,groundFound?groundY:nativeFeetY,damage,GhostTint,Mathf.Max(0,EnemyAnimationClock.Now-sourceMaterialBoundAt));
+            corpse.Bind(enemy.id,enemy.Pointer.ToInt64(),model,isBoss,death,groundFound?groundY:nativeFeetY,damage,GhostTint,Mathf.Max(0,EnemyAnimationClock.Now-sourceMaterialBoundAt),enemy.enemyData!=null?(int)enemy.enemyData.enemyName:-1);
             replacement.enabled=false;
             EnemyDeathPresentation.Add(corpse);
         }
@@ -117,15 +117,17 @@ public sealed class AzerothCorpseVisual:MonoBehaviour
     public AzerothCorpseVisual(IntPtr pointer):base(pointer){}
     Model model;Clip clip;MeshFilter filter;MeshRenderer renderer;
     uint enemyId;long enemyPointer;bool boss,released;
+    int nativeEnemyNameId;Vector3 capturedVisualScale;
     float start,age,nextFrame,floorY;int frame=-1;
     Vector3 deathPosition;string damageSource="",element="",releaseReason="";
     float killingDamage;bool killingCrit;
     Color nativeTint;MaterialPropertyBlock[] sourceBlocks;Material[] chosenMaterials;
     MaterialPropertyBlock[] genericSourceBlocks;Material[] genericChosenMaterials;SourceEnvironmentInstance sourceEnvironment;float sourceAgeAtDeath;
     [HideFromIl2Cpp]
-    internal void Bind(uint id,long pointer,Model source,bool isBoss,Clip death,float floor,DamageContainer damage,Color ghostTint,float sourceGlobalAge=0)
+    internal void Bind(uint id,long pointer,Model source,bool isBoss,Clip death,float floor,DamageContainer damage,Color ghostTint,float sourceGlobalAge=0,int nativeEnemyId=-1)
     {
         enemyId=id;enemyPointer=pointer;model=source;boss=isBoss;clip=death;floorY=floor;
+        nativeEnemyNameId=nativeEnemyId;capturedVisualScale=transform.lossyScale;
         deathPosition=transform.position;start=EnemyAnimationClock.Now;
         damageSource=damage?.damageSource??"";element=damage!=null?damage.element.ToString():"";
         killingDamage=damage?.damage??0;killingCrit=damage?.crit??false;
@@ -172,6 +174,8 @@ public sealed class AzerothCorpseVisual:MonoBehaviour
         AssetsValid=model!=null && model.IsUsable(false) && filter!=null && filter.sharedMesh!=null,
         Position=new[]{transform.position.x,transform.position.y,transform.position.z},
         Scale=new[]{transform.lossyScale.x,transform.lossyScale.y,transform.lossyScale.z},
+        NativeEnemyId=nativeEnemyNameId,CapturedScale=new[]{capturedVisualScale.x,capturedVisualScale.y,capturedVisualScale.z},ScaleUnchanged=transform.lossyScale==capturedVisualScale,
+        GhostDrawPasses=model?.GhostProfile!=null?model.GhostRenderSnapshot(renderer,clip?.Name,frame,nativeTint):null,
         HasCollider=GetComponent<Collider>()!=null,HasRigidbody=GetComponent<Rigidbody>()!=null,
         NativeActorChild=transform.parent!=null,DamageSource=damageSource,Element=element,
         KillingDamage=killingDamage,KillingCrit=killingCrit,ReleaseReason=releaseReason
