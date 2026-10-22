@@ -386,3 +386,6 @@ First isolated Presentation candidate75356 completed full native menu/character/
 - Closure5720PASS/0FAIL,1407 decoded RGBA buffers. Ten existing gameplay assemblies remain byte-identical to the accepted v5 portable runtime; presentation is an eleventh plugin.
 - Rejected v6 completed lifecycle21PASS but fill ROI remainedzero due managedVector3[]→Il2CppStructArray input-copy marshalling. V7 uses an explicit native array and reads its written values. Independent review confirmed this from generatedinterop; no pixel threshold was reduced. Failed native logs and freezes retained separately.
 - New independent playable all-heroes-v6 runtime and source-only Git module prepared; previous user runtimes remain intact. Single root launcher prefers the completed v6 build and falls back to v5.
+### Private publisher metadata follow-up
+
+During v0.5.1 upload, a read-only metadata check exposed PowerShell nested-array handling when Invoke-RestMethod is wrapped in @(...). Direct JSON-array assignment correctly lists the actual draft420856859 and published v0.5.0. The publisher now uses direct assignment before filtering tags, so retrying an existing matching draft does not mistakenly create a second release. The active upload and runtime payload are unchanged.

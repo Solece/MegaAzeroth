@@ -25,7 +25,7 @@ try {
     if(!$verificationData.VerifiedAllArchiveMembers -or !$verificationData.NativeExtractedMenu.Passed){throw 'Archive and extracted-native acceptance must pass before upload.'}
     $actualHash=(Get-FileHash -Algorithm SHA256 -LiteralPath $Archive).Hash.ToLowerInvariant()
     if($actualHash -ne $verificationData.Sha256){throw 'Archive differs from accepted verification report.'}
-    $all=@(Invoke-RestMethod -Uri ($api+'/releases') -Headers $headers)
+    $all=Invoke-RestMethod -Uri ($api+'/releases?per_page=100') -Headers $headers
     $matching=@($all | Where-Object tag_name -eq $Tag)
     if($matching.Count -gt 1){throw 'Multiple releases match tag.'}
     if($matching.Count -eq 1){
