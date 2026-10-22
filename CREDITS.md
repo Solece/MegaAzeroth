@@ -25,3 +25,5 @@ The project source code retains any license already present in the source reposi
 Thanks to the authors and contributors of BepInEx, UnityDoorstop, .NET, Il2CppInterop, HarmonyX, MonoMod, Mono.Cecil, Cpp2IL/LibCpp2IL, Disarm, AsmResolver, AssetRipper libraries, Capstone, Iced, SemanticVersioning and Dobby. Exact observed versions, pinned source links and the collected license texts are described in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and `Licenses/`.
 
 These projects retain their respective licenses and copyright notices. They do not endorse this modification.
+
+Presentation update: AzerothPresentation is the eleventh project plugin in v0.5.1. It adapts the original Azeroth menu and loading artwork, retaining native scene-loading progress and menu controls. The original art retains its existing authorship and rights.

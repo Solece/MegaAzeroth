@@ -45,7 +45,8 @@ def main():
  payload=output/'Runtime'
  if payload.exists() and any(payload.iterdir()):raise ValueError('Output payload must be fresh')
  payload.mkdir(parents=True,exist_ok=True);files=[];excluded=[];sanitized=[];links=[]
- for relative_root in ROOTS:
+ optional=['BepInEx/plugins/AzerothPresentation']
+ for relative_root in ROOTS+[r for r in optional if (runtime/r).is_dir()]:
   root=runtime/relative_root
   if not root.is_dir():raise FileNotFoundError(root)
   links.append({'Path':relative_root,'ResolvedSource':str(root.resolve())})

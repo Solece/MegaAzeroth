@@ -1,0 +1,60 @@
+{
+  "format": "azeroth-menu-loading-recipes-v1",
+  "assets": [
+    {
+      "sourcePath": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom.blp",
+      "archive": "patch.MPQ",
+      "sourceSha256": "98ed6b29fa5e43da53516938645f538fd4818729256c2a4e25d54cc6ce9f2ece",
+      "width": 512,
+      "height": 512,
+      "rgbaSha256": "126bc1afcecc48490bcf35f946fc31df674de90f588ef37d296357113359182a",
+      "rgba": "LoadScreenEasternKingdom.rgba",
+      "size": "LoadScreenEasternKingdom.size",
+      "png": "LoadScreenEasternKingdom.png"
+    },
+    {
+      "sourcePath": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor.blp",
+      "archive": "patch.MPQ",
+      "sourceSha256": "702fbd7a6e5988e2a3b97d44a8620fc73449e4511f685a4fba35628a8bffb11d",
+      "width": 512,
+      "height": 512,
+      "rgbaSha256": "861b2ef67619c061669f1a2c22f218af377026410842254d25449b7a30cd4286",
+      "rgba": "LoadScreenKalimdor.rgba",
+      "size": "LoadScreenKalimdor.size",
+      "png": "LoadScreenKalimdor.png"
+    },
+    {
+      "sourcePath": "Interface\\Glues\\LoadingScreens\\LoadScreenShadowfangKeep.blp",
+      "archive": "patch.MPQ",
+      "sourceSha256": "963daf314eca86e9b5702bc421b7b0cd3e371072aa5de7772a5dfc0e62c21b52",
+      "width": 512,
+      "height": 512,
+      "rgbaSha256": "bed7b813277941bdf69175eb3c418c19bd1eab2cfe73aedd72a618a76509b76a",
+      "rgba": "LoadScreenShadowfangKeep.rgba",
+      "size": "LoadScreenShadowfangKeep.size",
+      "png": "LoadScreenShadowfangKeep.png"
+    },
+    {
+      "sourcePath": "Interface\\Glues\\LoadingBar\\Loading-BarBorder.blp",
+      "archive": "patch.MPQ",
+      "sourceSha256": "77184e48f5e4a92afe9b56aa38a82bdcd8e7886eaa706171a298a2f8767d3792",
+      "width": 512,
+      "height": 64,
+      "rgbaSha256": "84f8198dac4fde21932164b5ca81df7e6b70e81ebc6fc7ed61e603d02da2c541",
+      "rgba": "Loading-BarBorder.rgba",
+      "size": "Loading-BarBorder.size",
+      "png": "Loading-BarBorder.png"
+    },
+    {
+      "sourcePath": "Interface\\Glues\\LoadingBar\\Loading-BarFill.blp",
+      "archive": "patch.MPQ",
+      "sourceSha256": "b489d6d914f6b208454007f6bee4d69bfcbf2d1393e4194b3408cad2452e7a21",
+      "width": 64,
+      "height": 64,
+      "rgbaSha256": "838a575c87f78fdb854957bb71e487b1d768d1430902b64169b915f027f698af",
+      "rgba": "Loading-BarFill.rgba",
+      "size": "Loading-BarFill.size",
+      "png": "Loading-BarFill.png"
+    }
+  ]
+}

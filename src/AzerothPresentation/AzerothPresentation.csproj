@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net6.0</TargetFramework><AssemblyName>AzerothPresentation</AssemblyName><ImplicitUsings>enable</ImplicitUsings><Nullable>disable</Nullable><LangVersion>latest</LangVersion><NuGetAudit>false</NuGetAudit><BepInExRoot Condition="'$(BepInExRoot)'==''">$(MSBuildProjectDirectory)/../../Megabonk-Lab/BepInEx</BepInExRoot></PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(BepInExRoot)/core/BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(BepInExRoot)/core/BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(BepInExRoot)/core/0Harmony.dll" Private="false" />
+    <Reference Include="$(BepInExRoot)/core/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(BepInExRoot)/interop/Assembly-CSharp.dll" Private="false" />
+    <Reference Include="$(BepInExRoot)/interop/Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="$(BepInExRoot)/interop/Unity*.dll" Private="false" />
+  </ItemGroup>
+</Project>

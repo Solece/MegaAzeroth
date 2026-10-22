@@ -18,6 +18,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--package", type=Path, required=True)
     ap.add_argument("--archive", type=Path, required=True)
+    ap.add_argument("--release-id", default="v0.5.0-private")
     args = ap.parse_args()
     package = args.package.resolve()
     if args.archive.exists():
@@ -34,14 +35,14 @@ def main() -> None:
         files.append({"Path": rel, "Bytes": path.stat().st_size, "Sha256": sha(path)})
     manifest = {
         "Format": "megaazeroth-bundled-files-v1",
-        "ReleaseId": "v0.5.0-private",
+        "ReleaseId": args.release_id,
         "Files": files,
     }
     mp = package / "runtime-files.json"
     mp.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     release = {
         "Format": "megaazeroth-bundled-release-v1",
-        "ReleaseId": "v0.5.0-private",
+        "ReleaseId": args.release_id,
         "BundledRuntime": True,
         "RuntimePath": "Runtime",
         "RuntimeFiles": {"Path": "runtime-files.json", "Sha256": sha(mp)},

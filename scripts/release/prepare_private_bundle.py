@@ -44,6 +44,7 @@ def main() -> None:
     p.add_argument("--inventory", type=Path, required=True)
     p.add_argument("--bepinex-archive", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--source-commit", default="815a5f2be6c0d0aeb2a8cdebc8809386c3be8ec4")
     args = p.parse_args()
     if args.output.exists():
         raise SystemExit("Output already exists; choose a fresh staging directory.")
@@ -55,8 +56,12 @@ def main() -> None:
     if sha(args.bepinex_archive) != BEPINEX_SHA:
         raise SystemExit("Loader archive hash mismatch.")
     inventory = json.loads(args.inventory.read_text(encoding="utf-8-sig"))
-    if len(inventory["OurDlls"]) != 10:
-        raise SystemExit("Expected ten validated mod assemblies.")
+    if len(inventory["OurDlls"]) < 10:
+        raise SystemExit("Expected the ten core validated mod assemblies.")
+    for row in inventory["OurDlls"]:
+        relative = PurePosixPath(row["Path"])
+        if relative.is_absolute() or ".." in relative.parts or not str(relative).startswith("BepInEx/plugins/") or relative.suffix != ".dll":
+            raise SystemExit("Unexpected mod inventory path: " + row["Path"])
     runtime = args.output / "Runtime"
     runtime.mkdir(parents=True)
     for name in ("Megabonk.exe", "GameAssembly.dll", "UnityPlayer.dll", "baselib.dll",
@@ -113,7 +118,7 @@ def main() -> None:
     report = {
         "GameVersion": "1.0.69",
         "SteamBuildId": "21750826",
-        "SourceModCommit": "815a5f2be6c0d0aeb2a8cdebc8809386c3be8ec4",
+        "SourceModCommit": args.source_commit,
         "Purpose": "Private personal snapshot; no Steam authentication bypass",
         "GameFiles": sum(x.is_file() for x in args.game.rglob("*")),
         "ModAssemblies": len(inventory["OurDlls"]),

@@ -23,10 +23,13 @@ function Assert-NativeGame([string]$Runtime) {
 function Test-BundledRuntime([string]$PackageRoot,[switch]$VerifyAll) {
     $releasePath=Join-Path $PackageRoot 'release.json'
     if (!(Test-Path -LiteralPath $releasePath)) {
-        $existing=Resolve-LaunchPath $PackageRoot 'builds/all-heroes-v5/Megabonk-Lab'
-        if (!(Test-Path -LiteralPath $existing)) { throw 'Extract the complete portable archive first. A source-only clone does not include the prepared runtime.' }
-        Assert-NativeGame $existing
-        return [pscustomobject]@{RuntimeRoot=$existing;ReleaseId='existing-local-v5';VerifiedAll=$false;Source='Local prepared v5 fallback'}
+        foreach ($version in @('all-heroes-v6','all-heroes-v5')) {
+            $existing=Resolve-LaunchPath $PackageRoot ('builds/'+$version+'/Megabonk-Lab')
+            if (!(Test-Path -LiteralPath $existing)) { continue }
+            Assert-NativeGame $existing
+            return [pscustomobject]@{RuntimeRoot=$existing;ReleaseId=('existing-local-'+$version);VerifiedAll=$false;Source=('Local prepared '+$version+' fallback')}
+        }
+        throw 'Extract the complete portable archive first. A source-only clone does not include the prepared runtime.'
     }
     $release=Get-Content -LiteralPath $releasePath -Raw -Encoding UTF8 | ConvertFrom-Json
     if ($release.Format -ne 'megaazeroth-bundled-release-v1' -or !$release.BundledRuntime) { throw 'This launcher expects a complete bundled portable release.' }
