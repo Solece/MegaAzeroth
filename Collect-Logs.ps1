@@ -24,8 +24,12 @@ function Read-DiagnosticText([string]$Path) {
         while($count -lt $buffer.Length){$read=$stream.Read($buffer,$count,$buffer.Length-$count);if($read -eq 0){break};$count+=$read}
         $text=[Text.Encoding]::UTF8.GetString($buffer,0,$count)
     } finally {$stream.Dispose()}
-    $text=$text.Replace($root,'%PACKAGE_ROOT%')
-    if($env:USERPROFILE){$text=$text.Replace($env:USERPROFILE,'%USERPROFILE%')}
+    foreach($privatePath in @(@{Path=$root;Label='%PACKAGE_ROOT%'},@{Path=$env:USERPROFILE;Label='%USERPROFILE%'})){
+        if(!$privatePath.Path){continue}
+        foreach($variant in @($privatePath.Path,$privatePath.Path.Replace('\','/'))){
+            $text=[Text.RegularExpressions.Regex]::Replace($text,[Text.RegularExpressions.Regex]::Escape($variant),$privatePath.Label,[Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        }
+    }
     return $text
 }
 function Add-DiagnosticText($Archive,[string]$Name,[string]$Text) {

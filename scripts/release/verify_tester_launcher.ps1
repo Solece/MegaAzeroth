@@ -9,7 +9,7 @@ $fixture=Join-Path $OutputRoot ('checks/other PC '+[Guid]::NewGuid().ToString('N
 foreach($name in @('Play.ps1','Collect-Logs.ps1')){Copy-Item -LiteralPath (Join-Path $LauncherRoot $name) -Destination (Join-Path $fixture $name)}
 [IO.File]::WriteAllText((Join-Path $fixture '.env'),'PRIVATE_SENTINEL_NOT_FOR_DIAGNOSTICS')
 [IO.File]::WriteAllText((Join-Path $fixture 'saves/player.json'),'PRIVATE_SAVE_NOT_FOR_DIAGNOSTICS')
-[IO.File]::WriteAllText((Join-Path $fixture 'Runtime/BepInEx/LogOutput.log'),('Q'*3MB)+"`n"+$fixture+"`n"+$env:USERPROFILE)
+[IO.File]::WriteAllText((Join-Path $fixture 'Runtime/BepInEx/LogOutput.log'),('Q'*3MB)+"`n"+$fixture+"`n"+$env:USERPROFILE+"`n"+$fixture.Replace('\','/').ToUpperInvariant()+"`n"+$env:USERPROFILE.Replace('\','/').ToUpperInvariant())
 [IO.File]::WriteAllText((Join-Path $fixture 'reports/play-test-fixture.log'),'REAL_PLAY_LOG')
 [IO.File]::WriteAllText((Join-Path $fixture 'release.json'),'{"ReleaseId":"fixture"}')
 $ps51=Join-Path $env:WINDIR 'System32/WindowsPowerShell/v1.0/powershell.exe'
@@ -29,6 +29,7 @@ try {
     $log=Read-ZipText $zip 'Runtime/BepInEx/LogOutput.log'
     Check ($zip.GetEntry('Runtime/BepInEx/LogOutput.log').Length -le 2MB) 'Bounds oversized logs to final two MiB'
     Check (!$log.Contains($fixture) -and !$log.Contains($env:USERPROFILE) -and $log.Contains('%PACKAGE_ROOT%')) 'Redacts package and user-profile paths'
+    Check (!$log.Contains($fixture.Replace('\','/').ToUpperInvariant()) -and !$log.Contains($env:USERPROFILE.Replace('\','/').ToUpperInvariant())) 'Redacts Unity slash format and case variations'
     $system=Read-ZipText $zip 'system.json'|ConvertFrom-Json
     Check ($system.PowerShell -like '5.1*') 'Runs under actual Windows PowerShell5.1'
 }finally{$zip.Dispose()}
